@@ -17,12 +17,12 @@ import javax.swing.JOptionPane;
 public class LoginController implements ActionListener{//Implementa la interfaz ActionListener para manejar eventos de accion//
     //Atributos//
     private Login loginView=new Login();//Crea una instancia de la clase Login//
-    //Constructores//
+    private MainMenuController mainMenuController=new MainMenuController();
+    //Metodos//
     public LoginController(){
         openViewLogin();//Hace visible la interfaz grafica del login//
         this.loginView.btnIngress.addActionListener(this);//Conecta el boton ingresar del Login con el LoginController//
     }
-    //Metodos//
     public void openViewLogin(){//Metodo para hacer visible la ventana del Login//
         loginView.setVisible(true);
     }
@@ -34,8 +34,7 @@ public class LoginController implements ActionListener{//Implementa la interfaz 
             String password=String.valueOf(loginView.txtPassword.getPassword());//Guarda la contraseña ingresada//
             if(con.validateUser(user, password)==true){//Si el usuario es valido//
                 JOptionPane.showMessageDialog(null,"<html><center>Buenos Dias\n<center>Bienvenido al sistema<html><center>");//Despliga mensaje de bienvenida//
-                MainMenu form= new MainMenu();//Crea una instancia de MainMenu//
-                form.setVisible(true);//Hace visible la interfaz grafica de MainMenu//
+                mainMenuController.openMainMenuView();
                 loginView.dispose();//Cierra la interfaz grafica del Login//
             }
             else{//Si el usuario no es valido//

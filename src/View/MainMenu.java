@@ -19,56 +19,61 @@ public class MainMenu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        btnAddUser = new javax.swing.JToggleButton();
-        btnDelUser = new javax.swing.JToggleButton();
-        btnEditUser = new javax.swing.JToggleButton();
+        btnAddUser = new javax.swing.JButton();
+        btnDelUser = new javax.swing.JButton();
+        btnSearchUser = new javax.swing.JButton();
+        btnAddSeat = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
         setSize(new java.awt.Dimension(760, 640));
 
         btnAddUser.setText("Agregar Usuario");
-
-        btnDelUser.setText("Eliminar Usuario");
-
-        btnEditUser.setText("Modificar Usuario");
-        btnEditUser.addActionListener(new java.awt.event.ActionListener() {
+        btnAddUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEditUserActionPerformed(evt);
+                btnAddUserActionPerformed(evt);
             }
         });
+
+        btnDelUser.setText("Dar de Baja Usuario");
+
+        btnSearchUser.setText("Buscar Usuario");
+
+        btnAddSeat.setText("Agregar Asiento");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(417, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnEditUser)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(btnDelUser)
-                        .addComponent(btnAddUser)))
-                .addGap(91, 91, 91))
+                .addContainerGap(408, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnAddSeat)
+                    .addComponent(btnDelUser)
+                    .addComponent(btnAddUser)
+                    .addComponent(btnSearchUser))
+                .addGap(92, 92, 92))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(67, 67, 67)
+                .addGap(63, 63, 63)
                 .addComponent(btnAddUser)
-                .addGap(18, 18, 18)
+                .addGap(29, 29, 29)
                 .addComponent(btnDelUser)
-                .addGap(27, 27, 27)
-                .addComponent(btnEditUser)
-                .addContainerGap(374, Short.MAX_VALUE))
+                .addGap(29, 29, 29)
+                .addComponent(btnSearchUser)
+                .addGap(33, 33, 33)
+                .addComponent(btnAddSeat)
+                .addContainerGap(309, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnEditUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditUserActionPerformed
+    private void btnAddUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddUserActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnEditUserActionPerformed
+    }//GEN-LAST:event_btnAddUserActionPerformed
 
     /**
      * @param args the command line arguments
@@ -106,8 +111,9 @@ public class MainMenu extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    public javax.swing.JToggleButton btnAddUser;
-    public javax.swing.JToggleButton btnDelUser;
-    public javax.swing.JToggleButton btnEditUser;
+    public javax.swing.JButton btnAddSeat;
+    public javax.swing.JButton btnAddUser;
+    public javax.swing.JButton btnDelUser;
+    public javax.swing.JButton btnSearchUser;
     // End of variables declaration//GEN-END:variables
 }

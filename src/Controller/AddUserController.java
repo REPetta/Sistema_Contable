@@ -8,7 +8,13 @@ import java.awt.event.ActionListener;
 
 public class AddUserController implements ActionListener {
     //Atributos//
-    private AddUser addUserViem=new AddUser();
+    private AddUser addUserView=new AddUser();
+    //Metodos//
+    public void openAddUserController(){
+        addUserView.setVisible(true);
+    }
+
+   
 
     @Override
     public void actionPerformed(ActionEvent e) {
