@@ -1,7 +1,6 @@
 //Clase encargada de la gestion de usuarios//
 package Controller;
 
-import View.Login;
 import View.MainMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,7 +12,7 @@ public class MainMenuController implements ActionListener{//Implementa la interf
     private DeleteUserController deleteUserController=new DeleteUserController();
     private SearchUserController searchUserController=new SearchUserController();
     private AddSeatController addSeatController=new AddSeatController();
-    private Login loginView=new Login();
+    private LoginController loginController;
     //Metodos//
     public void openMainMenuView(){//Metodo para hacer visible la ventana del MainMenu//
         mainMenuView.setVisible(true);
@@ -52,23 +51,25 @@ public class MainMenuController implements ActionListener{//Implementa la interf
             closeMainMenuView();
         }
     }
-     /* Todos los metodos buttonBack despliegan la vista pero no traen sus controladores
     public void buttonExit(ActionEvent e){//Metodo que le da al boton Salir la funcion de cerrar el Menu Principal y volver al Login//
         if(e.getSource()==mainMenuView.btnExit){
             closeMainMenuView();
-            loginView.setVisible(true);
+            loginController=new LoginController();
+            loginController.openViewLogin();
+            
+           
             
             
         }
     }
-    */
+   
     @Override
     public void actionPerformed(ActionEvent e) {
         buttonAddUser(e);
         buttonDelUser(e);
         buttonSearchUser(e);
         buttonAddSeat(e);
-        //buttonExit(e);
+        buttonExit(e);
     }
     
 }

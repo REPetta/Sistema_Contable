@@ -20,7 +20,6 @@ public class LoginController implements ActionListener{//Implementa la interfaz 
     //Metodos//
     
     public LoginController(){
-        openViewLogin();//Hace visible la interfaz grafica del login//
         this.loginView.btnIngress.addActionListener(this);//Conecta el boton ingresar del Login con el LoginController//
     }
     
