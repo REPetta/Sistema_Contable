@@ -1,11 +1,8 @@
 //Clase encargada de la gestion de usuarios//
 package Controller;
 
-import View.AddSeat;
-import View.AddUser;
-import View.DeleteUser;
+import View.Login;
 import View.MainMenu;
-import View.SearchUser;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,47 +10,65 @@ public class MainMenuController implements ActionListener{//Implementa la interf
     //Atributos//
     private MainMenu mainMenuView=new MainMenu();//Crea una instancia de la clase MainMenu//
     private AddUserController addUserController= new AddUserController();
+    private DeleteUserController deleteUserController=new DeleteUserController();
+    private SearchUserController searchUserController=new SearchUserController();
+    private AddSeatController addSeatController=new AddSeatController();
+    private Login loginView=new Login();
     //Metodos//
     public void openMainMenuView(){//Metodo para hacer visible la ventana del MainMenu//
         mainMenuView.setVisible(true);
+    }
+    public void closeMainMenuView(){//Metodo para cerrar el menu principal
+        mainMenuView.dispose();
     }
     public MainMenuController(){
         this.mainMenuView.btnAddUser.addActionListener(this);//Conecta el boton agregar usuario con esta clase//
         this.mainMenuView.btnDelUser.addActionListener(this);//Conecta el boton borrar usuario con esta clase//
         this.mainMenuView.btnSearchUser.addActionListener(this);//Conecta el boton buscar usuario con esta clase//
         this.mainMenuView.btnAddSeat.addActionListener(this);//Conecta el boton agregar asiento con esta clase//
+        this.mainMenuView.btnExit.addActionListener(this);//Conecta el boton salir con esta clase
     }
-    public void buttomAddUser(ActionEvent e){               //Accion del boton agregar usuario//
+    public void buttonAddUser(ActionEvent e){               //Accion del boton Agregar Usuario//
         if(e.getSource()==mainMenuView.btnAddUser){//Ejecuta el bloque solo si se presiona el boton agregar usuario//
-            addUserController.openAddUserController();
-            mainMenuView.dispose();
+            addUserController.openAddUserView();//Abre  la ventana de Agregar Usuario//
+            closeMainMenuView();//Cierra  el menu principal//
         }
     }
-    public void buttomDelUser(ActionEvent e){//Arreglar fron//
+    public void buttonDelUser(ActionEvent e){   //Metodo que le da al boton Dar de Baja Usuario la funcion de abrir la ventana Dar de Baja Usuario y cerrar el Menu Principal//
         if(e.getSource()==mainMenuView.btnDelUser){
-            System.out.println("Error aqui");
-            DeleteUser form=new DeleteUser();
-            form.setVisible(true);
-            mainMenuView.dispose();
+            deleteUserController.openDeleteUserView();
+            closeMainMenuView();
         }
     }
-    public void buttomSearchUser(ActionEvent e){
+    public void buttonSearchUser(ActionEvent e){//Metodo que le da al boton Buscar Usuario la funcion de abrir la ventana de Buscar Usuario y cerrar el Menu Principal//
         if(e.getSource()==mainMenuView.btnSearchUser){
-            SearchUser form=new SearchUser();
-            form.setVisible(true);
-            mainMenuView.dispose();
+            searchUserController.openSearchUserView();
+            closeMainMenuView();
         }
     }
-    public void buttomAddSeat(ActionEvent e){
+    public void buttonAddSeat(ActionEvent e){//Metodo que le da al boton Agregar Asiento la funcion de abrir la ventana de Agregar Asiento y cerrar el Menu Principal//
         if(e.getSource()==mainMenuView.btnAddSeat){
-            AddSeat form=new AddSeat();
-            form.setVisible(true);
-            mainMenuView.dispose();
+            addSeatController.openAddSeatView();
+            closeMainMenuView();
         }
     }
+     /* Todos los metodos buttonBack despliegan la vista pero no traen sus controladores
+    public void buttonExit(ActionEvent e){//Metodo que le da al boton Salir la funcion de cerrar el Menu Principal y volver al Login//
+        if(e.getSource()==mainMenuView.btnExit){
+            closeMainMenuView();
+            loginView.setVisible(true);
+            
+            
+        }
+    }
+    */
     @Override
     public void actionPerformed(ActionEvent e) {
-        buttomAddUser(e);
+        buttonAddUser(e);
+        buttonDelUser(e);
+        buttonSearchUser(e);
+        buttonAddSeat(e);
+        //buttonExit(e);
     }
     
 }

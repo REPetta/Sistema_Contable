@@ -4,7 +4,6 @@ package Controller;
 
 import ConnectionsBD.LoginConnection;
 import View.Login;
-import View.MainMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -19,10 +18,13 @@ public class LoginController implements ActionListener{//Implementa la interfaz 
     private Login loginView=new Login();//Crea una instancia de la clase Login//
     private MainMenuController mainMenuController=new MainMenuController();
     //Metodos//
+    
     public LoginController(){
         openViewLogin();//Hace visible la interfaz grafica del login//
         this.loginView.btnIngress.addActionListener(this);//Conecta el boton ingresar del Login con el LoginController//
     }
+    
+    
     public void openViewLogin(){//Metodo para hacer visible la ventana del Login//
         loginView.setVisible(true);
     }

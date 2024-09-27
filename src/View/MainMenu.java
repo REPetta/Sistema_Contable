@@ -23,6 +23,7 @@ public class MainMenu extends javax.swing.JFrame {
         btnDelUser = new javax.swing.JButton();
         btnSearchUser = new javax.swing.JButton();
         btnAddSeat = new javax.swing.JButton();
+        btnExit = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -41,6 +42,8 @@ public class MainMenu extends javax.swing.JFrame {
 
         btnAddSeat.setText("Agregar Asiento");
 
+        btnExit.setText("Salir");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -48,10 +51,12 @@ public class MainMenu extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(408, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnAddSeat)
                     .addComponent(btnDelUser)
                     .addComponent(btnAddUser)
-                    .addComponent(btnSearchUser))
+                    .addComponent(btnSearchUser)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnAddSeat)))
                 .addGap(92, 92, 92))
         );
         layout.setVerticalGroup(
@@ -65,7 +70,9 @@ public class MainMenu extends javax.swing.JFrame {
                 .addComponent(btnSearchUser)
                 .addGap(33, 33, 33)
                 .addComponent(btnAddSeat)
-                .addContainerGap(309, Short.MAX_VALUE))
+                .addGap(49, 49, 49)
+                .addComponent(btnExit)
+                .addContainerGap(237, Short.MAX_VALUE))
         );
 
         pack();
@@ -114,6 +121,7 @@ public class MainMenu extends javax.swing.JFrame {
     public javax.swing.JButton btnAddSeat;
     public javax.swing.JButton btnAddUser;
     public javax.swing.JButton btnDelUser;
+    public javax.swing.JButton btnExit;
     public javax.swing.JButton btnSearchUser;
     // End of variables declaration//GEN-END:variables
 }
