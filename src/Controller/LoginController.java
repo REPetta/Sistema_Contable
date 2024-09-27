@@ -29,8 +29,7 @@ public class LoginController implements ActionListener{//Implementa la interfaz 
     }
     public void loginIngress(ActionEvent e) throws ClassNotFoundException, SQLException, IOException{
         if(e.getSource()==loginView.btnIngress){//Si se detecta un click en el boton Ingresar ejecuta el bloque//
-            
-            LoginConnection con= new LoginConnection();//Crea una instancia de LoginConnection
+            LoginConnection con= new LoginConnection();//Crea una instancia de LoginConnection//
             String user=loginView.txtUser.getText();//Guarda el nombre de usuario ingresado//
             String password=String.valueOf(loginView.txtPassword.getPassword());//Guarda la contraseña ingresada//
             if(con.validateUser(user, password)==true){//Si el usuario es valido//

@@ -2,7 +2,6 @@
 package Controller;
 
 import View.SearchUser;
-import View.MainMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

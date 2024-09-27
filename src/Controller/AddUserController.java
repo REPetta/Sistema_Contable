@@ -28,9 +28,7 @@ public class AddUserController implements ActionListener {
        }
    
    }
-
    
-
     @Override
     public void actionPerformed(ActionEvent e) {
       buttonBack(e);
