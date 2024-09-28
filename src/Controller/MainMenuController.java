@@ -9,12 +9,13 @@ import java.awt.event.ActionListener;
 public class MainMenuController implements ActionListener{//Implementa la interfaz ActionListener para manejar eventos de accion//
     //Atributos//
     private MainMenu mainMenuView=new MainMenu();
-    private AddUserController addUserController= new AddUserController();
-    private DeleteUserController deleteUserController=new DeleteUserController();
-    private SearchUserController searchUserController=new SearchUserController();
-    private AddSeatController addSeatController=new AddSeatController();
+    private AddUserController addUserController;
+    private DeleteUserController deleteUserController;
+    private SearchUserController searchUserController;
+    private AddSeatController addSeatController;
     private LoginController loginController;
     private User currentUser;
+    private SingletonController singletonController;
     
     //Metodos//
     public void openMainMenuView(){//Metodo para hacer visible la ventana del MainMenu//
@@ -24,6 +25,7 @@ public class MainMenuController implements ActionListener{//Implementa la interf
         mainMenuView.dispose();
     }
     public MainMenuController(SingletonController singletonController){
+        this.singletonController=singletonController;
         this.currentUser=singletonController.getUser();
         this.mainMenuView.btnAddUser.addActionListener(this);//Conecta el boton agregar usuario con esta clase//
         this.mainMenuView.btnDelUser.addActionListener(this);//Conecta el boton borrar usuario con esta clase//
@@ -36,26 +38,30 @@ public class MainMenuController implements ActionListener{//Implementa la interf
             this.mainMenuView.btnSearchUser.setVisible(false);
         }
     }
-    public void buttonAddUser(ActionEvent e){               //Accion del boton Agregar Usuario//
+    public void buttonAddUser(ActionEvent e ){               //Accion del boton Agregar Usuario//
         if(e.getSource()==mainMenuView.btnAddUser){//Ejecuta el bloque solo si se presiona el boton agregar usuario//
+            addUserController= new AddUserController(singletonController);
             addUserController.openAddUserView();//Abre  la ventana de Agregar Usuario//
             closeMainMenuView();//Cierra  el menu principal//
         }
     }
     public void buttonDelUser(ActionEvent e){   //Metodo que le da al boton Dar de Baja Usuario la funcion de abrir la ventana Dar de Baja Usuario y cerrar el Menu Principal//
         if(e.getSource()==mainMenuView.btnDelUser){
+            deleteUserController= new DeleteUserController(singletonController);
             deleteUserController.openDeleteUserView();
             closeMainMenuView();
         }
     }
     public void buttonSearchUser(ActionEvent e){//Metodo que le da al boton Buscar Usuario la funcion de abrir la ventana de Buscar Usuario y cerrar el Menu Principal//
         if(e.getSource()==mainMenuView.btnSearchUser){
+            searchUserController=new SearchUserController(singletonController);
             searchUserController.openSearchUserView();
             closeMainMenuView();
         }
     }
     public void buttonAddSeat(ActionEvent e){//Metodo que le da al boton Agregar Asiento la funcion de abrir la ventana de Agregar Asiento y cerrar el Menu Principal//
         if(e.getSource()==mainMenuView.btnAddSeat){
+            addSeatController=new AddSeatController(singletonController);
             addSeatController.openAddSeatView();
             closeMainMenuView();
         }

@@ -10,8 +10,10 @@ public class AddUserController implements ActionListener {
     //Atributos//
     private AddUser addUserView=new AddUser();
     private MainMenuController mainMenuController;
+    private SingletonController singletonController;
     //Metodos//
-    public AddUserController(){//Conecta el boton Volver con la Clase
+    public AddUserController(SingletonController singletonController){//Conecta el boton Volver con la Clase
+        this.singletonController=singletonController;
         this.addUserView.btnBack.addActionListener(this);
     }
     public void openAddUserView(){
@@ -23,7 +25,6 @@ public class AddUserController implements ActionListener {
    public void buttonBack(ActionEvent e){//Metodo que le da al boton volver la accion de salir de la ventana Agregar Usuario y volver al Menu Principal//
        if(e.getSource()==addUserView.btnBack){
            closeAddUserView();
-           SingletonController singletonController=SingletonController.getInstancia();
            mainMenuController=new MainMenuController(singletonController);
            mainMenuController.openMainMenuView();
        }
