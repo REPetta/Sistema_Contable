@@ -1,20 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+//Clase encargada de la vista de Dar de Baja Usuario//
 package View;
 
-/**
- *
- * @author Rodrigo
- */
 public class DeleteUser extends javax.swing.JFrame {
 
-    /**
-     * Creates new form DeleteUser
-     */
     public DeleteUser() {
         initComponents();
+        this.setLocationRelativeTo(null); // Localiza la ventana en el centro de la pantalla//
+        this.setTitle("Dar de Baja Usuario");  //El nombre la venta sera Dar de Baja Usuario"
     }
 
     /**

@@ -32,7 +32,8 @@ public class MainMenuController implements ActionListener{//Implementa la interf
         this.mainMenuView.btnSearchUser.addActionListener(this);//Conecta el boton buscar usuario con esta clase//
         this.mainMenuView.btnAddSeat.addActionListener(this);//Conecta el boton agregar asiento con esta clase//
         this.mainMenuView.btnExit.addActionListener(this);//Conecta el boton salir con esta clase
-        if(currentUser.getTasks().getFirst()=="agregar_asiento"){
+        this.mainMenuView.setTitle("Menu Principal"+" - "+currentUser.getName()+" ( "+currentUser.getRol()+ " ) " );
+        if(currentUser.getTasks().contains("dar_alta_usuario")==false){
             this.mainMenuView.btnAddUser.setVisible(false);
             this.mainMenuView.btnDelUser.setVisible(false);
             this.mainMenuView.btnSearchUser.setVisible(false);
@@ -70,11 +71,7 @@ public class MainMenuController implements ActionListener{//Implementa la interf
         if(e.getSource()==mainMenuView.btnExit){
             closeMainMenuView();
             loginController=new LoginController();
-            loginController.openViewLogin();
-            
-           
-            
-            
+            loginController.openViewLogin();  
         }
     }
    

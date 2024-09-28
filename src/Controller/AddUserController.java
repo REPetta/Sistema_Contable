@@ -1,4 +1,4 @@
-
+//Clase encargada del comportamiento de la vista de "Agregar Usuario"//
 
 package Controller;
 
@@ -16,10 +16,10 @@ public class AddUserController implements ActionListener {
         this.singletonController=singletonController;
         this.addUserView.btnBack.addActionListener(this);
     }
-    public void openAddUserView(){
+    public void openAddUserView(){//Muestra la ventana//
         addUserView.setVisible(true);
     }
-    public void closeAddUserView(){
+    public void closeAddUserView(){//Cierra la ventana//
         addUserView.dispose();
     }
    public void buttonBack(ActionEvent e){//Metodo que le da al boton volver la accion de salir de la ventana Agregar Usuario y volver al Menu Principal//

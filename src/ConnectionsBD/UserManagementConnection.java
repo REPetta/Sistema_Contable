@@ -31,20 +31,21 @@ public int getIdUser(String userName)throws ClassNotFoundException, SQLException
      }catch(ClassNotFoundException | SQLException e){}
      return idUser;
 }
-     public void getTasks(User user,String userName) throws ClassNotFoundException, SQLException, IOException{
+//Metodo para obtener las tareas del Usuario//
+public void getTasks(User user,String userName) throws ClassNotFoundException, SQLException, IOException{
      String sql="SELECT t.tarea FROM Usuario AS u INNER JOIN Perfiles AS p ON u.idperfil=p.idperfil INNER JOIN Perfiles_Tareas AS tp ON p.idperfil=tp.idperfil INNER JOIN Tareas AS t ON tp.idtarea=t.idtarea WHERE u.idusuario=?;";
      try{
             //Atributos//
             ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
             PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
-            int usurID=getIdUser(userName);
+            int usurID=getIdUser(userName);//Guarda el idusuario en una variable para retornar//
             
             ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
             ps=objConect.conect().prepareStatement(sql);//Establece la conexion con la base de datos//
             ps.setInt(1,usurID);//Asigna al primer ? el usuarioId//
             rs=ps.executeQuery();//Ejecuta la consulta y almacena el resultado//
             //Agrega todas las tareas del usuario en la base de datos a la instancia de usuario//
-            while(rs.next()){ 
+            while(rs.next()){   
                 String taskName=rs.getString("tarea");
                 user.setTask(taskName);
             }
@@ -53,9 +54,9 @@ public int getIdUser(String userName)throws ClassNotFoundException, SQLException
  }
     
 }
-//Metodo para guardar las columnas de usuario en la clase User//
+//Metodo para guardar las columnas de usuario en la clase User y retornar esta//
 public User getUserColumns(int iduser) throws SQLException, ClassNotFoundException, IOException{
-     String sql="SELECT nombre, apellido, dni, username, password FROM Usuario WHERE idusuario=?;";
+     String sql="SELECT u.nombre, u.apellido, u.dni, u.username, u.password, p.perfil FROM Usuario AS u INNER JOIN Perfiles   AS p ON u.idperfil=p.idperfil WHERE idusuario=?;";//Consulta sql//
      User user;
      try{
          //Atributos//
@@ -73,11 +74,34 @@ public User getUserColumns(int iduser) throws SQLException, ClassNotFoundExcepti
                 int dni=rs.getInt("dni");
                 String userName=rs.getString("username");
                 String password=rs.getString("password");
-                user=new User(name, lastName, dni, userName, password);
+                String rol=rs.getString("perfil");
+                user=new User(name, lastName, dni, userName, password,rol);
                 return user;
             }
             objConect.closeConnect();//Cierra la conexion
      }catch(ClassNotFoundException | SQLException e){}
+    return null;
+     }
+     //Metodo para retornar el perfil//
+     public String getPerfil(String userName) throws ClassNotFoundException, SQLException, IOException{
+         String sql="SELECT p.perfil From Usuario AS u INNER JOIN Perfiles AS p ON u.idperfil=p.idperfil WHERE u.idusuario=?;";//Consulta sql//
+         try{
+             //Atributos//
+            
+            ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
+            PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
+            int usurID=getIdUser(userName);//Guarda el idusuario en una variable para retornar//
+            
+            ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
+            ps=objConect.conect().prepareStatement(sql);//Establece la conexion con la base de datos//
+            ps.setInt(1,usurID);//Asigna al primer ? el usuarioId//
+            rs=ps.executeQuery();//Ejecuta la consulta y almacena el resultado//
+            //Si la consulta coicide // 
+            if(rs.next()){
+                 String rol=rs.getString("perfil");
+                 return rol;
+             }
+         }catch(ClassNotFoundException | SQLException e){}
     return null;
      }
 }

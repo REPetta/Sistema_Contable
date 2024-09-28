@@ -1,4 +1,4 @@
-
+//Clase encargada del comportamiento de la vista Agregar Asiento//
 package Controller;
 
 import View.AddSeat;
@@ -15,10 +15,10 @@ public class AddSeatController implements ActionListener {
         this.singletonController=singletonController;
         this.addSeatView.btnBack.addActionListener(this);
     }
-    public void openAddSeatView(){
+    public void openAddSeatView(){//Muestra la ventana//
         addSeatView.setVisible(true);
     }
-    public void closeAddSeatView(){
+    public void closeAddSeatView(){//Cierra la ventana//
         addSeatView.dispose();
     }
     public void buttonBack(ActionEvent e){//Metodo que le da al boton volver la accion de salir de la ventana Agregar Asiento y volver al Menu Principal//

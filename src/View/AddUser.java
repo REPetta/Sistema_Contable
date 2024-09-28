@@ -1,20 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+//Vista de Agregar Usuario//
 package View;
 
-/**
- *
- * @author Rodrigo
- */
+
 public class AddUser extends javax.swing.JFrame {
 
-    /**
-     * Creates new form AddUser
-     */
+
     public AddUser() {
         initComponents();
+        this.setLocationRelativeTo(null); // Localiza la ventana en el centro de la pantalla//
+        this.setTitle("Agregar Usuario");  //El nombre la venta sera Agregar Usuario"
     }
 
     /**

@@ -1,4 +1,4 @@
-
+//Clase encargada del comportamiento
 package Controller;
 
 import View.DeleteUser;
@@ -11,14 +11,14 @@ public class DeleteUserController implements ActionListener{
     private MainMenuController mainMenuController;
     private SingletonController singletonController;
     //Metodos//
-    public DeleteUserController(SingletonController singletonController){//Conecta el boton Volver con la Clase
+    public DeleteUserController(SingletonController singletonController){//Conecta el boton Volver con la Clase//
         this.singletonController=singletonController;
         this.deleteUserView.btnBack.addActionListener(this);
     }
-    public void openDeleteUserView(){
+    public void openDeleteUserView(){//Muestra la ventana//
         deleteUserView.setVisible(true);
     }
-    public void closeDeleteUserView(){
+    public void closeDeleteUserView(){//Cierra la ventana//
         deleteUserView.dispose();
     }
     public void buttonBack(ActionEvent e){//Metodo que le da al boton volver la accion de salir de la ventana Dar de Baja Usuario y volver al Menu Principal//

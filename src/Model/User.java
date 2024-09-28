@@ -11,6 +11,7 @@ public class User {
     private int dni;
     private String userName;
     private String password;
+    private String rol;
     private ArrayList<String> tasks;
     //Contructores//
     public User(String name, String lastName, int dni, String userName, String password){
@@ -20,6 +21,15 @@ public class User {
         this.userName=userName;
         this.password=password;
         this.tasks=new ArrayList<>();
+    }
+      public User(String name, String lastName, int dni, String userName, String password,String rol){
+        this.name=name;
+        this.lastName=lastName;
+        this.dni=dni;
+        this.userName=userName;
+        this.password=password;
+        this.tasks=new ArrayList<>();
+        this.rol=rol;
     }
     //Setters and Getters//
     public void setName(String n){
@@ -57,5 +67,11 @@ public class User {
     }
     public ArrayList<String> getTasks(){
         return this.tasks;
+    }
+    public void setRol(String r){
+        this.rol=r;
+    }
+    public String getRol(){
+        return this.rol;
     }
 }
