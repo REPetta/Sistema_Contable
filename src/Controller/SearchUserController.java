@@ -22,7 +22,8 @@ public class SearchUserController implements ActionListener {
     public void buttonBack(ActionEvent e){//Metodo que le da al boton volver la accion de salir de la ventana Buscar Usuario y volver al Menu Principal//
        if(e.getSource()==searchUserView.btnBack){
            closeSearchUserView();
-           mainMenuController=new MainMenuController();
+           SingletonController singletonController=SingletonController.getInstancia();
+           mainMenuController=new MainMenuController(singletonController);
            mainMenuController.openMainMenuView();
        }
    }

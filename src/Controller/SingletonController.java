@@ -8,7 +8,7 @@ public class SingletonController {
     private User user;
     //
     //Contructor Privado
-    private SingletonController(){}
+    SingletonController(){}
     //
     //Metodo para obtener la Instancia Unica//
     public static SingletonController getInstancia(){
@@ -19,7 +19,7 @@ public class SingletonController {
     }
     //
     //Metodo para establecer el usuario
-    public void setUsuario(User user){
+    public void setUser(User user){
         this.user=user;
     }
     //

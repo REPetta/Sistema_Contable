@@ -1,18 +1,21 @@
 //Clase encargada de la gestion de usuarios//
 package Controller;
 
+import Model.User;
 import View.MainMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class MainMenuController implements ActionListener{//Implementa la interfaz ActionListener para manejar eventos de accion//
     //Atributos//
-    private MainMenu mainMenuView=new MainMenu();//Crea una instancia de la clase MainMenu//
+    private MainMenu mainMenuView=new MainMenu();
     private AddUserController addUserController= new AddUserController();
     private DeleteUserController deleteUserController=new DeleteUserController();
     private SearchUserController searchUserController=new SearchUserController();
     private AddSeatController addSeatController=new AddSeatController();
     private LoginController loginController;
+    private User currentUser;
+    
     //Metodos//
     public void openMainMenuView(){//Metodo para hacer visible la ventana del MainMenu//
         mainMenuView.setVisible(true);
@@ -20,12 +23,18 @@ public class MainMenuController implements ActionListener{//Implementa la interf
     public void closeMainMenuView(){//Metodo para cerrar el menu principal
         mainMenuView.dispose();
     }
-    public MainMenuController(){
+    public MainMenuController(SingletonController singletonController){
+        this.currentUser=singletonController.getUser();
         this.mainMenuView.btnAddUser.addActionListener(this);//Conecta el boton agregar usuario con esta clase//
         this.mainMenuView.btnDelUser.addActionListener(this);//Conecta el boton borrar usuario con esta clase//
         this.mainMenuView.btnSearchUser.addActionListener(this);//Conecta el boton buscar usuario con esta clase//
         this.mainMenuView.btnAddSeat.addActionListener(this);//Conecta el boton agregar asiento con esta clase//
         this.mainMenuView.btnExit.addActionListener(this);//Conecta el boton salir con esta clase
+        if(currentUser.getTasks().getFirst()=="agregar_asiento"){
+            this.mainMenuView.btnAddUser.setVisible(false);
+            this.mainMenuView.btnDelUser.setVisible(false);
+            this.mainMenuView.btnSearchUser.setVisible(false);
+        }
     }
     public void buttonAddUser(ActionEvent e){               //Accion del boton Agregar Usuario//
         if(e.getSource()==mainMenuView.btnAddUser){//Ejecuta el bloque solo si se presiona el boton agregar usuario//

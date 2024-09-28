@@ -22,7 +22,8 @@ public class AddSeatController implements ActionListener {
     public void buttonBack(ActionEvent e){//Metodo que le da al boton volver la accion de salir de la ventana Agregar Asiento y volver al Menu Principal//
        if(e.getSource()==addSeatView.btnBack){
            closeAddSeatView();
-           mainMenuController=new MainMenuController();
+           SingletonController singletonController=SingletonController.getInstancia();
+           mainMenuController=new MainMenuController(singletonController);
            mainMenuController.openMainMenuView();
        }
    }

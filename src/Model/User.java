@@ -2,6 +2,8 @@
 
 package Model;
 
+import java.util.ArrayList;
+
 public class User {
     //Atributos//
     private String name;
@@ -9,15 +11,15 @@ public class User {
     private int dni;
     private String userName;
     private String password;
-    private String rol;
+    private ArrayList<String> tasks;
     //Contructores//
-    public User(String name, String lastName, int dni, String userName, String password,String rol){
+    public User(String name, String lastName, int dni, String userName, String password){
         this.name=name;
         this.lastName=lastName;
         this.dni=dni;
         this.userName=userName;
         this.password=password;
-        this.rol=rol;
+        this.tasks=new ArrayList<>();
     }
     //Setters and Getters//
     public void setName(String n){
@@ -50,10 +52,10 @@ public class User {
     public String getPassword(){
         return this.password;
     }
-    public void setRol(String r){
-        this.rol=r;
+    public void setTask(String t){
+        tasks.add(t);
     }
-    public String getRol(){
-        return this.rol;
+    public ArrayList<String> getTasks(){
+        return this.tasks;
     }
 }
