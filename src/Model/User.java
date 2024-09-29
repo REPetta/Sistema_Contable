@@ -13,24 +13,26 @@ public class User {
     private String password;
     private String rol;
     private ArrayList<String> tasks;
+    private static User user;
     //Contructores//
-    public User(String name, String lastName, int dni, String userName, String password){
+    public User(String name, String lastName, int dni, String userName){
         this.name=name;
         this.lastName=lastName;
         this.dni=dni;
         this.userName=userName;
-        this.password=password;
         this.tasks=new ArrayList<>();
     }
-      public User(String name, String lastName, int dni, String userName, String password,String rol){
+      public User(String name, String lastName, int dni, String userName,String rol){
         this.name=name;
         this.lastName=lastName;
         this.dni=dni;
         this.userName=userName;
-        this.password=password;
         this.tasks=new ArrayList<>();
         this.rol=rol;
     }
+      public User(){
+      }
+      
     //Setters and Getters//
     public void setName(String n){
         this.name=n;
@@ -65,6 +67,9 @@ public class User {
     public void setTask(String t){
         tasks.add(t);
     }
+    public void setTasks(ArrayList<String> ts){
+        this.tasks=ts;
+    }
     public ArrayList<String> getTasks(){
         return this.tasks;
     }
@@ -73,5 +78,22 @@ public class User {
     }
     public String getRol(){
         return this.rol;
+    }
+    //Metodo para obtener la Instancia Unica//
+    public static User getInstancia(){
+        if(user==null){
+            user=new User();
+        }
+        return user;
+    }
+    //
+    //Metodo para establecer el usuario
+    public void setUser(User user){
+        this.user=user;
+    }
+    //
+    //Metodo para obtener el usuario
+    public User getUser(){
+        return this.user;
     }
 }

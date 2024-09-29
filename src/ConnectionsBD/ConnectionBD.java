@@ -18,7 +18,7 @@ public class ConnectionBD {
         return con;//Retorna la conexion establecida para realizar consulas a la BD desde otra parte//
     }
     //Metodo para cerrar la conexion con la BD//
-    public void closeConnect() throws IOException, SQLException{
+    public void close() throws IOException, SQLException{
         con.close();
     }
 }

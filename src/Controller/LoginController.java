@@ -3,6 +3,7 @@ package Controller;
 
 
 import ConnectionsBD.LoginConnection;
+import Model.User;
 import View.Login;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,7 +18,8 @@ public class LoginController implements ActionListener{//Implementa la interfaz 
     //Atributos//
     private Login loginView=new Login();//Crea una instancia de la clase Login//
     private MainMenuController mainMenuController;
-    private SingletonController singletonController;
+    private User instanceUser=User.getInstancia();
+    private LoginConnection loginConnection=new LoginConnection();
     //Metodos//
     
     public LoginController(){
@@ -33,11 +35,18 @@ public class LoginController implements ActionListener{//Implementa la interfaz 
             LoginConnection con= new LoginConnection();//Crea una instancia de LoginConnection//
             String user=loginView.txtUser.getText();//Guarda el nombre de usuario ingresado//
             String password=String.valueOf(loginView.txtPassword.getPassword());//Guarda la contraseña ingresada//
-            singletonController=new SingletonController();
-            if(con.validateUser(user, password,singletonController)==true){//Si el usuario es valido//
+            if(con.validateUser(user, password)==true){//Si el usuario es valido//
+                //Inicializa la instancia del usuario actual//
+                User userNew=loginConnection.instanceUserGet(user);
+                instanceUser.setDni(userNew.getDni());
+                instanceUser.setName(userNew.getName());
+                instanceUser.setLastName(userNew.getLastName());
+                instanceUser.setUserName(userNew.getUserName());
+                instanceUser.setRol(userNew.getRol());
+                instanceUser.setTasks(userNew.getTasks());
                 
                 JOptionPane.showMessageDialog(null,"<html><center>Buenos Dias\n<center>Bienvenido al sistema<html><center>");//Despliga mensaje de bienvenida//
-                mainMenuController= new MainMenuController(singletonController);
+                mainMenuController= new MainMenuController();
                 mainMenuController.openMainMenuView();
                 loginView.dispose();//Cierra la interfaz grafica del Login//
             }

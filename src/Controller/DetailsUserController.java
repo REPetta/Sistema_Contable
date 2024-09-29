@@ -20,13 +20,6 @@ public class DetailsUserController implements ActionListener {
 
     //Metodos//
     public DetailsUserController(String userName) throws ClassNotFoundException, SQLException, IOException{
-        try{
-            this.rol=userManagementConnection.getPerfil(userName);
-        }catch(ClassNotFoundException | SQLException e){}
-        try{
-            this.idUser=userManagementConnection.getIdUser(userName);
-            this.user=userManagementConnection.getUserColumns(idUser);
-        }catch(ClassNotFoundException | SQLException e){}
         this.detailsUserView=new DetailsUser();
         this.detailsUserView.viewName.setText(user.getName());
         this.detailsUserView.viewLastName.setText(user.getLastName());
