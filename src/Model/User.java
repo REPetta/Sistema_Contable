@@ -12,6 +12,7 @@ public class User {
     private String userName;
     private String password;
     private String rol;
+    private String state;
     private ArrayList<String> tasks;
     private static User user;
     //Contructores//
@@ -31,6 +32,15 @@ public class User {
         this.rol=rol;
     }
       public User(){
+      }
+      public User(String name, String lastName, int dni, String userName,String rol,String state){
+        this.name=name;
+        this.lastName=lastName;
+        this.dni=dni;
+        this.userName=userName;
+        this.tasks=new ArrayList<>();
+        this.rol=rol;
+        this.state=state;
       }
       
     //Setters and Getters//
@@ -78,6 +88,12 @@ public class User {
     }
     public String getRol(){
         return this.rol;
+    }
+    public void setState(String s){
+        this.state=s;
+    }
+    public String getState(){
+        return this.state;
     }
     //Metodo para obtener la Instancia Unica//
     public static User getInstancia(){

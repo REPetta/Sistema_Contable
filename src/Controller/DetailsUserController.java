@@ -14,19 +14,18 @@ public class DetailsUserController implements ActionListener {
     //Atributos//
     private DetailsUser detailsUserView;
     private String rol;
-    private UserManagementConnection userManagementConnection=new UserManagementConnection();
-    private User user;
-    int idUser;
+    private User currentUser=User.getInstancia();
 
     //Metodos//
-    public DetailsUserController(String userName) throws ClassNotFoundException, SQLException, IOException{
-        this.detailsUserView=new DetailsUser();
+    public DetailsUserController(User user) throws ClassNotFoundException, SQLException, IOException{
+        this.detailsUserView=new DetailsUser(); 
+        this.detailsUserView.setTitle("Resultados de la Busqueda"+" - "+currentUser.getUserName()+" ( "+currentUser.getRol().substring(0, 1).toUpperCase()+currentUser.getRol().substring(1).toLowerCase()+ " ) " );
         this.detailsUserView.viewName.setText(user.getName());
         this.detailsUserView.viewLastName.setText(user.getLastName());
         this.detailsUserView.viewDni.setText(String.valueOf(user.getDni()));
         this.detailsUserView.viewUserName.setText(user.getUserName());
-        this.detailsUserView.viewRol.setText(rol);
-    }
+        this.detailsUserView.viewRol.setText((user.getRol().substring(0, 1).toUpperCase()+user.getRol().substring(1).toLowerCase()));
+        }
     //Muestra la ventana//
     public void openDetailsUserView(){
         detailsUserView.setVisible(true);

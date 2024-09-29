@@ -8,7 +8,6 @@ public class DetailsUser extends javax.swing.JFrame {
     public DetailsUser() {
         initComponents();
         this.setLocationRelativeTo(null); // Localiza la ventana en el centro de la pantalla//
-        setTitle("Datos del Usuario");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//Cierra la ventana pero no el programa//
     }
 

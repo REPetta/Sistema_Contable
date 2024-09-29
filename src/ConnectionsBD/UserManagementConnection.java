@@ -39,8 +39,7 @@ public ArrayList<String> getTasks(String userName) throws ClassNotFoundException
     
 //Metodo para guardar las columnas de usuario en la clase User y retornar esta//
 public User getUserColumns(String username) throws SQLException, ClassNotFoundException, IOException{
-     String sql="SELECT u.nombre, u.apellido, u.dni, u.username, p.perfil FROM Usuario AS u INNER JOIN Perfiles   AS p ON u.idperfil=p.idperfil WHERE username=?;";//Consulta sql//
-     User user=new User();
+     String sql="SELECT u.nombre, u.apellido, u.dni, u.username, u.estado, p.perfil FROM Usuario AS u INNER JOIN Perfiles   AS p ON u.idperfil=p.idperfil WHERE username=?;";//Consulta sql//
      ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
      PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
      ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
@@ -54,6 +53,8 @@ public User getUserColumns(String username) throws SQLException, ClassNotFoundEx
                 int dni=rs.getInt("dni");
                 String userName=rs.getString("username");
                 String rol=rs.getString("perfil");
+                String state=rs.getString("estado");
+                User user= new User(name,lastName,dni,userName,rol,state);
                 return user;
             }
   }catch(ClassNotFoundException | SQLException e){
