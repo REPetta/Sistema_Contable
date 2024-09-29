@@ -85,4 +85,57 @@ public void cancelUser(User user)throws SQLException, ClassNotFoundException, IO
      if (objConect != null) try { objConect.close(); } catch (SQLException e) { e.printStackTrace(); }
     }   
 }
+
+//Metodo para validar el Usuario que quiero registrar//
+public boolean validateUser(User user) throws SQLException, ClassNotFoundException, IOException{
+     String sql="SELECT * FROM Usuario WHERE username=?;";
+     ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
+     PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
+     ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
+     try{
+          ps=objConect.conect().prepareStatement(sql);//Establece la conexion con la base de datos//
+          ps.setString(1, user.getUserName());;//Asigna al primer ? al username//
+          rs=ps.executeQuery();//Ejecuta la consulta y almacena el resultado//
+          if(rs.next()){
+              return false;
+          }
+     }catch(ClassNotFoundException | SQLException e){
+     e.printStackTrace();
+     throw e;
+ }finally{
+     if(rs!=null) try{rs.close();}catch(SQLException e){e.printStackTrace();}
+     if (ps != null) try { ps.close(); } catch (SQLException e) { e.printStackTrace(); }
+     if (objConect != null) try { objConect.close(); } catch (SQLException e) { e.printStackTrace(); }
+    }
+    return true;
+}
+
+//Metodo para agregar usuario a la base de datos//
+public void addUser(User user) throws SQLException, ClassNotFoundException, IOException{
+    String sql="INSERT INTO Usuario(nombre,apellido,dni,estado,username,password,idperfil) VALUES(?,?,?,'alta',?,?,?);";
+     ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
+     PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
+     ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
+     try{
+          ps=objConect.conect().prepareStatement(sql);//Establece la conexion con la base de datos//
+          ps.setString(1, user.getName());
+          ps.setString(2, user.getLastName());
+          ps.setInt(3, user.getDni());
+          ps.setString(4, user.getUserName());
+          ps.setString(5, user.getPassword());
+          if("ADMINISTRADOR".equals(user.getRol().toUpperCase())){
+                ps.setInt(6, 1);
+            }else{
+             ps.setInt(6, 2);
+          }            
+          ps.executeUpdate();
+     }catch(ClassNotFoundException | SQLException e){
+     e.printStackTrace();
+     throw e;
+ }finally{
+     if(rs!=null) try{rs.close();}catch(SQLException e){e.printStackTrace();}
+     if (ps != null) try { ps.close(); } catch (SQLException e) { e.printStackTrace(); }
+     if (objConect != null) try { objConect.close(); } catch (SQLException e) { e.printStackTrace(); }
+    }
+}
 }

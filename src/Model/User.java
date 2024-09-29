@@ -42,6 +42,14 @@ public class User {
         this.rol=rol;
         this.state=state;
       }
+      public User(String name, String lastName, String userName, String password, String rol,int dni){
+          this.name=name;
+          this.lastName=lastName;
+          this.userName=userName;
+          this.password=password;
+          this.rol=rol;
+          this.dni=dni;
+      }
       
     //Setters and Getters//
     public void setName(String n){
