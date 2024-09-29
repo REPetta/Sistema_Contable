@@ -67,4 +67,22 @@ public User getUserColumns(String username) throws SQLException, ClassNotFoundEx
     }   
     return null;
 }
+//Metodo para dar de baja a un usuario//
+public void cancelUser(User user)throws SQLException, ClassNotFoundException, IOException{
+    String sql="UPDATE Usuario SET estado=? WHERE username=?;";
+    PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
+    ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
+    try{
+            ps=objConect.conect().prepareStatement(sql);//Establece la conexion con la base de datos//
+            ps.setString(1, "baja");//Asigna al primer ? al username//
+            ps.setString(2, user.getUserName());
+            ps.executeUpdate();//Ejecuta la consulta y almacena el resultado//
+  }catch(ClassNotFoundException | SQLException e){
+     e.printStackTrace();
+     throw e;
+ }finally{
+     if (ps != null) try { ps.close(); } catch (SQLException e) { e.printStackTrace(); }
+     if (objConect != null) try { objConect.close(); } catch (SQLException e) { e.printStackTrace(); }
+    }   
+}
 }

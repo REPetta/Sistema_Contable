@@ -1,7 +1,6 @@
-
+//Clase que se encargar del comportamiento de la vista Resulstados de la Busqueda//
 package Controller;
 
-import ConnectionsBD.UserManagementConnection;
 import Model.User;
 import View.DetailsUser;
 import java.awt.event.ActionEvent;
@@ -13,7 +12,6 @@ import java.sql.SQLException;
 public class DetailsUserController implements ActionListener {
     //Atributos//
     private DetailsUser detailsUserView;
-    private String rol;
     private User currentUser=User.getInstancia();
 
     //Metodos//
