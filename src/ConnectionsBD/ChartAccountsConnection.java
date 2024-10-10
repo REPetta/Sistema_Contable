@@ -1,0 +1,73 @@
+//Clase encarga de las consultas del plan de cuentas con la base de datos//
+package ConnectionsBD;
+
+import Controller.ChartAccountsController;
+import Model.Account;
+import Model.AccountNode;
+import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class ChartAccountsConnection {
+    
+    //Metodo para crear el plan de cuentas con las cuentas de la base de datos//
+    public ChartAccountsController createChartAccounts() throws SQLException, ClassNotFoundException, IOException{
+        //Atributos
+        ChartAccountsController chartAccounts=new ChartAccountsController();
+        AccountNode auxNode;
+        Account auxAccount;
+        String sql="SELECT nombrecuenta,codigo,tipo,saldocuenta,recibesaldo FROM Cuenta ORDER BY codigo ASC;";
+        ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
+        PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
+        ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
+        try{
+              ps=objConect.conect().prepareStatement(sql);//Establece la conexion con la base de datos//
+              rs=ps.executeQuery();//Ejecuta la consulta y almacena el resultado//
+              while(rs.next()){//Next verifica si el registro de rs coincide con la consulta y si no lo hace avanza al siguiente, hasta que no haya mas filas en la tabla//
+                  auxAccount=new Account();
+                  auxAccount.setAccountName(rs.getString("nombrecuenta"));
+                  auxAccount.setAccountCode(rs.getInt("codigo"));
+                  auxAccount.setAccountType(rs.getString("tipo"));
+                  auxAccount.setAccountBalance(rs.getFloat("saldocuenta"));
+                  auxAccount.setReceiveBalance((int) rs.getFloat("recibesaldo"));
+                  auxNode= new AccountNode();
+                  auxNode.setAccount(auxAccount);
+                  chartAccounts.addAccount(chartAccounts.getRoot(),auxNode);
+              }
+              return chartAccounts;
+    }catch(ClassNotFoundException | SQLException e){
+     e.printStackTrace();
+     throw e;
+ }finally{
+     if(rs!=null) try{rs.close();}catch(SQLException e){e.printStackTrace();}
+     if (ps != null) try { ps.close(); } catch (SQLException e) { e.printStackTrace(); }
+     if (objConect != null) try { objConect.close(); } catch (SQLException e) { e.printStackTrace(); }
+    }   
+    
+}
+    //Metodo para agregar una cuenta a la base de datos(Incompleto)//
+    public void addAccount(Account account) throws ClassNotFoundException, SQLException, IOException{
+        String sql="INSERT INTO Cuenta(nombrecuenta,codigo,tipo,saldocuenta,recibesaldo)\n" +
+"	VALUES(?,?,?,?,?);";
+        ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
+        PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
+        ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
+        try{
+            ps=objConect.conect().prepareStatement(sql);//Establece la conexion con la base de datos//
+            ps.setString(1,account.getAccountName());
+            ps.setInt(2,account.getAccountCode());
+            ps.setString(3, account.getAccountType());
+            ps.setFloat(4, account.getAccountBalance());
+            ps.setFloat(5, account.getReceiveBalance());
+            ps.executeUpdate();//Ejecuta la secuencia e inserta la cuenta en la tabla de la base de datos//
+        }catch(ClassNotFoundException | SQLException e){
+            e.printStackTrace();
+            throw e;
+        }finally{
+             if(rs!=null) try{rs.close();}catch(SQLException e){e.printStackTrace();}
+             if (ps != null) try { ps.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (objConect != null) try { objConect.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
+        }
+}
