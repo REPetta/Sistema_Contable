@@ -30,7 +30,7 @@ public class ChartAccountsConnection {
                   auxAccount.setAccountCode(rs.getInt("codigo"));
                   auxAccount.setAccountType(rs.getString("tipo"));
                   auxAccount.setAccountBalance(rs.getFloat("saldocuenta"));
-                  auxAccount.setReceiveBalance((int) rs.getFloat("recibesaldo"));
+                  auxAccount.setReceiveBalance(rs.getInt("recibesaldo"));
                   auxNode= new AccountNode();
                   auxNode.setAccount(auxAccount);
                   chartAccounts.addAccount(chartAccounts.getRoot(),auxNode);
@@ -49,7 +49,7 @@ public class ChartAccountsConnection {
     //Metodo para agregar una cuenta a la base de datos(Incompleto)//
     public void addAccount(Account account) throws ClassNotFoundException, SQLException, IOException{
         String sql="INSERT INTO Cuenta(nombrecuenta,codigo,tipo,saldocuenta,recibesaldo)\n" +
-"	VALUES(?,?,?,?,?);";
+"	VALUES(?,?,?,?,?) ON CONFLICT(codigo) DO NOTHING;";
         ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
         PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
         ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
