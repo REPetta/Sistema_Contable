@@ -10,10 +10,10 @@ public class AccountNode {
     //Constructor//
     public AccountNode(Account account){
         this.account=account;
-        this.subAccounts=new ArrayList<AccountNode>();
+        this.subAccounts=new ArrayList<>();
     }
     public AccountNode(){
-    
+         this.subAccounts=new ArrayList<>();
     }
     //Setters And Getters//
     public Account getAccount() {

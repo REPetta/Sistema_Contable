@@ -33,7 +33,7 @@ public class ChartAccountsConnection {
                   auxAccount.setReceiveBalance(rs.getInt("recibesaldo"));
                   auxNode= new AccountNode();
                   auxNode.setAccount(auxAccount);
-                  chartAccounts.addAccount(chartAccounts.getRoot(),auxNode);
+                  chartAccounts.addAccount(chartAccounts.getRoot(),auxNode);           
               }
               return chartAccounts;
     }catch(ClassNotFoundException | SQLException e){

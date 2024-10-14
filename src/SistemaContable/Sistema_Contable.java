@@ -12,12 +12,12 @@ import java.sql.SQLException;
 public class Sistema_Contable {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
-        //Esta parte para probar el sistema contable
+        /*//Esta parte para probar el sistema contable
         LoginController loginController=new LoginController();
         loginController.openViewLogin();//Hace visible la interfaz grafica del login
-        
-        //Esta parte para probar si el plan de cuenta se crea correctamente con las cuentas de la base de datos
-        /*ChartAccountsController chartAccounts=new ChartAccountsController();
+        */
+       /* //Esta parte para probar si el plan de cuenta se crea correctamente con las cuentas de la base de datos
+        ChartAccountsController chartAccounts=new ChartAccountsController();
         ChartAccountsConnection chartAccountConnection= new ChartAccountsConnection();
         chartAccounts=chartAccountConnection.createChartAccounts();
         chartAccounts.printChartAccounts();
