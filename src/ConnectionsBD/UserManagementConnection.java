@@ -138,4 +138,29 @@ public void addUser(User user) throws SQLException, ClassNotFoundException, IOEx
      if (objConect != null) try { objConect.close(); } catch (SQLException e) { e.printStackTrace(); }
     }
 }
+//Obtener idUsuario//
+public int getIdUser(String userName) throws ClassNotFoundException, SQLException, IOException{
+     //Atributos//
+     String sql="SELECT idusuario FROM Usuario WHERE username=?";//Consulta sql//
+     ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
+     PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
+     ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
+     int idUser=0;
+      try{
+          ps=objConect.conect().prepareStatement(sql);//Establece la conexion con la base de datos//
+          ps.setString(1, userName);        
+          rs=ps.executeQuery();
+           if(rs.next()){
+              idUser=rs.getInt("idusuario");
+          }
+     }catch(ClassNotFoundException | SQLException e){
+     e.printStackTrace();
+     throw e;
+ }finally{
+     if(rs!=null) try{rs.close();}catch(SQLException e){e.printStackTrace();}
+     if (ps != null) try { ps.close(); } catch (SQLException e) { e.printStackTrace(); }
+     if (objConect != null) try { objConect.close(); } catch (SQLException e) { e.printStackTrace(); }
+    }
+    return idUser;
+}
 }
