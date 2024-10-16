@@ -19,6 +19,14 @@ public class Seat {
         this.idUser = idUser;
     }
 
+    public Seat(int operationNumber, Date date, String descriptionSeat, int idUser) {
+        this.operationNumber = operationNumber;
+        this.date = date;
+        this.descriptionSeat = descriptionSeat;
+        this.idUser = idUser;
+    }
+    
+
     public Seat() {
     }
     //Getters and Setters//

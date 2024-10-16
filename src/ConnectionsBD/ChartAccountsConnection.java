@@ -17,7 +17,7 @@ public class ChartAccountsConnection {
         ChartAccountsController chartAccounts=new ChartAccountsController();
         AccountNode auxNode;
         Account auxAccount;
-        String sql="SELECT nombrecuenta,codigo,tipo,saldocuenta,recibesaldo FROM Cuenta ORDER BY codigo ASC;";
+        String sql="SELECT idcuenta,nombrecuenta,codigo,tipo,saldocuenta,recibesaldo FROM Cuenta ORDER BY codigo ASC;";
         ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
         PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
         ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
@@ -26,6 +26,7 @@ public class ChartAccountsConnection {
               rs=ps.executeQuery();//Ejecuta la consulta y almacena el resultado//
               while(rs.next()){//Next verifica si el registro de rs coincide con la consulta y si no lo hace avanza al siguiente, hasta que no haya mas filas en la tabla//
                   auxAccount=new Account();
+                  auxAccount.setIdAccount(rs.getInt("idcuenta"));
                   auxAccount.setAccountName(rs.getString("nombrecuenta"));
                   auxAccount.setAccountCode(rs.getInt("codigo"));
                   auxAccount.setAccountType(rs.getString("tipo"));
@@ -69,5 +70,5 @@ public class ChartAccountsConnection {
              if (ps != null) try { ps.close(); } catch (SQLException e) { e.printStackTrace(); }
             if (objConect != null) try { objConect.close(); } catch (SQLException e) { e.printStackTrace(); }
             }
-        }
+    }
 }

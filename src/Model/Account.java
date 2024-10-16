@@ -3,6 +3,7 @@ package Model;
 
 public class Account {
     //Atributos//
+    private int idAccount;
     private String accountName;
     private int accountCode;
     private String accountType;
@@ -11,7 +12,8 @@ public class Account {
     //Contructor//
     public Account(){
 }
-    public Account(String accountName,int accountCode, String accountType, float accountBalance, int receiveBalance){
+    public Account(int idAccount, String accountName,int accountCode, String accountType, float accountBalance, int receiveBalance){
+        this.idAccount=idAccount;
         this.accountName=accountName.toUpperCase();
         this.accountCode=accountCode;
         this.accountType=accountType.toUpperCase();
@@ -58,6 +60,14 @@ public class Account {
 
     public void setReceiveBalance(int receiveBalance) {
         this.receiveBalance = receiveBalance;
+    }
+
+    public int getIdAccount() {
+        return idAccount;
+    }
+
+    public void setIdAccount(int idAccount) {
+        this.idAccount = idAccount;
     }
     
 }

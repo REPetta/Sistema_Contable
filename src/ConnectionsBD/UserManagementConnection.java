@@ -113,7 +113,6 @@ public boolean validateUser(User user) throws SQLException, ClassNotFoundExcepti
 //Metodo para agregar usuario a la base de datos//
 public void addUser(User user) throws SQLException, ClassNotFoundException, IOException{
     String sql="INSERT INTO Usuario(nombre,apellido,dni,estado,username,password,idperfil) VALUES(?,?,?,'alta',?,?,?);";
-     ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
      PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
      ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
      try{
@@ -133,7 +132,6 @@ public void addUser(User user) throws SQLException, ClassNotFoundException, IOEx
      e.printStackTrace();
      throw e;
  }finally{
-     if(rs!=null) try{rs.close();}catch(SQLException e){e.printStackTrace();}
      if (ps != null) try { ps.close(); } catch (SQLException e) { e.printStackTrace(); }
      if (objConect != null) try { objConect.close(); } catch (SQLException e) { e.printStackTrace(); }
     }

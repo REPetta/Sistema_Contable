@@ -7,12 +7,12 @@ import Model.AccountNode;
 public class ChartAccountsController {
     //Atributos//
     private AccountNode root;
-    private Account chartAccounts=new Account("PLAN DE CUENTAS",0,"PLAN DE CUENTAS",0,0);
-    private Account assets=new Account("ACTIVO",100,"ACTIVO",0,0);
-    private Account passive=new Account("PASIVO",200,"PASIVO",0,0);
-    private Account netEquity=new Account("PATRIMONIO",300,"PATRIMONIO NETO",0,0);
-    private Account resultsPositives= new Account("INGRESOS",400,"RESULTADO POSITIVO",0,0);
-    private Account resultsNegatives=new Account("EGRESOS",500,"RESULTADO NEGATIVO",0,0);
+    private Account chartAccounts=new Account(0,"PLAN DE CUENTAS",0,"PLAN DE CUENTAS",0,0);
+    private Account assets=new Account(0,"ACTIVO",100,"ACTIVO",0,0);
+    private Account passive=new Account(0,"PASIVO",200,"PASIVO",0,0);
+    private Account netEquity=new Account(0,"PATRIMONIO",300,"PATRIMONIO NETO",0,0);
+    private Account resultsPositives= new Account(0,"INGRESOS",400,"RESULTADO POSITIVO",0,0);
+    private Account resultsNegatives=new Account(0,"EGRESOS",500,"RESULTADO NEGATIVO",0,0);
     
     
     //Contructor//
@@ -79,6 +79,7 @@ public class ChartAccountsController {
             for (AccountNode subAccount : node.getSubAccounts()){
                 printNode(subAccount, level+1);
             }
-        }    
+        }
     }
-}
+
+    }
