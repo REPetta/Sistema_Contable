@@ -3,6 +3,7 @@ package Controller;
 
 import Model.Account;
 import Model.AccountNode;
+import Model.AccountSeat;
 
 public class ChartAccountsController {
     //Atributos//
@@ -74,12 +75,52 @@ public class ChartAccountsController {
     }
     public  void printNode(AccountNode node, int level){
         String identer=" ".repeat(level);
-        System.out.println(identer + node.getAccount().getAccountCode() + "--" + node.getAccount().getAccountName() );
+        System.out.println(identer + node.getAccount().getAccountCode() + "--" + node.getAccount().getAccountName() +"--"+node.getAccount().getIdAccount());
         if (node.getSubAccounts()!=null){
             for (AccountNode subAccount : node.getSubAccounts()){
                 printNode(subAccount, level+1);
             }
         }
     }
-
+    //Metodo para buscar cuento nodo por id//
+    public Account getAccountForId(int idAccount){
+        AccountNode resultNode=searchNodeForId(root,idAccount);
+        if(resultNode!=null){
+            return resultNode.getAccount();
+        }else{
+            return null;
+        }
     }
+    //Metodo para buscar nodo por id/
+    private AccountNode searchNodeForId(AccountNode currentNode, int code){
+     //Si el nodo actual tiene el codigo buscado, devolverlo//
+        if(currentNode.getAccount().getIdAccount()==code){
+            return currentNode;
+         }
+        //Recorre las subcuentas de forma recursiva//
+        if(currentNode.getSubAccounts()!=null){
+            for(AccountNode subAccount: currentNode.getSubAccounts()){
+                AccountNode result=searchNodeForId(subAccount,code);
+                if(result!=null){
+                    return result;
+             }
+            }
+        }
+        return null;//Si no se encuentra el nodo//
+    }
+    
+    //Metodo para obtener el nombre de la cuenta//
+    public String getAccountName(AccountSeat accountSeat){
+         int idAccount=accountSeat.getIdAccount();
+         Account account=this.getAccountForId(idAccount);
+         if(account!= null){
+             return account.getAccountName();
+         }else{
+             System.out.println("No se ha encontrado la cuenta");
+             return null;
+         } 
+   }
+        
+        }
+        
+       

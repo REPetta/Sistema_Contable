@@ -50,7 +50,7 @@ public class SeatController {
         }
     }
     //Metodo para imprimir los asientos-cuenta//
-    public void printSeats() throws IOException, ClassNotFoundException, SQLException{
+    public void printSeats(ChartAccountsController chartAccounts) throws IOException, ClassNotFoundException, SQLException{
         try{
         //Primero obtenemos los asientos//
         seatCon=new SeatConnection();
@@ -61,7 +61,7 @@ public class SeatController {
             //Luego obtenemos las cuentas asociadas a cada asiento//
             ArrayList<AccountSeat> accounts=accountSeatCon.getAccountsSeats(seat.getIdSeat());
             for (AccountSeat account:accounts){
-                System.out.println("\tCuenta: "+ account.getIdAccount());
+                System.out.println("\tCuenta: "+ chartAccounts.getAccountName(account));
                 System.out.println("\tTipo: "+ account.getType());
                 System.out.println("\tMonto: "+account.getAmount());
                 System.out.println("\tSaldo: "+account.getBalance());

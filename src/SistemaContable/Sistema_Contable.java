@@ -33,13 +33,13 @@ public class Sistema_Contable {
         accounts.add(account2);
         seatController.addSeat(seat, accounts);
         */
-       /* //Imprimir los asientos contable//
-        SeatController seatController = new SeatController();
+      //Imprimir los asientos contable//
+       /* SeatController seatController = new SeatController();
         ChartAccountsController chartsAccounts= new ChartAccountsController();
         ChartAccountsConnection chartAccountConnection= new ChartAccountsConnection();
         chartsAccounts=chartAccountConnection.createChartAccounts();
-        seatController.printSeats();
-        */
+        seatController.printSeats(chartsAccounts);
+       */
         /*//Esta parte para probar el sistema contable
         LoginController loginController=new LoginController();
         loginController.openViewLogin();//Hace visible la interfaz grafica del login
