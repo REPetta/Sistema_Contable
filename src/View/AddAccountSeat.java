@@ -15,6 +15,7 @@ public class AddAccountSeat extends javax.swing.JFrame {
      */
     public AddAccountSeat() {
         initComponents();
+        this.setLocationRelativeTo(null); // Localiza la ventana en el centro de la pantalla//
     }
 
     /**
@@ -46,7 +47,7 @@ public class AddAccountSeat extends javax.swing.JFrame {
         btnEditar = new javax.swing.JButton();
         btnBuscar = new javax.swing.JButton();
         btnImprimir = new javax.swing.JButton();
-        btnCerrar = new javax.swing.JButton();
+        btnBack = new javax.swing.JButton();
         jComboBox1 = new javax.swing.JComboBox<>();
         jTextField1 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
@@ -149,8 +150,8 @@ public class AddAccountSeat extends javax.swing.JFrame {
             }
         });
 
-        btnCerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/eliminar.png"))); // NOI18N
-        btnCerrar.setText("Cerrar");
+        btnBack.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/eliminar.png"))); // NOI18N
+        btnBack.setText("Cerrar");
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -176,7 +177,7 @@ public class AddAccountSeat extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnImprimir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnCerrar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(btnBack, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(18, 18, 18)
                         .addComponent(jBtnGuardar))
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -265,7 +266,7 @@ public class AddAccountSeat extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEliminar)
                     .addComponent(btnBuscar)
-                    .addComponent(btnCerrar))
+                    .addComponent(btnBack))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
 
@@ -337,8 +338,8 @@ public class AddAccountSeat extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JTextField Date;
+    public javax.swing.JButton btnBack;
     public javax.swing.JButton btnBuscar;
-    public javax.swing.JButton btnCerrar;
     public javax.swing.JButton btnEditar;
     public javax.swing.JButton btnEliminar;
     public javax.swing.JButton btnImprimir;

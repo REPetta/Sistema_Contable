@@ -24,8 +24,10 @@ public class MainMenu extends javax.swing.JFrame {
         btnAddUser = new javax.swing.JButton();
         btnDelUser = new javax.swing.JButton();
         btnSearchUser = new javax.swing.JButton();
-        btnAddSeat = new javax.swing.JButton();
+        btnSearchSeat = new javax.swing.JButton();
         btnExit = new javax.swing.JButton();
+        btnAddSeat = new javax.swing.JButton();
+        btnShowAccounts = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
@@ -42,24 +44,45 @@ public class MainMenu extends javax.swing.JFrame {
 
         btnSearchUser.setText("Buscar Usuario");
 
-        btnAddSeat.setText("Agregar Asiento");
+        btnSearchSeat.setText("Buscar Asiento");
+        btnSearchSeat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchSeatActionPerformed(evt);
+            }
+        });
 
         btnExit.setText("Salir");
+
+        btnAddSeat.setText("Agregar Asiento");
+        btnAddSeat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddSeatActionPerformed(evt);
+            }
+        });
+
+        btnShowAccounts.setText("Ver Cuentas");
+        btnShowAccounts.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnShowAccountsActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(408, Short.MAX_VALUE)
+                .addContainerGap(353, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnAddSeat)
                     .addComponent(btnDelUser)
                     .addComponent(btnAddUser)
                     .addComponent(btnSearchUser)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(btnAddSeat)))
-                .addGap(92, 92, 92))
+                    .addComponent(btnSearchSeat)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(btnShowAccounts, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnExit, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)))
+                .addGap(147, 147, 147))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -71,10 +94,14 @@ public class MainMenu extends javax.swing.JFrame {
                 .addGap(29, 29, 29)
                 .addComponent(btnSearchUser)
                 .addGap(33, 33, 33)
+                .addComponent(btnSearchSeat)
+                .addGap(18, 18, 18)
                 .addComponent(btnAddSeat)
-                .addGap(49, 49, 49)
+                .addGap(12, 12, 12)
+                .addComponent(btnShowAccounts)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnExit)
-                .addContainerGap(237, Short.MAX_VALUE))
+                .addContainerGap(198, Short.MAX_VALUE))
         );
 
         pack();
@@ -83,6 +110,18 @@ public class MainMenu extends javax.swing.JFrame {
     private void btnAddUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddUserActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnAddUserActionPerformed
+
+    private void btnSearchSeatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchSeatActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSearchSeatActionPerformed
+
+    private void btnAddSeatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddSeatActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAddSeatActionPerformed
+
+    private void btnShowAccountsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnShowAccountsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnShowAccountsActionPerformed
 
     /**
      * @param args the command line arguments
@@ -124,6 +163,8 @@ public class MainMenu extends javax.swing.JFrame {
     public javax.swing.JButton btnAddUser;
     public javax.swing.JButton btnDelUser;
     public javax.swing.JButton btnExit;
+    public javax.swing.JButton btnSearchSeat;
     public javax.swing.JButton btnSearchUser;
+    public javax.swing.JButton btnShowAccounts;
     // End of variables declaration//GEN-END:variables
 }

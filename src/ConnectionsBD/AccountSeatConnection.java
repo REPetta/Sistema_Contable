@@ -10,7 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class SeatConnection {
+public class AccountSeatConnection {
     
     //Metodo para agregar un asiento a la base de datos//
     public void addSeat(Seat seat) throws ClassNotFoundException, SQLException, IOException{

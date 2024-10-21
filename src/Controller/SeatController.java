@@ -2,7 +2,7 @@
 //No funciona//
 package Controller;
 
-import ConnectionsBD.SeatConnection;
+import ConnectionsBD.AccountSeatConnection;
 import Model.AccountSeat;
 import Model.Seat;
 import java.io.IOException;
@@ -11,12 +11,12 @@ import java.util.ArrayList;
 
 public class SeatController {
     //Atributos//
-    private SeatConnection seatCon;
-    private SeatConnection accountSeatCon;
+    private AccountSeatConnection seatCon;
+    private AccountSeatConnection accountSeatCon;
     //Constructor//
     public  SeatController(){
-        this.seatCon=new SeatConnection();
-        this.accountSeatCon=new SeatConnection();
+        this.seatCon=new AccountSeatConnection();
+        this.accountSeatCon=new AccountSeatConnection();
     }
    //Metodo para agregar un asiento//
     public void addSeat(Seat seat, ArrayList<AccountSeat> accounts ) throws ClassNotFoundException, SQLException, IOException{
@@ -53,7 +53,7 @@ public class SeatController {
     public void printSeats(ChartAccountsController chartAccounts) throws IOException, ClassNotFoundException, SQLException{
         try{
         //Primero obtenemos los asientos//
-        seatCon=new SeatConnection();
+        seatCon=new AccountSeatConnection();
         ArrayList<Seat> seats=seatCon.getSeats();
         for(Seat seat : seats){
             System.out.println("Numero de Operacion: " + seat.getOperationNumber());

@@ -4,6 +4,8 @@
  */
 package View;
 
+import javax.swing.JFrame;
+
 /**
  *
  * @author elias
@@ -15,6 +17,9 @@ public class DeleteAccount extends javax.swing.JFrame {
      */
     public DeleteAccount() {
         initComponents();
+        this.setLocationRelativeTo(null); // Localiza la ventana en el centro de la pantalla//
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//Cierra la ventana pero no el programa//
+
     }
 
     /**
@@ -35,7 +40,7 @@ public class DeleteAccount extends javax.swing.JFrame {
         jTextField3 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btnNot = new javax.swing.JButton();
         jLabel5 = new javax.swing.JLabel();
         jTextField4 = new javax.swing.JTextField();
 
@@ -51,10 +56,10 @@ public class DeleteAccount extends javax.swing.JFrame {
 
         jButton1.setText("Si");
 
-        jButton2.setText("No");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnNot.setText("No");
+        btnNot.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnNotActionPerformed(evt);
             }
         });
 
@@ -95,8 +100,8 @@ public class DeleteAccount extends javax.swing.JFrame {
                         .addGap(50, 50, 50)
                         .addComponent(jButton1)
                         .addGap(77, 77, 77)
-                        .addComponent(jButton2)))
-                .addContainerGap(129, Short.MAX_VALUE))
+                        .addComponent(btnNot)))
+                .addContainerGap(57, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -122,7 +127,7 @@ public class DeleteAccount extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton1)
-                    .addComponent(jButton2))
+                    .addComponent(btnNot))
                 .addContainerGap(63, Short.MAX_VALUE))
         );
 
@@ -140,9 +145,9 @@ public class DeleteAccount extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btnNotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNotActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btnNotActionPerformed
 
     /**
      * @param args the command line arguments
@@ -180,8 +185,8 @@ public class DeleteAccount extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public javax.swing.JButton btnNot;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

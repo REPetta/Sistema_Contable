@@ -12,7 +12,9 @@ public class MainMenuController implements ActionListener{//Implementa la interf
     private AddUserController addUserController;
     private DeleteUserController deleteUserController;
     private SearchUserController searchUserController;
-    private AddSeatController addSeatController;
+    private AddAccountSeatController addAccountSeatController;
+    private AccountsSeatsController accountsSeatsController;
+    private ShowAccountsController showAccountsController;
     private LoginController loginController;
     private User currentUser=User.getInstancia();
     
@@ -27,13 +29,15 @@ public class MainMenuController implements ActionListener{//Implementa la interf
         this.mainMenuView.btnAddUser.addActionListener(this);//Conecta el boton agregar usuario con esta clase//
         this.mainMenuView.btnDelUser.addActionListener(this);//Conecta el boton borrar usuario con esta clase//
         this.mainMenuView.btnSearchUser.addActionListener(this);//Conecta el boton buscar usuario con esta clase//
-        this.mainMenuView.btnAddSeat.addActionListener(this);//Conecta el boton agregar asiento con esta clase//
+        this.mainMenuView.btnSearchSeat.addActionListener(this);//Conecta el boton buscar asiento con esta clase//
         this.mainMenuView.btnExit.addActionListener(this);//Conecta el boton salir con esta clase
+        this.mainMenuView.btnAddSeat.addActionListener(this);//Conecta el boton agregar asiento con esta clase//
+        this.mainMenuView.btnShowAccounts.addActionListener(this);//Conecta el boton para mostrar cuentas con esta clase//
         this.mainMenuView.setTitle("Menu Principal"+" - "+currentUser.getUserName()+" ( "+currentUser.getRol().substring(0, 1).toUpperCase()+currentUser.getRol().substring(1).toLowerCase()+ " ) " );
         if(currentUser.getTasks().contains("agregar_usuario")==false){
             this.mainMenuView.btnAddUser.setVisible(false);
             this.mainMenuView.btnDelUser.setVisible(false);
-            this.mainMenuView.btnSearchUser.setVisible(false);
+            this.mainMenuView.btnAddSeat.setVisible(false);
         }
     }
     public void buttonAddUser(ActionEvent e ){               //Accion del boton Agregar Usuario//
@@ -59,11 +63,27 @@ public class MainMenuController implements ActionListener{//Implementa la interf
     }
     public void buttonAddSeat(ActionEvent e){//Metodo que le da al boton Agregar Asiento la funcion de abrir la ventana de Agregar Asiento y cerrar el Menu Principal//
         if(e.getSource()==mainMenuView.btnAddSeat){
-            addSeatController=new AddSeatController();
-            addSeatController.openAddSeatView();
+            addAccountSeatController=new AddAccountSeatController();
+            addAccountSeatController.openAddAccountSeatView();
             closeMainMenuView();
         }
     }
+    public void buttonSearchSeat(ActionEvent e){//Metodo que le da al boton buscar asiento su funcion//
+        if(e.getSource()==mainMenuView.btnSearchSeat){
+           accountsSeatsController=new AccountsSeatsController();
+           accountsSeatsController.openAccountsSeatsControllerView();
+           closeMainMenuView();
+        }
+    }
+    public void buttonShowAccounts(ActionEvent e){//Metodo que le da al boton mostrar cuentas la funcionalidad//
+        if(e.getSource()==mainMenuView.btnShowAccounts){
+            showAccountsController= new ShowAccountsController();
+            showAccountsController.openShowAccountsView();
+            closeMainMenuView();
+            
+        }
+    }
+    
     public void buttonExit(ActionEvent e){//Metodo que le da al boton Salir la funcion de cerrar el Menu Principal y volver al Login//
         if(e.getSource()==mainMenuView.btnExit){
             closeMainMenuView();
@@ -78,6 +98,8 @@ public class MainMenuController implements ActionListener{//Implementa la interf
         buttonDelUser(e);
         buttonSearchUser(e);
         buttonAddSeat(e);
+        buttonSearchSeat(e);
+        buttonShowAccounts(e);
         buttonExit(e);
     }
     
