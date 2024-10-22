@@ -88,7 +88,7 @@ public class AddAccountController implements ActionListener {
         return true;
     }
     //Metodo para cerrar la vista//
-    public void buttonBack(ActionEvent e){//Metodo que le da al boton salir la accion de salir funcionalidad//
+    public void buttonBack(ActionEvent e) throws SQLException, ClassNotFoundException, IOException{//Metodo que le da al boton salir la accion de salir funcionalidad//
        if(e.getSource()==addAccountView.btnExit){
            closeAddAccountView();
            showAccountsView= new ShowAccountsController();
@@ -97,7 +97,15 @@ public class AddAccountController implements ActionListener {
     }
    @Override
     public void actionPerformed(ActionEvent e) {
-        buttonBack(e);
+        try {
+            buttonBack(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(AddAccountController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(AddAccountController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(AddAccountController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         try {
             buttonAddAccount(e);
         } catch (ClassNotFoundException ex) {

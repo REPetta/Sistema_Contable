@@ -5,6 +5,10 @@ import Model.User;
 import View.MainMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MainMenuController implements ActionListener{//Implementa la interfaz ActionListener para manejar eventos de accion//
     //Atributos//
@@ -69,7 +73,7 @@ public class MainMenuController implements ActionListener{//Implementa la interf
     }
 
     
-    public void buttonShowAccounts(ActionEvent e){//Metodo que le da al boton mostrar cuentas la funcionalidad//
+    public void buttonShowAccounts(ActionEvent e) throws SQLException, ClassNotFoundException, IOException{//Metodo que le da al boton mostrar cuentas la funcionalidad//
         if(e.getSource()==mainMenuView.btnShowAccounts){
             showAccountsController= new ShowAccountsController();
             showAccountsController.openShowAccountsView();
@@ -92,7 +96,15 @@ public class MainMenuController implements ActionListener{//Implementa la interf
         buttonDelUser(e);
         buttonSearchUser(e);
         buttonAddSeat(e);
-        buttonShowAccounts(e);
+        try {
+            buttonShowAccounts(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(MainMenuController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MainMenuController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(MainMenuController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         buttonExit(e);
     }
     
