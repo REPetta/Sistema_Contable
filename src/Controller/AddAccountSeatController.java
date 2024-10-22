@@ -15,8 +15,8 @@ public class AddAccountSeatController implements ActionListener{
     public AddAccountSeatController(){//Conecta el boton Volver con la Clase
        this.addAccountSeatView.setTitle("Agregar Asiento"+" - "+currentUser.getUserName()+" ( "+currentUser.getRol().substring(0, 1).toUpperCase()+currentUser.getRol().substring(1).toLowerCase()+ " ) " );
        this.addAccountSeatView.btnEliminar.addActionListener(this);
-       this.addAccountSeatView.jBtnGuardar.addActionListener(this);
-       this.addAccountSeatView.jButnNuevo.addActionListener(this);
+       this.addAccountSeatView.BtnGuardar.addActionListener(this);
+       this.addAccountSeatView.btnAdd.addActionListener(this);
        this.addAccountSeatView.btnBack.addActionListener(this);
     }
     public void openAddAccountSeatView(){//Muestra la ventana//

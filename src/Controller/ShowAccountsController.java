@@ -25,7 +25,7 @@ public class ShowAccountsController implements ActionListener{
     private AddAccountController addAccountView;
     private DeleteAccountController delAccountView;
     private EditAccountController editAccountView;
-    private DetailsAccount detailsAccountView;
+    private DetailsAccountController detailsAccountView;
     private ChartAccountsConnection chartAccounts=new ChartAccountsConnection();
     private ChartAccountsController chartAccountsController =new ChartAccountsController();
    
@@ -177,7 +177,8 @@ private AccountNode findAccountNodeByName(AccountNode currentNode, String accoun
     }
     public void  buttonDetailsAccount(ActionEvent e){
         if(e.getSource()==showAccountsView.btnDetalis){
-            detailsAccountView=new DetailsAccount();
+            detailsAccountView=new DetailsAccountController();
+            detailsAccountView.openDetailsUserView();
         }
     }
     public void buttonExit(ActionEvent e){//Metodo que le da al boton Salir la funcion de cerrar el Menu Principal y volver al Login//
@@ -193,6 +194,7 @@ private AccountNode findAccountNodeByName(AccountNode currentNode, String accoun
         buttonAddAccount(e);
         buttonDeleteAccount(e);
         buttonEditAccount(e);
+        buttonDetailsAccount(e);
         
     }
 }
