@@ -19,7 +19,7 @@ public class Sistema_Contable {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
         
-        /*//Agregar asiento//
+        /*/Agregar asiento//
         SeatController seatController = new SeatController();
         ChartAccountsController chartsAccounts= new ChartAccountsController();
         ChartAccountsConnection chartAccountConnection= new ChartAccountsConnection();
@@ -34,17 +34,17 @@ public class Sistema_Contable {
         seatController.addSeat(seat, accounts);
         */
       //Imprimir los asientos contable//
-       /* SeatController seatController = new SeatController();
+        /*SeatController seatController = new SeatController();
         ChartAccountsController chartsAccounts= new ChartAccountsController();
         ChartAccountsConnection chartAccountConnection= new ChartAccountsConnection();
         chartsAccounts=chartAccountConnection.createChartAccounts();
         seatController.printSeats(chartsAccounts);
-       */
+      */
         //Esta parte para probar el sistema contable
-        LoginController loginController=new LoginController();
+       LoginController loginController=new LoginController();
         loginController.openViewLogin();//Hace visible la interfaz grafica del login
-       /* //Esta parte para probar si el plan de cuenta se crea correctamente con las cuentas de la base de datos
-        ChartAccountsController chartAccounts=new ChartAccountsController();
+        //Esta parte para probar si el plan de cuenta se crea correctamente con las cuentas de la base de datos
+        /*ChartAccountsController chartAccounts=new ChartAccountsController();
         ChartAccountsConnection chartAccountConnection= new ChartAccountsConnection();
         chartAccounts=chartAccountConnection.createChartAccounts();
         chartAccounts.printChartAccounts();

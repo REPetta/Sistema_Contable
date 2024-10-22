@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 public class ChartAccountsConnection {
     
@@ -17,7 +18,7 @@ public class ChartAccountsConnection {
         ChartAccountsController chartAccounts=new ChartAccountsController();
         AccountNode auxNode;
         Account auxAccount;
-        String sql="SELECT idcuenta,nombrecuenta,codigo,tipo,saldocuenta,recibesaldo FROM Cuenta ORDER BY codigo ASC;";
+        String sql="SELECT idcuenta,nombrecuenta,codigo,tipo,saldocuenta,recibesaldo FROM Cuenta WHERE estado='alta' ORDER BY codigo ASC;";
         ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
         PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
         ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
@@ -49,8 +50,8 @@ public class ChartAccountsConnection {
 }
     //Metodo para agregar una cuenta a la base de datos(Incompleto)//
     public void addAccount(Account account) throws ClassNotFoundException, SQLException, IOException{
-        String sql="INSERT INTO Cuenta(nombrecuenta,codigo,tipo,saldocuenta,recibesaldo)\n" +
-"	VALUES(?,?,?,?,?) ON CONFLICT(codigo) DO NOTHING;";
+        String sql="INSERT INTO Cuenta(nombrecuenta,codigo,tipo,estado,saldocuenta,recibesaldo)\n" +
+"	VALUES(?,?,?,?,?,?) ON CONFLICT(codigo) DO NOTHING;";
         ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
         PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
         ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
@@ -59,9 +60,14 @@ public class ChartAccountsConnection {
             ps.setString(1,account.getAccountName());
             ps.setInt(2,account.getAccountCode());
             ps.setString(3, account.getAccountType());
-            ps.setFloat(4, account.getAccountBalance());
-            ps.setFloat(5, account.getReceiveBalance());
-            ps.executeUpdate();//Ejecuta la secuencia e inserta la cuenta en la tabla de la base de datos//
+            ps.setString(4, "alta");
+            ps.setFloat(5, account.getAccountBalance());
+            ps.setFloat(6, account.getReceiveBalance());
+            int affectedRows=ps.executeUpdate();//Ejecuta la secuencia e inserta la cuenta en la tabla de la base de datos//
+            if(affectedRows==0){
+                    JOptionPane.showMessageDialog(null, "La cuenta con código " + account.getAccountCode() + " ya existe.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+             }else{
+            JOptionPane.showMessageDialog(null, "La cuenta ha sido agregada correctamente");}
         }catch(ClassNotFoundException | SQLException e){
             e.printStackTrace();
             throw e;

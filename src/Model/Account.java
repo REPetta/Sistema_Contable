@@ -10,7 +10,7 @@ public class Account {
     private float accountBalance;
     private int receiveBalance;
     //Contructor//
-    public Account(){
+    public Account(){   
 }
     public Account(int idAccount, String accountName,int accountCode, String accountType, float accountBalance, int receiveBalance){
         this.idAccount=idAccount;
@@ -20,6 +20,15 @@ public class Account {
         this.accountBalance=accountBalance;
         this.receiveBalance=receiveBalance;
     }
+
+    public Account(String accountName, int accountCode, String accountType, float accountBalance) {
+        this.accountName = accountName;
+        this.accountCode = accountCode;
+        this.accountType = accountType;
+        this.accountBalance = accountBalance;
+    }
+    
+    
     //Setters And Getters//
 
     public String getAccountName() {

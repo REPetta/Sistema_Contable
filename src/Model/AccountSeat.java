@@ -62,5 +62,5 @@ public class AccountSeat {
     public void setBalance(float balance) {
         this.balance = balance;
     }
-    
+
 }

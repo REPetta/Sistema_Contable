@@ -14,6 +14,7 @@ public class ChartAccountsController {
     private Account netEquity=new Account(0,"PATRIMONIO",300,"PATRIMONIO NETO",0,0);
     private Account resultsPositives= new Account(0,"INGRESOS",400,"RESULTADO POSITIVO",0,0);
     private Account resultsNegatives=new Account(0,"EGRESOS",500,"RESULTADO NEGATIVO",0,0);
+    private static ChartAccountsController chartAccountsInstance;
     
     
     //Contructor//
@@ -120,7 +121,23 @@ public class ChartAccountsController {
              return null;
          } 
    }
-        
+    //Metodo para obtener la Instancia Unica//
+    public static ChartAccountsController getInstancia(){
+        if(chartAccountsInstance==null){
+            chartAccountsInstance=new ChartAccountsController();
         }
+        return chartAccountsInstance;
+    }
+    //Metodo para establecer el plan de cuentas//
+    public void setChartAccounts(ChartAccountsController chartAccounts){
+        this.chartAccountsInstance=chartAccounts;
+    }
+    //
+    //Metodo para obtener el plan de cuentas//
+    public ChartAccountsController getChartAccounts(){
+        return this.chartAccountsInstance;
+    }
+        
+}
         
        

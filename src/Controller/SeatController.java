@@ -5,6 +5,7 @@ package Controller;
 import ConnectionsBD.AccountSeatConnection;
 import Model.AccountSeat;
 import Model.Seat;
+import Model.User;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class SeatController {
     //Atributos//
     private AccountSeatConnection seatCon;
     private AccountSeatConnection accountSeatCon;
+    private static SeatController  seats;
     //Constructor//
     public  SeatController(){
         this.seatCon=new AccountSeatConnection();
@@ -71,6 +73,24 @@ public class SeatController {
         }catch(SQLException e){
             e.printStackTrace();
         }
+    }
+    
+     //Metodo para obtener la Instancia Unica//
+    public static SeatController getInstancia(){
+        if(seats==null){
+            seats=new SeatController();
+        }
+        return seats;
+    }
+    //
+    //Metodo para establecer el usuario
+    public void setSeatsController(SeatController seats){
+        this.seats=seats;
+    }
+    //
+    //Metodo para obtener el usuario
+    public SeatController getSeatController(){
+        return this.seats;
     }
     
  }
