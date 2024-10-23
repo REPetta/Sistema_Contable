@@ -56,6 +56,8 @@ public class AddAccountSeatController implements ActionListener{
     public void limpiarVista() {
         addAccountSeatView.txtDescripcion.setText("");
         addAccountSeatView.txtImporte.setText("");
+        addAccountSeatView.cBoxDestiny.setSelectedIndex(0);
+        addAccountSeatView.comboCuenta.setSelectedIndex(0);
        // iniciarTabla();//
         
         }
