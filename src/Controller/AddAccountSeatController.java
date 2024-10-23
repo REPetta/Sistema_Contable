@@ -39,14 +39,14 @@ public class AddAccountSeatController implements ActionListener{
         addAccountSeatView.dispose();
     }
     
-    private void cancelSeat(ActionEvent e) {
+    public void cancelSeat(ActionEvent e) {
     if (e.getSource() == addAccountSeatView.btnCancelar) {
         // Limpiar campos
         limpiarVista();
     }
 }
 
-    private void limpiarVista() {
+    public void limpiarVista() {
         addAccountSeatView.txtDescripcion.setText("");
         addAccountSeatView.txtImporte.setText("");
         iniciarTabla();
