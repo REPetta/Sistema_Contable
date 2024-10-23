@@ -153,4 +153,29 @@ public class AccountSeatConnection {
    
     }
     
+     
+    
+    
+    
+    public int obtenerIdCuentaPorNombre(String nombreCuenta) {
+    int idCuenta = 0;
+
+    String sql = "SELECT c.idcuenta FROM cuenta c WHERE c.nombrecuenta = ?;";
+    ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();
+
+    try (PreparedStatement ps = objConect.conect().prepareStatement(sql)) {
+        ps.setString(1, nombreCuenta);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                idCuenta = rs.getInt("idcuenta");
+            }
+        }
+    } catch (Exception e) {
+        System.out.println("Error al obtener id cuenta: " + e.getMessage());
+    }
+
+    return idCuenta;
+}
+    
+    
  }
