@@ -2,6 +2,7 @@
 //No funciona//
 package ConnectionsBD;
 
+import Model.Account;
 import Model.AccountSeat;
 import Model.Seat;
 import java.io.IOException;
@@ -116,6 +117,40 @@ public class AccountSeatConnection {
     }
         return accounts;      
     }
-    
+        // metodo para traer las cuentas// 
+        
+     public ArrayList<Account> getAccount() throws IOException, SQLException, ClassNotFoundException{
+        //Atributos//
+        ArrayList<Account> accounts= new ArrayList<>();
+        String sql="SELECT* FROM cuenta c WHERE c.estado='alta' and c.recibesaldo= 1 ;";
+        ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
+        PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
+        ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
+        try{
+            ps=objConect.conect().prepareStatement(sql);//Establece la conexion con la base de datos//
+         
+            rs=ps.executeQuery();
+            while(rs.next()){
+                 Account account= new Account(
+                        rs.getInt("idCuenta"),
+                        rs.getString("nombreCuenta"),
+                        rs.getInt("codigo"),
+                        rs.getString("tipo"),
+                        rs.getString("estado"),
+                        rs.getFloat("saldoCuenta"),
+                        rs.getInt("recibeSaldo")
+                         
+                );
+                accounts.add(account);
+            }
+        }catch(SQLException e){
+            
+            throw e;
+        }finally{
+                
+    }
+        return accounts; 
+   
+    }
     
  }

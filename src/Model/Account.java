@@ -6,6 +6,7 @@ public class Account {
     private int idAccount;
     private String accountName;
     private int accountCode;
+    private String estado;
     private String accountType;
     private float accountBalance;
     private int receiveBalance;
@@ -20,6 +21,18 @@ public class Account {
         this.accountBalance=accountBalance;
         this.receiveBalance=receiveBalance;
     }
+
+    public Account(int idAccount, String accountName, int accountCode, String estado, String accountType, float accountBalance, int receiveBalance) {
+        this.idAccount = idAccount;
+        this.accountName = accountName;
+        this.accountCode = accountCode;
+        this.estado = estado;
+        this.accountType = accountType;
+        this.accountBalance = accountBalance;
+        this.receiveBalance = receiveBalance;
+    }
+    
+    
 
     public Account(String accountName, int accountCode, String accountType, float accountBalance) {
         this.accountName = accountName;
@@ -36,7 +49,14 @@ public class Account {
     
     
     
+    public String getEstado() {
+        return estado;
+    }
+
     //Setters And Getters//
+    public void setEstado(String estado) {    
+        this.estado = estado;
+    }
 
     public String getAccountName() {
         return accountName;

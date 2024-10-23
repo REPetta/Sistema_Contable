@@ -1,12 +1,19 @@
 //Clase encargada del comportamiento de la vista de agregar asiento//
 package Controller;
 
+import ConnectionsBD.AccountSeatConnection;
+import Model.Account;
 import Model.User;
 import View.AddAccountSeat;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.DefaultTableModel;
+import java.sql.SQLException;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import javax.swing.DefaultComboBoxModel;
 public class AddAccountSeatController implements ActionListener{
     //Atributos//
     private AddAccountSeat addAccountSeatView=new AddAccountSeat();
@@ -15,6 +22,7 @@ public class AddAccountSeatController implements ActionListener{
     DefaultTableModel modelo = new DefaultTableModel();
     //Metodos//
     public AddAccountSeatController(){//Conecta el boton Volver con la Clase
+        setCuentasComboBox(); //inicializo el combox//
        this.addAccountSeatView.setTitle("Agregar Asiento"+" - "+currentUser.getUserName()+" ( "+currentUser.getRol().substring(0, 1).toUpperCase()+currentUser.getRol().substring(1).toLowerCase()+ " ) " );
        this.addAccountSeatView.btnCancelar.addActionListener(this);
        this.addAccountSeatView.btnSaveOperation.addActionListener(this);
@@ -82,5 +90,33 @@ public class AddAccountSeatController implements ActionListener{
         cancelSeat(e);
     }
     
-    
+    //inicializacion para combobox de cuentas//
+    public ArrayList<Account> cuentas () throws IOException,  ClassNotFoundException,   SQLException{
+        AccountSeatConnection conexionCuentas =new AccountSeatConnection();
+        return conexionCuentas.getAccount();
+     }
+   
+    public void setCuentasComboBox() {
+        try {
+            // Obtener la lista de cuentas
+            ArrayList<Account> cuentas = cuentas(); // Asegúrate de que este método esté disponible en el contexto
+
+            // Crear un modelo para el JComboBox
+            DefaultComboBoxModel<String> model = 
+
+                new DefaultComboBoxModel<>();
+
+            // Llenar el modelo con los nombres de las cuentas
+            for (Account cuenta : cuentas) {
+                model.addElement(cuenta.getAccountName()); // Agregar el nombre de la cuenta
+            }
+
+            // Setear el modelo en el JComboBox
+            addAccountSeatView.comboCuenta.setModel(model); 
+    // Asegúrate de que addSeatView tenga cbbCuentas
+        } catch (IOException | SQLException | ClassNotFoundException e) {
+            e.printStackTrace(); // Manejar la excepción según sea necesario
+        }
+    }
+
 }
