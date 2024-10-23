@@ -95,8 +95,14 @@ public class AddAccountSeatController implements ActionListener{
         datos[0]=asiento.getFecha().toString();
         datos[1]=asiento.getDescripcion();
         datos[2]=asiento.getCuenta();
-        datos[3]=String.valueOf(asiento.getImporte());
-        datos[4]="0";
+        if (asiento.getDestino()=="HABER") {
+            datos[4]=String.valueOf(asiento.getImporte());
+            
+        } else {
+             datos[3]=String.valueOf(asiento.getImporte());;
+        }
+        
+       
         modelo.addRow(datos);   
     
     }
