@@ -40,6 +40,13 @@ public class Account {
         this.accountType = accountType;
         this.accountBalance = accountBalance;
     }
+
+    public Account(String accountName, int accountCode, float accountBalance) {
+        this.accountName = accountName;
+        this.accountCode = accountCode;
+        this.accountBalance = accountBalance;
+    }
+    
     
     
     public String getEstado() {

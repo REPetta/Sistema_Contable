@@ -77,4 +77,57 @@ public class ChartAccountsConnection {
             if (objConect != null) try { objConect.close(); } catch (SQLException e) { e.printStackTrace(); }
             }
     }
+    public boolean deleteAccount(int Code) throws SQLException, ClassNotFoundException, IOException{
+        String sql="UPDATE Cuenta SET estado='baja' WHERE codigo=?;";
+        ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
+        PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
+        ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
+        try{
+            ps=objConect.conect().prepareStatement(sql);//Establece la conexion con la base de datos//
+            ps.setInt(1, Code);
+            int rowsUpdated = ps.executeUpdate();
+            // Verificar si se actualizó alguna fila
+            if( rowsUpdated > 0){
+                return true;
+            }else{
+                return false;
+            }
+    }catch(ClassNotFoundException | SQLException e){
+            e.printStackTrace();
+            throw e;
+        }finally{
+             if(rs!=null) try{rs.close();}catch(SQLException e){e.printStackTrace();}
+             if (ps != null) try { ps.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (objConect != null) try { objConect.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
+    }
+    
+    public boolean updateAccount(Account account)   throws SQLException, ClassNotFoundException, IOException{
+        String sql = "UPDATE cuenta SET nombrecuenta = ?, saldocuenta= ?, tipo = ? WHERE codigo = ?";
+        ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
+        PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
+        ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
+         try {
+            ps=objConect.conect().prepareStatement(sql);//Establece la conexion con la base de datos//
+             ps.setString(1, account.getAccountName());
+            ps.setDouble(2, account.getAccountBalance());
+            ps.setString(3, account.getAccountType());
+            ps.setInt(4, account.getAccountCode());
+        
+            int rowsAffected = ps.executeUpdate();
+            // Verificar si se actualizó alguna fila
+                if( rowsAffected> 0){
+                    return true;
+                }else{
+                    return false;
+                }
+    }catch(ClassNotFoundException | SQLException e){
+            e.printStackTrace();
+            throw e;
+        }finally{
+             if(rs!=null) try{rs.close();}catch(SQLException e){e.printStackTrace();}
+             if (ps != null) try { ps.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (objConect != null) try { objConect.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
+}
 }

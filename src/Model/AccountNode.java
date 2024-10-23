@@ -35,5 +35,9 @@ public class AccountNode {
     public void addSubAccount(AccountNode subAccount){
         this.subAccounts.add(subAccount);
     }
+    @Override
+    public String toString(){
+        return this.getAccount().getAccountName();
+    }
     
 }

@@ -7,29 +7,38 @@ public class AccountSeat {
     private int idAccount;
     private float amount;
     private String type;
-    private float balance;
+    private String decripcionOperacion;
     //Contructores//
 
     public AccountSeat() {
     }
 
-    public AccountSeat(int idSeat, int idAccount, float amount, String type, float balance) {
-        this.idSeat = idSeat;
+    public AccountSeat( int idSeat ,int idAccount, float amount, String type,String descripcionOperacion) {
+        this.idSeat=idSeat;
         this.idAccount = idAccount;
         this.amount = amount;
         this.type = type;
-        this.balance = balance;
+        this.decripcionOperacion=descripcionOperacion;
     }
     
-    //Setters and Getters//
-
     public int getIdSeat() {
         return idSeat;
     }
 
-    public void setIdSeat(int idSeat) {
+    //Setters and Getters//
+    public void setIdSeat(int idSeat) {    
         this.idSeat = idSeat;
     }
+
+    public String getDecripcionOperacion() {
+        return decripcionOperacion;
+    }
+
+    public void setDecripcionOperacion(String decripcionOperacion) {
+        this.decripcionOperacion = decripcionOperacion;
+    }
+
+    
 
     public int getIdAccount() {
         return idAccount;
@@ -55,12 +64,5 @@ public class AccountSeat {
         this.type = type;
     }
 
-    public float getBalance() {
-        return balance;
-    }
-
-    public void setBalance(float balance) {
-        this.balance = balance;
-    }
 
 }
