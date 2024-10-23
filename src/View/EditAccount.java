@@ -44,7 +44,7 @@ public class EditAccount extends javax.swing.JFrame {
 
         jLabel1.setText("Nombre De Cuenta");
 
-        jLabel4.setText("Saldo De Cuenta");
+        jLabel4.setText("Estado de la Cuenta");
 
         btnExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/eliminar.png"))); // NOI18N
         btnExit.setText("Cancelar");

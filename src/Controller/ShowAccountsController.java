@@ -36,14 +36,12 @@ public class ShowAccountsController implements ActionListener{
           this.showAccountsView.setTitle("Mostrar Cuentas"+" - "+currentUser.getUserName()+" ( "+currentUser.getRol().substring(0, 1).toUpperCase()+currentUser.getRol().substring(1).toLowerCase()+ " ) " );
           this.showAccountsView.btnAddAccount.addActionListener(this);
           this.showAccountsView.btnDelAccount.addActionListener(this);
-          this.showAccountsView.btnEditAccount.addActionListener(this);
-          this.showAccountsView.btnExit.addActionListener(this);
           this.showAccountsView.btnDetalis.addActionListener(this);
+          this.showAccountsView.btnExit.addActionListener(this);
           chartAccountsController=chartAccounts.createChartAccounts();
           if(currentUser.getTasks().contains("agregar_usuario")==false){
             this.showAccountsView.btnAddAccount.setVisible(false);
             this.showAccountsView.btnDelAccount.setVisible(false);
-            this.showAccountsView.btnEditAccount.setVisible(false);
           }
            poblarJTree();
     }
@@ -83,7 +81,7 @@ public class ShowAccountsController implements ActionListener{
          // Obtener el nodo seleccionado
         DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) showAccountsView.getTreeAccounts().getLastSelectedPathComponent();
 
-        if (selectedNode != null && selectedNode.getUserObject() instanceof AccountNode) {
+        if (selectedNode != null && selectedNode.getUserObject() instanceof AccountNode ) {
             AccountNode nodoSeleccionado = (AccountNode) selectedNode.getUserObject();
         
         // Aquí puedes realizar operaciones sobre el nodo seleccionado (mostrar detalles, editar, eliminar)
@@ -133,7 +131,11 @@ public class ShowAccountsController implements ActionListener{
         DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) showAccountsView.treeAccounts.getLastSelectedPathComponent();
         if (selectedNode != null && selectedNode.getUserObject() instanceof AccountNode) {
             AccountNode selectedAccountNode = (AccountNode) selectedNode.getUserObject();
-            Account selectedAccount = selectedAccountNode.getAccount(); // Obtiene la cuenta
+            // Verificar si el nodo seleccionado tiene el atributo recibeSaldo en 1
+        if (selectedAccountNode.getAccount().getReceiveBalance() == 1) {
+            // Aquí puedes realizar operaciones sobre el nodo seleccionado (mostrar detalles, editar, eliminar)
+            // Ejemplo: mostrarDetallesCuenta(nodoSeleccionado);
+             Account selectedAccount = selectedAccountNode.getAccount(); // Obtiene la cuenta
 
             if (selectedAccount != null) {
                 // Abrir la vista de eliminación con la cuenta seleccionada
@@ -146,6 +148,11 @@ public class ShowAccountsController implements ActionListener{
         } else {
             JOptionPane.showMessageDialog(null, "Por favor, selecciona una cuenta válida del árbol.", "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
+        } else {
+            // Opcional: puedes mostrar un mensaje indicando que la selección no es válida
+            JOptionPane.showMessageDialog(showAccountsView, "La cuenta seleccionada no permite operaciones.", "Selección inválida", JOptionPane.WARNING_MESSAGE);
+        }
+           
     }
     }
     // Método auxiliar para encontrar el nodo AccountNode por nombre de cuenta
@@ -162,27 +169,32 @@ private AccountNode findAccountNodeByName(AccountNode currentNode, String accoun
     return null;
 }
     
-    public void buttonEditAccount(ActionEvent e){ //Metodo que le da al boton modificar cuenta la funcionalidad//
+    /*public void buttonEditAccount(ActionEvent e){ //Metodo que le da al boton modificar cuenta la funcionalidad//
          if (e.getSource() == showAccountsView.btnEditAccount) {
         // Obtener la cuenta seleccionada en el JTree
         DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) showAccountsView.treeAccounts.getLastSelectedPathComponent();
         if (selectedNode != null && selectedNode.getUserObject() instanceof AccountNode) {
             AccountNode selectedAccountNode = (AccountNode) selectedNode.getUserObject();
-            Account selectedAccount = selectedAccountNode.getAccount(); // Obtiene la cuenta
-
-            if (selectedAccount != null) {
+             if (selectedAccountNode.getAccount().getReceiveBalance() == 1) {
+                Account selectedAccount = selectedAccountNode.getAccount(); // Obtiene la cuenta
+                 if (selectedAccount != null) {
                 // Abrir la vista de eliminación con la cuenta seleccionada
                 showAccountsView.dispose();
                 editAccountView = new EditAccountController(selectedAccount);
                 editAccountView.openEditAccountView();
-            } else {
-                JOptionPane.showMessageDialog(null, "La cuenta seleccionada es nula.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "La cuenta seleccionada es nula.", "Error", JOptionPane.ERROR_MESSAGE);
+                     }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Por favor, selecciona una cuenta válida del árbol.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+        }
         } else {
-            JOptionPane.showMessageDialog(null, "Por favor, selecciona una cuenta válida del árbol.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            // Opcional: puedes mostrar un mensaje indicando que la selección no es válida
+            JOptionPane.showMessageDialog(showAccountsView, "La cuenta seleccionada no permite operaciones.", "Selección inválida", JOptionPane.WARNING_MESSAGE);
         }
-    }
-        }
+    }      
+    }*/
+        
     
     public void  buttonDetailsAccount(ActionEvent e){
           if (e.getSource() == showAccountsView.btnDetalis) {
@@ -190,20 +202,26 @@ private AccountNode findAccountNodeByName(AccountNode currentNode, String accoun
             DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) showAccountsView.treeAccounts.getLastSelectedPathComponent();
            if (selectedNode != null && selectedNode.getUserObject() instanceof AccountNode) {
                 AccountNode selectedAccountNode = (AccountNode) selectedNode.getUserObject();
-                Account selectedAccount = selectedAccountNode.getAccount(); // Obtiene la cuenta
-
-            if (selectedAccount != null) {
+                 if (selectedAccountNode.getAccount().getReceiveBalance()== 1) {
+            // Aquí puedes realizar operaciones sobre el nodo seleccionado (mostrar detalles, editar, eliminar)
+                         Account selectedAccount = selectedAccountNode.getAccount(); // Obtiene la cuenta
+                          if (selectedAccount != null) {
                 // Abrir la vista de eliminación con la cuenta seleccionada
                 detailsAccountView = new DetailsAccountController(selectedAccount);
                 detailsAccountView.openDetailsAccountView();
-            } else {
-                JOptionPane.showMessageDialog(null, "La cuenta seleccionada es nula.", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Por favor, selecciona una cuenta válida del árbol.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                     } else {
+                        JOptionPane.showMessageDialog(null, "La cuenta seleccionada es nula.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                     JOptionPane.showMessageDialog(null, "Por favor, selecciona una cuenta válida del árbol.", "Advertencia", JOptionPane.WARNING_MESSAGE);
         }
+            } else {
+                    // Opcional: puedes mostrar un mensaje indicando que la selección no es válida
+            JOptionPane.showMessageDialog(showAccountsView, "La cuenta seleccionada no permite operaciones.", "Selección inválida", JOptionPane.WARNING_MESSAGE);
+        }      
     }
     }
+    
     public void buttonExit(ActionEvent e){//Metodo que le da al boton Salir la funcion de cerrar el Menu Principal y volver al Login//
         if(e.getSource()==showAccountsView.btnExit){
             closeShowAccountsView();
@@ -216,7 +234,7 @@ private AccountNode findAccountNodeByName(AccountNode currentNode, String accoun
         buttonExit(e);
         buttonAddAccount(e);
         buttonDeleteAccount(e);
-        buttonEditAccount(e);
+        //buttonEditAccount(e);
         buttonDetailsAccount(e);
         
     }

@@ -2,6 +2,7 @@
 package Controller;
 
 import ConnectionsBD.ChartAccountsConnection;
+import Controller.ShowAccountsController;
 import Model.Account;
 import Model.AccountNode;
 import Model.User;
@@ -48,13 +49,14 @@ public class DeleteAccountController implements ActionListener {
         deleteAccountView.setVisible(true);
     }
     //Metodo para el boton yes//
-    public void buttonYes(ActionEvent e) {
+    public void buttonYes(ActionEvent e) throws ClassNotFoundException, SQLException, IOException {
          if (e.getSource() == deleteAccountView.btnYes) {
         try {
             // Intento de eliminar la cuenta usando la conexión a la base de datos
+            if(chartAccountsConnection.validateDelete(selectedAccount.getIdAccount())==true){
             boolean success = chartAccountsConnection.deleteAccount(selectedAccount.getAccountCode());
             
-            if (success=true) {
+            if (success) {
                 // Si se elimina correctamente, mostrar mensaje de éxito
                 JOptionPane.showMessageDialog(null, "La cuenta ha sido eliminada correctamente.");
                 deleteAccountView.dispose(); // Cerrar la ventana de eliminación
@@ -64,6 +66,10 @@ public class DeleteAccountController implements ActionListener {
                 // Si no se elimina, mostrar un mensaje de error al usuario
                 JOptionPane.showMessageDialog(null, "No se pudo eliminar la cuenta.", "Error", JOptionPane.ERROR_MESSAGE);
             }
+        }else{
+                 JOptionPane.showMessageDialog(null, "La cuenta no puede ser eliminada porque esta relaciona con un asiento contable");
+
+        }
         } catch (SQLException ex) {
             // Manejo de errores relacionados con la base de datos
             ex.printStackTrace(); // Imprimir la traza de error en la consola
@@ -73,7 +79,10 @@ public class DeleteAccountController implements ActionListener {
             ex.printStackTrace(); // Imprimir la traza de error en la consola
             JOptionPane.showMessageDialog(null, "Ocurrió un error inesperado: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }    }
+        
+    }    
+         }
+    
     //Metodo para el boton no//
     public void buttonNot(ActionEvent e) throws SQLException, ClassNotFoundException, IOException{
         if(e.getSource()==deleteAccountView.btnNot){
@@ -93,7 +102,15 @@ public class DeleteAccountController implements ActionListener {
         } catch (IOException ex) {
             Logger.getLogger(DeleteAccountController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        buttonYes(e);
+        try {
+            buttonYes(e);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(DeleteAccountController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(DeleteAccountController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(DeleteAccountController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }

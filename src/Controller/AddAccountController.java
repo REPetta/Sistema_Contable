@@ -25,6 +25,7 @@ public class AddAccountController implements ActionListener {
          this.addAccountView.btnExit.addActionListener(this);
          this.addAccountView.btnAddAccount.addActionListener(this);
          this.addAccountView.cBoxType.addActionListener(this);
+         this.addAccountView.comboRSaldo.addActionListener(this);
     }
 //Metodos//
     public void openAddAccountView(){//Muestra la ventana//
@@ -40,7 +41,10 @@ public class AddAccountController implements ActionListener {
             addAccountView.txtCode.getText().trim().isEmpty() ||
             addAccountView.txtAmount.getText().trim().isEmpty() ||
             addAccountView.cBoxType.getSelectedItem() == null || 
-            addAccountView.cBoxType.getSelectedItem().toString().trim().isEmpty()) {
+            addAccountView.cBoxType.getSelectedItem().toString().trim().isEmpty() ||
+            addAccountView.comboRSaldo.getSelectedItem() == null || 
+            addAccountView.comboRSaldo.getSelectedItem().toString().trim().isEmpty()        
+                    ) {
             
             // Mostrar mensaje de error
             JOptionPane.showMessageDialog(null, "Error: No puede haber campos vacíos.");
@@ -48,6 +52,7 @@ public class AddAccountController implements ActionListener {
             addAccountView.txtCode.setText("");
             addAccountView.txtAmount.setText("");
             addAccountView.cBoxType.setSelectedIndex(0);
+            addAccountView.comboRSaldo.setSelectedIndex(0);
             return; // Detener el proceso si hay campos vacíos
         }
                     Account newAccount= new Account();
@@ -55,18 +60,25 @@ public class AddAccountController implements ActionListener {
                     newAccount.setAccountCode(Integer.parseInt(addAccountView.txtCode.getText().trim()));
                     newAccount.setAccountType(addAccountView.cBoxType.getSelectedItem().toString().trim());
                     newAccount.setAccountBalance(Float.parseFloat(addAccountView.txtAmount.getText().trim()));
+                    if(addAccountView.comboRSaldo.getSelectedItem()=="SI"){
+                        newAccount.setReceiveBalance(1);
+                    }else{
+                        newAccount.setReceiveBalance(0);
+                    }
                     if(validateAccount(newAccount)==true){
                            con= new ChartAccountsConnection();
                            con.addAccount(newAccount);
                            addAccountView.txtAccountName.setText("");
                            addAccountView.txtCode.setText("");
                            addAccountView.txtAmount.setText("");
-                           addAccountView.cBoxType.setSelectedIndex(0);         
+                           addAccountView.cBoxType.setSelectedIndex(0);
+                           addAccountView.comboRSaldo.setSelectedIndex(0);
                         }else{
                             addAccountView.txtAccountName.setText("");
                             addAccountView.txtCode.setText("");
                             addAccountView.txtAmount.setText("");
                             addAccountView.cBoxType.setSelectedIndex(0);
+                            addAccountView.comboRSaldo.setSelectedIndex(0);
                         }
                     }
     }
