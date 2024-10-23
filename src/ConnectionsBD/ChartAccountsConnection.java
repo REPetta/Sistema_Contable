@@ -18,7 +18,7 @@ public class ChartAccountsConnection {
         ChartAccountsController chartAccounts=new ChartAccountsController();
         AccountNode auxNode;
         Account auxAccount;
-        String sql="SELECT idcuenta,nombrecuenta,codigo,tipo,saldocuenta,recibesaldo FROM Cuenta WHERE estado='alta' ORDER BY codigo ASC;";
+        String sql="SELECT idcuenta,nombrecuenta,codigo,tipo,estado,saldocuenta,recibesaldo FROM Cuenta WHERE estado='alta' ORDER BY codigo ASC;";
         ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
         PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
         ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
@@ -31,6 +31,7 @@ public class ChartAccountsConnection {
                   auxAccount.setAccountName(rs.getString("nombrecuenta"));
                   auxAccount.setAccountCode(rs.getInt("codigo"));
                   auxAccount.setAccountType(rs.getString("tipo"));
+                  auxAccount.setEstado(rs.getString("estado"));
                   auxAccount.setAccountBalance(rs.getFloat("saldocuenta"));
                   auxAccount.setReceiveBalance(rs.getInt("recibesaldo"));
                   auxNode= new AccountNode();
@@ -59,7 +60,7 @@ public class ChartAccountsConnection {
             ps=objConect.conect().prepareStatement(sql);//Establece la conexion con la base de datos//
             ps.setString(1,account.getAccountName());
             ps.setInt(2,account.getAccountCode());
-            ps.setString(3, account.getAccountType());
+            ps.setString(3, account.getAccountType().toUpperCase());
             ps.setString(4, "alta");
             ps.setFloat(5, account.getAccountBalance());
             ps.setFloat(6, account.getReceiveBalance());
@@ -78,7 +79,7 @@ public class ChartAccountsConnection {
             }
     }
     public boolean deleteAccount(int Code) throws SQLException, ClassNotFoundException, IOException{
-        String sql="UPDATE Cuenta SET estado='baja' WHERE codigo=?;";
+        String sql="UPDATE Cuenta SET estado='baja' WHERE codigo=? ;";
         ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
         PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
         ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
@@ -101,18 +102,41 @@ public class ChartAccountsConnection {
             if (objConect != null) try { objConect.close(); } catch (SQLException e) { e.printStackTrace(); }
             }
     }
+    public boolean validateDelete(int code) throws ClassNotFoundException, SQLException, IOException{
+        String sql="SELECT * FROM Cuenta c INNER JOIN Asiento_Cuenta ac ON c.idCuenta=ac.idCuenta WHERE c.idcuenta=?;";
+        ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
+        PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
+        ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
+        try{
+            ps=objConect.conect().prepareStatement(sql);//Establece la conexion con la base de datos//
+            ps.setInt(1, code);//Asigna al primer ? el userName//
+            rs=ps.executeQuery();//Ejecuta la consulta y almacena el resultado//
+            if(rs.next()){//Next verifica si el registro de rs coincide con la consulta y si no lo hace avanza al siguiente, hasta que no haya mas filas en la tabla//
+                return false;
+                }
+           }catch(ClassNotFoundException | SQLException e){
+     e.printStackTrace();
+     throw e;
+ }finally{
+     if(rs!=null) try{rs.close();}catch(SQLException e){e.printStackTrace();}
+     if (ps != null) try { ps.close(); } catch (SQLException e) { e.printStackTrace(); }
+     if (objConect != null) try { objConect.close(); } catch (SQLException e) { e.printStackTrace(); }
+    }   
+       return true;
+          
+   }
+    
     
     public boolean updateAccount(Account account)   throws SQLException, ClassNotFoundException, IOException{
-        String sql = "UPDATE cuenta SET nombrecuenta = ?, saldocuenta= ?, tipo = ? WHERE codigo = ?";
+        String sql = "UPDATE cuenta SET nombrecuenta = ?, estado = ? WHERE codigo = ?";
         ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
         PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
         ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
          try {
             ps=objConect.conect().prepareStatement(sql);//Establece la conexion con la base de datos//
              ps.setString(1, account.getAccountName());
-            ps.setDouble(2, account.getAccountBalance());
-            ps.setString(3, account.getAccountType());
-            ps.setInt(4, account.getAccountCode());
+            ps.setString(2, account.getEstado().toLowerCase());
+            ps.setInt(3, account.getAccountCode());
         
             int rowsAffected = ps.executeUpdate();
             // Verificar si se actualizó alguna fila

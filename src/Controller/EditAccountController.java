@@ -29,8 +29,7 @@ public class EditAccountController implements ActionListener{
         this.editAccountView.btnExit.addActionListener(this);
          if (this.selectedAccount != null) {
                 this.editAccountView.txtName.setText(this.selectedAccount.getAccountName());
-                this.editAccountView.txtAmount.setText(String.valueOf(this.selectedAccount.getAccountBalance()));
-                //this.editAccountView.cBoxType.setSelectedItem(this.selectedAccount.getAccountType());
+                this.editAccountView.txtAmount.setText(this.selectedAccount.getEstado().toUpperCase());
             } else {
                 // Manejo de error si la cuenta es nula
                 JOptionPane.showMessageDialog(null, "La cuenta seleccionada es nula.", "Error", JOptionPane.ERROR_MESSAGE);
