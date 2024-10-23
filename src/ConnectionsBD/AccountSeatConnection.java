@@ -14,15 +14,13 @@ public class AccountSeatConnection {
     
     //Metodo para agregar un asiento a la base de datos//
     public void addSeat(Seat seat) throws ClassNotFoundException, SQLException, IOException{
-        String sql="INSERT INTO asiento(fecha,numerooperacion,descripcionasiento,idusuario) VALUES(?,?,?,?);";
+        String sql="INSERT INTO asiento(fecha,idusuario) VALUES(?,?);";
         ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
         PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
         try{
             ps=objConect.conect().prepareStatement(sql);
             ps.setDate(1, new java.sql.Date(seat.getDate().getTime()));
-            ps.setInt(2, seat.getOperationNumber());
-            ps.setString(3, seat.getDescriptionSeat());
-            ps.setInt(4, seat.getIdUser());
+            ps.setInt(2, seat.getIdUser());
             ps.executeUpdate();
         
         }catch(ClassNotFoundException | SQLException e){
@@ -36,7 +34,7 @@ public class AccountSeatConnection {
         //Metodo para ingregresar en la tabla asiento_cuenta//
     public void addAccountSeat(AccountSeat accountSeat) throws ClassNotFoundException, SQLException, IOException{
         //Atributos//
-        String sql="INSERT  INTO asiento_cuenta (idasiento,idcuenta,tipo,monto,saldo) VALUES(?,?,?,?,?);";
+        String sql="INSERT  INTO asiento_cuenta (idasiento,idcuenta,tipo,monto,descripcionoperacion) VALUES(?,?,?,?,?);";
         ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
         PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
         try{
@@ -45,7 +43,7 @@ public class AccountSeatConnection {
             ps.setInt(2, accountSeat.getIdAccount());
             ps.setString(3, accountSeat.getType());
             ps.setFloat(4, accountSeat.getAmount());
-            ps.setFloat(5, accountSeat.getBalance());
+            ps.setString(5, accountSeat.getDecripcionOperacion());
             ps.executeUpdate();
         
         }catch(ClassNotFoundException | SQLException e){
@@ -70,9 +68,7 @@ public class AccountSeatConnection {
             while(rs.next()){
                 Seat seat= new Seat(
                         rs.getInt("idasiento"),
-                        rs.getInt("numerooperacion"),
                         rs.getDate("fecha"),
-                        rs.getString("descripcionasiento"),
                         rs.getInt("idusuario")
                 );
                 seats.add(seat);
@@ -106,7 +102,7 @@ public class AccountSeatConnection {
                         rs.getInt("idcuenta"),
                         rs.getFloat("monto"),
                         rs.getString("tipo"),
-                        rs.getFloat("saldo")
+                        rs.getString("descripcionoperacion")
                 );
                 accounts.add(accountSeat);
             }

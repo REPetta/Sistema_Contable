@@ -58,7 +58,6 @@ public class SeatController {
         seatCon=new AccountSeatConnection();
         ArrayList<Seat> seats=seatCon.getSeats();
         for(Seat seat : seats){
-            System.out.println("Numero de Operacion: " + seat.getOperationNumber());
             System.out.println("Fecha: " + seat.getDate());
             //Luego obtenemos las cuentas asociadas a cada asiento//
             ArrayList<AccountSeat> accounts=accountSeatCon.getAccountsSeats(seat.getIdSeat());
@@ -66,7 +65,7 @@ public class SeatController {
                 System.out.println("\tCuenta: "+ chartAccounts.getAccountName(account));
                 System.out.println("\tTipo: "+ account.getType());
                 System.out.println("\tMonto: "+account.getAmount());
-                System.out.println("\tSaldo: "+account.getBalance());
+                
             }
             System.out.println("------------------------------------------------------------------");
             }
