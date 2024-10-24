@@ -32,7 +32,6 @@ public class MainMenuController implements ActionListener{//Implementa la interf
         this.mainMenuView.btnAddUser.addActionListener(this);//Conecta el boton agregar usuario con esta clase//
         this.mainMenuView.btnDelUser.addActionListener(this);//Conecta el boton borrar usuario con esta clase//
         this.mainMenuView.btnSearchUser.addActionListener(this);//Conecta el boton buscar usuario con esta clase//
-        this.mainMenuView.btnSearchSeat.addActionListener(this);//Conecta el boton buscar asiento con esta clase//
         this.mainMenuView.btnExit.addActionListener(this);//Conecta el boton salir con esta clase
         this.mainMenuView.btnAddSeat.addActionListener(this);//Conecta el boton agregar asiento con esta clase//
         this.mainMenuView.btnShowAccounts.addActionListener(this);//Conecta el boton para mostrar cuentas con esta clase//
