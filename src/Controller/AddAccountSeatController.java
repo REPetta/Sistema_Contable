@@ -87,7 +87,9 @@ public class AddAccountSeatController implements ActionListener{
     
     public void cargarTabla(AsientoTabla asiento){
     String[] datos =new String[5];
-        datos[0]=asiento.getFecha().toString();
+    SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
+    String fechaFormateada = formato.format(asiento.getFecha());
+    datos[0]=fechaFormateada;
         datos[1]=asiento.getDescripcion();
         datos[2]=asiento.getCuenta();
         if (asiento.getDestino()=="HABER") {
