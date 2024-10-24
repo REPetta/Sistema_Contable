@@ -20,6 +20,7 @@ import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
 public class AddAccountSeatController implements ActionListener{
     //Atributos//
     private AccountSeatConnection conexionAsientoBD=new AccountSeatConnection();
@@ -150,22 +151,65 @@ public class AddAccountSeatController implements ActionListener{
             e.printStackTrace(); // Manejar la excepción según sea necesario
         }
     }
+
     
-    public AsientoTabla getAsientoTabla() throws ParseException{
-        AsientoTabla asientoTabla= new AsientoTabla();
-         asientoTabla.setFecha(addAccountSeatView.dateFecha.getDate());
-        asientoTabla.setDescripcion(addAccountSeatView.txtDescripcion.getText());
-        asientoTabla.setDestino(addAccountSeatView.cBoxDestiny.getSelectedItem().toString());
-        asientoTabla.setImporte(Float.parseFloat(addAccountSeatView.txtImporte.getText().toString()));
-        asientoTabla.setCuenta(addAccountSeatView.comboCuenta.getSelectedItem().toString());
-        asientoTabla.setIdCuenta(conexionAsientoBD.obtenerIdCuentaPorNombre(addAccountSeatView.comboCuenta.getSelectedItem().toString()));
-        return asientoTabla;
-    
+    public void getAsientoTabla(AsientoTabla asientoTabla) throws ParseException{
+         Date fecha=addAccountSeatView.dateFecha.getDate();
+         String descripcion=addAccountSeatView.txtDescripcion.getText().trim();
+         String destino=addAccountSeatView.txtDescripcion.getText().trim();
+         String importText=addAccountSeatView.txtImporte.getText().toString().trim();
+         // Validar que importText solo contenga números o un número decimal válido
+         Float importe=0.0f;
+         if (importText.matches("^\\d+(\\.\\d+)?$")) {
+            importe = Float.parseFloat(importText);
+            
+         } else {
+            // Si contiene letras o es un formato inválido, establece importe en 0 y muestra un mensaje
+            JOptionPane.showMessageDialog(null, "El campo importe solo puede contener números.");
+            importe = 0.0f;
+        }
+         Object selectedCuenta=addAccountSeatView.comboCuenta.getSelectedItem();
+         String cuenta= (selectedCuenta!=null) ? selectedCuenta.toString() : "";
+         //Integer idCuenta=conexionAsientoBD.obtenerIdCuentaPorNombre(addAccountSeatView.comboCuenta.getSelectedItem().toString());
+        if( fecha==null || descripcion.isEmpty() ||  destino.isEmpty() || importe==0 || cuenta.isEmpty()  ){
+                JOptionPane.showMessageDialog(null,"No puede haber ninguna opcion en blanco");
+                limpiarVista();
+            }else{
+                asientoTabla.setFecha(fecha);
+                asientoTabla.setDescripcion(descripcion);
+                asientoTabla.setDestino(destino);
+                asientoTabla.setImporte(importe);
+                asientoTabla.setCuenta(cuenta);
+                asientoTabla.setIdCuenta(conexionAsientoBD.obtenerIdCuentaPorNombre(addAccountSeatView.comboCuenta.getSelectedItem().toString()));
+        }
     }
     
     public void accionBtnAgregarAtabla(ActionEvent e) throws ParseException{
-        if(e.getSource()== addAccountSeatView.btnSaveOperation){
-  /*          SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        if(e.getSource()== addAccountSeatView.btnSaveOperation){       
+              AsientoTabla asientoTabla= new AsientoTabla();
+              getAsientoTabla(asientoTabla);
+              if(asientoTabla.getCuenta()!=null){
+                    cargarTabla(asientoTabla);
+                    addAccountSeatView.txtDescripcion.setText("");
+                    addAccountSeatView.txtImporte.setText("");
+                    addAccountSeatView.cBoxDestiny.setSelectedIndex(0);
+                    addAccountSeatView.comboCuenta.setSelectedIndex(0);
+                    addAccountSeatView.dateFecha.setDate(null);
+              }
+              else{
+                  addAccountSeatView.txtDescripcion.setText("");
+                  addAccountSeatView.txtImporte.setText("");
+                  addAccountSeatView.cBoxDestiny.setSelectedIndex(0);
+                  addAccountSeatView.comboCuenta.setSelectedIndex(0);
+                  addAccountSeatView.dateFecha.setDate(null);
+              }
+        }
+    
+    }
+
+}
+/*
+  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             String fechaSql = sdf.format(getAsientoTabla().getFecha()); 
             System.out.println(fechaSql);
              System.out.println(getAsientoTabla().getDescripcion());
@@ -173,9 +217,3 @@ public class AddAccountSeatController implements ActionListener{
              System.out.println(getAsientoTabla().getDestino());
              System.out.println(getAsientoTabla().getImporte());
              System.out.println(getAsientoTabla().getIdCuenta());*/
-              cargarTabla(getAsientoTabla());
-        }
-    
-    }
-
-}
