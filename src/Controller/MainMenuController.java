@@ -21,6 +21,7 @@ public class MainMenuController implements ActionListener{//Implementa la interf
     private LoginController loginController;
     private User currentUser=User.getInstancia();
     private LibroDiarioController libroDiarioView;
+    private LibroMayorController libroMayorView;
     
     //Metodos//
     public void openMainMenuView(){//Metodo para hacer visible la ventana del MainMenu//
@@ -37,6 +38,7 @@ public class MainMenuController implements ActionListener{//Implementa la interf
         this.mainMenuView.btnAddSeat.addActionListener(this);//Conecta el boton agregar asiento con esta clase//
         this.mainMenuView.btnShowAccounts.addActionListener(this);//Conecta el boton para mostrar cuentas con esta clase//
         this.mainMenuView.btnLibroDiario.addActionListener(this);
+        this.mainMenuView.btnLibroMayor.addActionListener(this);
         this.mainMenuView.setTitle("Menu Principal"+" - "+currentUser.getUserName()+" ( "+currentUser.getRol().substring(0, 1).toUpperCase()+currentUser.getRol().substring(1).toLowerCase()+ " ) " );
         if(currentUser.getTasks().contains("agregar_usuario")==false){
             this.mainMenuView.btnAddUser.setVisible(false);
@@ -91,6 +93,14 @@ public class MainMenuController implements ActionListener{//Implementa la interf
         }
     }
     
+    public void buttonVerLibroMayor(ActionEvent e){
+        if(e.getSource()==mainMenuView.btnLibroMayor){
+            libroMayorView=new LibroMayorController();
+            libroMayorView.openLibroMayor();
+            closeMainMenuView();
+        }
+    }
+    
     public void buttonExit(ActionEvent e){//Metodo que le da al boton Salir la funcion de cerrar el Menu Principal y volver al Login//
         if(e.getSource()==mainMenuView.btnExit){
             closeMainMenuView();
@@ -106,6 +116,7 @@ public class MainMenuController implements ActionListener{//Implementa la interf
         buttonSearchUser(e);
         buttonAddSeat(e);
         buttonVerLibroDiario(e);
+        buttonVerLibroMayor(e);
         try {
             buttonShowAccounts(e);
         } catch (SQLException ex) {

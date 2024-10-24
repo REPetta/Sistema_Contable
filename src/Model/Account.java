@@ -8,6 +8,7 @@ public class Account {
     private int accountCode;
     private String estado;
     private String accountType;
+    private float saldoInicial;
     private float accountBalance;
     private int receiveBalance;
     //Contructor//
@@ -45,6 +46,27 @@ public class Account {
         this.accountName = accountName;
         this.accountCode = accountCode;
         this.accountBalance = accountBalance;
+    }
+
+    public Account(int idAccount, String accountName, int accountCode, String estado, String accountType, float saldoInicial, float accountBalance, int receiveBalance) {
+        this.idAccount = idAccount;
+        this.accountName = accountName;
+        this.accountCode = accountCode;
+        this.estado = estado;
+        this.accountType = accountType;
+        this.saldoInicial = saldoInicial;
+        this.accountBalance = accountBalance;
+        this.receiveBalance = receiveBalance;
+    }
+    
+    
+    
+    public float getSaldoInicial() {
+        return saldoInicial;
+    }
+
+    public void setSaldoInicial(float saldoInicial) {
+        this.saldoInicial = saldoInicial;
     }
     
     

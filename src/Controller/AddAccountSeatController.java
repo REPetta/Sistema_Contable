@@ -29,7 +29,7 @@ public class AddAccountSeatController implements ActionListener{
     DefaultTableModel modelo = new DefaultTableModel();
     //Metodos//
     public AddAccountSeatController(){//Conecta el boton Volver con la Clase
-        setCuentasComboBox(); //inicializo el combox//
+       setCuentasComboBox(); //inicializo el combox//
        this.addAccountSeatView.setTitle("Agregar Asiento"+" - "+currentUser.getUserName()+" ( "+currentUser.getRol().substring(0, 1).toUpperCase()+currentUser.getRol().substring(1).toLowerCase()+ " ) " );
        this.addAccountSeatView.btnCancelar.addActionListener(this);
        this.addAccountSeatView.btnSaveOperation.addActionListener(this);

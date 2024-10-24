@@ -139,10 +139,10 @@ public class AccountSeatConnection {
                         rs.getInt("codigo"),
                         rs.getString("tipo"),
                         rs.getString("estado"),
+                        rs.getFloat("saldoInicial"),
                         rs.getFloat("saldoCuenta"),
                         rs.getInt("recibeSaldo")
                 );
-                System.out.println(account.getAccountName());
                 accounts.add(account);
             }
         }catch(SQLException e){
