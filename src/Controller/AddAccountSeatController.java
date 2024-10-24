@@ -3,6 +3,7 @@ package Controller;
 
 import ConnectionsBD.AccountSeatConnection;
 import Model.Account;
+import Model.AsientoTabla;
 import Model.User;
 import View.AddAccountSeat;
 import java.awt.event.ActionEvent;
@@ -12,10 +13,16 @@ import javax.swing.table.DefaultTableModel;
 import java.sql.SQLException;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 public class AddAccountSeatController implements ActionListener{
     //Atributos//
+    private AccountSeatConnection conexionAsientoBD=new AccountSeatConnection();
     private AddAccountSeat addAccountSeatView=new AddAccountSeat();
     private MainMenuController mainMenuController;
     private User currentUser=User.getInstancia();
@@ -58,6 +65,10 @@ public class AddAccountSeatController implements ActionListener{
      
     public void iniciarTabla() {
         
+        
+        
+        
+        
         modelo = new DefaultTableModel() {
             public boolean isCellEditable(int fila, int columna) {
                 if (columna == 1 && columna == 2 && columna == 3) {
@@ -77,7 +88,26 @@ public class AddAccountSeatController implements ActionListener{
         addAccountSeatView.tableModel.setRowHeight(15);
         addAccountSeatView.tableModel.setModel(modelo);
         addAccountSeatView.tableModel.setRowHeight(25);
+        
+        
 
+    }
+    
+    public void cargarTabla(AsientoTabla asiento){
+    String[] datos =new String[5];
+        datos[0]=asiento.getFecha().toString();
+        datos[1]=asiento.getDescripcion();
+        datos[2]=asiento.getCuenta();
+        if (asiento.getDestino()=="HABER") {
+            datos[4]=String.valueOf(asiento.getImporte());
+            
+        } else {
+             datos[3]=String.valueOf(asiento.getImporte());
+        }
+        
+       
+        modelo.addRow(datos);   
+    
     }
     public void buttonBack(ActionEvent e){//Metodo que le da al boton volver la accion de salir de la ventana Agregar Asiento y volver al Menu Principal//
        if(e.getSource()==addAccountSeatView.btnBack){
@@ -91,6 +121,11 @@ public class AddAccountSeatController implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         buttonBack(e);
         cancelSeat(e);
+        try {
+            accionBtnAgregarAtabla(e);
+        } catch (ParseException ex) {
+            Logger.getLogger(AddAccountSeatController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     //inicializacion para combobox de cuentas//
@@ -120,6 +155,33 @@ public class AddAccountSeatController implements ActionListener{
         } catch (IOException | SQLException | ClassNotFoundException e) {
             e.printStackTrace(); // Manejar la excepción según sea necesario
         }
+    }
+    
+    public AsientoTabla getAsientoTabla() throws ParseException{
+        AsientoTabla asientoTabla= new AsientoTabla();
+         asientoTabla.setFecha(addAccountSeatView.dateFecha.getDate());
+        asientoTabla.setDescripcion(addAccountSeatView.txtDescripcion.getText());
+        asientoTabla.setDestino(addAccountSeatView.cBoxDestiny.getSelectedItem().toString());
+        asientoTabla.setImporte(Float.parseFloat(addAccountSeatView.txtImporte.getText().toString()));
+        asientoTabla.setCuenta(addAccountSeatView.comboCuenta.getSelectedItem().toString());
+        asientoTabla.setIdCuenta(conexionAsientoBD.obtenerIdCuentaPorNombre(addAccountSeatView.comboCuenta.getSelectedItem().toString()));
+        return asientoTabla;
+    
+    }
+    
+    public void accionBtnAgregarAtabla(ActionEvent e) throws ParseException{
+        if(e.getSource()== addAccountSeatView.btnSaveOperation){
+  /*          SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String fechaSql = sdf.format(getAsientoTabla().getFecha()); 
+            System.out.println(fechaSql);
+             System.out.println(getAsientoTabla().getDescripcion());
+             System.out.println(getAsientoTabla().getCuenta());
+             System.out.println(getAsientoTabla().getDestino());
+             System.out.println(getAsientoTabla().getImporte());
+             System.out.println(getAsientoTabla().getIdCuenta());*/
+              cargarTabla(getAsientoTabla());
+        }
+    
     }
 
 }

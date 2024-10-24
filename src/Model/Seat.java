@@ -15,6 +15,11 @@ public class Seat {
         this.idUser = idUser;
     }
 
+    public Seat(Date date) {
+        this.date = date;
+    }
+    
+
     public Seat(Date date,  int idUser) {
         this.date = date;
         this.idUser = idUser;

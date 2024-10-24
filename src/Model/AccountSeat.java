@@ -13,6 +13,14 @@ public class AccountSeat {
     public AccountSeat() {
     }
 
+    public AccountSeat(int idAccount, float amount, String type, String decripcionOperacion) {
+        this.idAccount = idAccount;
+        this.amount = amount;
+        this.type = type;
+        this.decripcionOperacion = decripcionOperacion;
+    }
+    
+
     public AccountSeat( int idSeat ,int idAccount, float amount, String type,String descripcionOperacion) {
         this.idSeat=idSeat;
         this.idAccount = idAccount;
