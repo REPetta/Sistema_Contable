@@ -141,8 +141,8 @@ public class AccountSeatConnection {
                         rs.getString("estado"),
                         rs.getFloat("saldoCuenta"),
                         rs.getInt("recibeSaldo")
-                         
                 );
+                System.out.println(account.getAccountName());
                 accounts.add(account);
             }
         }catch(SQLException e){
@@ -154,9 +154,6 @@ public class AccountSeatConnection {
         return accounts; 
    
     }
-    
-     
-    
     
     
     public int obtenerIdCuentaPorNombre(String nombreCuenta) {

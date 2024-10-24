@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 
-public class LibrosConneccition {
+public class LibrosConnection {
    
     //Metodo par obtener todos los asientos entre dos fechas dadas//
     public ArrayList<AccountSeatController> obtenerListaAsientos(Date fechaMenor , Date fechaMayor) throws ClassNotFoundException, SQLException, IOException{
@@ -46,12 +46,12 @@ public class LibrosConneccition {
                             lastIdSeat = idSeat;
                         }
                     // Si hay datos de Asiento_Cuenta, agregarlos a la lista del asiento actual
-                        if(rs.getInt("ac.idAsiento")!=0){
+                        if(rs.getInt("idAsiento")!=0){
                             AccountSeat asientoCuenta= new AccountSeat();
-                            asientoCuenta.setIdSeat(rs.getInt("ac.idAsiento"));
-                            asientoCuenta.setIdAccount(rs.getInt("ac.idCuenta"));
-                            asientoCuenta.setType(rs.getString("ac.tipo"));
-                            asientoCuenta.setAmount(rs.getFloat("ac.monto"));
+                            asientoCuenta.setIdSeat(rs.getInt("idAsiento"));
+                            asientoCuenta.setIdAccount(rs.getInt("idCuenta"));
+                            asientoCuenta.setType(rs.getString("tipo"));
+                            asientoCuenta.setAmount(rs.getFloat("monto"));
                             asientoCuenta.setDecripcionOperacion(rs.getString("descripcionOperacion"));
                              // Agregar Asiento_Cuenta a la lista del AccountSeatController actual
                             if(currentAsiento!=null){

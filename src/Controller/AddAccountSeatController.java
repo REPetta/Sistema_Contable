@@ -60,15 +60,10 @@ public class AddAccountSeatController implements ActionListener{
         addAccountSeatView.comboCuenta.setSelectedIndex(0);
         addAccountSeatView.dateFecha.setDate(null);
         iniciarTabla();
-        
         }
      
     public void iniciarTabla() {
-        
-        
-        
-        
-        
+ 
         modelo = new DefaultTableModel() {
             public boolean isCellEditable(int fila, int columna) {
                 if (columna == 1 && columna == 2 && columna == 3) {
@@ -88,9 +83,6 @@ public class AddAccountSeatController implements ActionListener{
         addAccountSeatView.tableModel.setRowHeight(15);
         addAccountSeatView.tableModel.setModel(modelo);
         addAccountSeatView.tableModel.setRowHeight(25);
-        
-        
-
     }
     
     public void cargarTabla(AsientoTabla asiento){

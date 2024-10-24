@@ -20,6 +20,7 @@ public class MainMenuController implements ActionListener{//Implementa la interf
     private ShowAccountsController showAccountsController;
     private LoginController loginController;
     private User currentUser=User.getInstancia();
+    private LibroDiarioController libroDiarioView;
     
     //Metodos//
     public void openMainMenuView(){//Metodo para hacer visible la ventana del MainMenu//
@@ -35,6 +36,7 @@ public class MainMenuController implements ActionListener{//Implementa la interf
         this.mainMenuView.btnExit.addActionListener(this);//Conecta el boton salir con esta clase
         this.mainMenuView.btnAddSeat.addActionListener(this);//Conecta el boton agregar asiento con esta clase//
         this.mainMenuView.btnShowAccounts.addActionListener(this);//Conecta el boton para mostrar cuentas con esta clase//
+        this.mainMenuView.btnLibroDiario.addActionListener(this);
         this.mainMenuView.setTitle("Menu Principal"+" - "+currentUser.getUserName()+" ( "+currentUser.getRol().substring(0, 1).toUpperCase()+currentUser.getRol().substring(1).toLowerCase()+ " ) " );
         if(currentUser.getTasks().contains("agregar_usuario")==false){
             this.mainMenuView.btnAddUser.setVisible(false);
@@ -81,6 +83,14 @@ public class MainMenuController implements ActionListener{//Implementa la interf
         }
     }
     
+    public void buttonVerLibroDiario(ActionEvent e){
+        if(e.getSource()==mainMenuView.btnLibroDiario){
+            libroDiarioView= new LibroDiarioController();
+            libroDiarioView.openLibroDiario();
+            closeMainMenuView();
+        }
+    }
+    
     public void buttonExit(ActionEvent e){//Metodo que le da al boton Salir la funcion de cerrar el Menu Principal y volver al Login//
         if(e.getSource()==mainMenuView.btnExit){
             closeMainMenuView();
@@ -95,6 +105,7 @@ public class MainMenuController implements ActionListener{//Implementa la interf
         buttonDelUser(e);
         buttonSearchUser(e);
         buttonAddSeat(e);
+        buttonVerLibroDiario(e);
         try {
             buttonShowAccounts(e);
         } catch (SQLException ex) {
@@ -105,6 +116,7 @@ public class MainMenuController implements ActionListener{//Implementa la interf
             Logger.getLogger(MainMenuController.class.getName()).log(Level.SEVERE, null, ex);
         }
         buttonExit(e);
+        
     }
     
 }
