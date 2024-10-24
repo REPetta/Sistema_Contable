@@ -105,8 +105,6 @@ public class AddAccountSeat extends javax.swing.JFrame {
 
         btnSaveOperation.setText("Agregar Operacion");
 
-        comboCuenta.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--" }));
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
