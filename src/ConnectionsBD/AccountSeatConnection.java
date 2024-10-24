@@ -122,6 +122,8 @@ public class AccountSeatConnection {
      public ArrayList<Account> getAccount() throws IOException, SQLException, ClassNotFoundException{
         //Atributos//
         ArrayList<Account> accounts= new ArrayList<>();
+        Account accountNula=new Account();
+        accounts.add(accountNula);
         String sql="SELECT* FROM cuenta c WHERE c.estado='alta' and c.recibesaldo= 1 ;";
         ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
         PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
@@ -137,9 +139,9 @@ public class AccountSeatConnection {
                         rs.getInt("codigo"),
                         rs.getString("tipo"),
                         rs.getString("estado"),
+                        rs.getFloat("saldoInicial"),
                         rs.getFloat("saldoCuenta"),
                         rs.getInt("recibeSaldo")
-                         
                 );
                 accounts.add(account);
             }
@@ -152,9 +154,6 @@ public class AccountSeatConnection {
         return accounts; 
    
     }
-    
-     
-    
     
     
     public int obtenerIdCuentaPorNombre(String nombreCuenta) {

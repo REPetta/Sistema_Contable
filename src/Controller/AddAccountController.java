@@ -59,6 +59,7 @@ public class AddAccountController implements ActionListener {
                     newAccount.setAccountName(addAccountView.txtAccountName.getText().trim());
                     newAccount.setAccountCode(Integer.parseInt(addAccountView.txtCode.getText().trim()));
                     newAccount.setAccountType(addAccountView.cBoxType.getSelectedItem().toString().trim());
+                    newAccount.setSaldoInicial(Float.parseFloat(addAccountView.txtAmount.getText().trim()));
                     newAccount.setAccountBalance(Float.parseFloat(addAccountView.txtAmount.getText().trim()));
                     if(addAccountView.comboRSaldo.getSelectedItem()=="SI"){
                         newAccount.setReceiveBalance(1);

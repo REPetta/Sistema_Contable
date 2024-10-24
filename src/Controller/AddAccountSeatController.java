@@ -29,7 +29,7 @@ public class AddAccountSeatController implements ActionListener{
     DefaultTableModel modelo = new DefaultTableModel();
     //Metodos//
     public AddAccountSeatController(){//Conecta el boton Volver con la Clase
-        setCuentasComboBox(); //inicializo el combox//
+       setCuentasComboBox(); //inicializo el combox//
        this.addAccountSeatView.setTitle("Agregar Asiento"+" - "+currentUser.getUserName()+" ( "+currentUser.getRol().substring(0, 1).toUpperCase()+currentUser.getRol().substring(1).toLowerCase()+ " ) " );
        this.addAccountSeatView.btnCancelar.addActionListener(this);
        this.addAccountSeatView.btnSaveOperation.addActionListener(this);
@@ -58,16 +58,12 @@ public class AddAccountSeatController implements ActionListener{
         addAccountSeatView.txtImporte.setText("");
         addAccountSeatView.cBoxDestiny.setSelectedIndex(0);
         addAccountSeatView.comboCuenta.setSelectedIndex(0);
-       // iniciarTabla();//
-        
+        addAccountSeatView.dateFecha.setDate(null);
+        iniciarTabla();
         }
      
     public void iniciarTabla() {
-        
-        
-        
-        
-        
+ 
         modelo = new DefaultTableModel() {
             public boolean isCellEditable(int fila, int columna) {
                 if (columna == 1 && columna == 2 && columna == 3) {
@@ -87,9 +83,6 @@ public class AddAccountSeatController implements ActionListener{
         addAccountSeatView.tableModel.setRowHeight(15);
         addAccountSeatView.tableModel.setModel(modelo);
         addAccountSeatView.tableModel.setRowHeight(25);
-        
-        
-
     }
     
     public void cargarTabla(AsientoTabla asiento){
@@ -101,7 +94,7 @@ public class AddAccountSeatController implements ActionListener{
             datos[4]=String.valueOf(asiento.getImporte());
             
         } else {
-             datos[3]=String.valueOf(asiento.getImporte());;
+             datos[3]=String.valueOf(asiento.getImporte());
         }
         
        

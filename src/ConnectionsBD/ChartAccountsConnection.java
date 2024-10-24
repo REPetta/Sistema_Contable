@@ -18,7 +18,7 @@ public class ChartAccountsConnection {
         ChartAccountsController chartAccounts=new ChartAccountsController();
         AccountNode auxNode;
         Account auxAccount;
-        String sql="SELECT idcuenta,nombrecuenta,codigo,tipo,estado,saldocuenta,recibesaldo FROM Cuenta WHERE estado='alta' ORDER BY codigo ASC;";
+        String sql="SELECT idcuenta,nombrecuenta,codigo,tipo,estado,saldoinicial,saldocuenta,recibesaldo FROM Cuenta WHERE estado='alta' ORDER BY codigo ASC;";
         ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
         PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
         ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
@@ -32,6 +32,7 @@ public class ChartAccountsConnection {
                   auxAccount.setAccountCode(rs.getInt("codigo"));
                   auxAccount.setAccountType(rs.getString("tipo"));
                   auxAccount.setEstado(rs.getString("estado"));
+                  auxAccount.setSaldoInicial(rs.getFloat("saldoinicial"));
                   auxAccount.setAccountBalance(rs.getFloat("saldocuenta"));
                   auxAccount.setReceiveBalance(rs.getInt("recibesaldo"));
                   auxNode= new AccountNode();
@@ -51,8 +52,8 @@ public class ChartAccountsConnection {
 }
     //Metodo para agregar una cuenta a la base de datos(Incompleto)//
     public void addAccount(Account account) throws ClassNotFoundException, SQLException, IOException{
-        String sql="INSERT INTO Cuenta(nombrecuenta,codigo,tipo,estado,saldocuenta,recibesaldo)\n" +
-"	VALUES(?,?,?,?,?,?) ON CONFLICT(codigo) DO NOTHING;";
+        String sql="INSERT INTO Cuenta(nombrecuenta,codigo,tipo,estado,saldoinicial,saldocuenta,recibesaldo)\n" +
+"	VALUES(?,?,?,?,?,?,?) ON CONFLICT(codigo) DO NOTHING;";
         ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
         PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
         ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
@@ -62,8 +63,9 @@ public class ChartAccountsConnection {
             ps.setInt(2,account.getAccountCode());
             ps.setString(3, account.getAccountType().toUpperCase());
             ps.setString(4, "alta");
-            ps.setFloat(5, account.getAccountBalance());
-            ps.setFloat(6, account.getReceiveBalance());
+            ps.setFloat(5, account.getSaldoInicial());
+            ps.setFloat(6, account.getAccountBalance());
+            ps.setFloat(7, account.getReceiveBalance());
             int affectedRows=ps.executeUpdate();//Ejecuta la secuencia e inserta la cuenta en la tabla de la base de datos//
             if(affectedRows==0){
                     JOptionPane.showMessageDialog(null, "La cuenta con código " + account.getAccountCode() + " ya existe.", "Advertencia", JOptionPane.WARNING_MESSAGE);
