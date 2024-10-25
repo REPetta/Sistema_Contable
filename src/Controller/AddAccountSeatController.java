@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
@@ -159,9 +160,6 @@ public class AddAccountSeatController implements ActionListener{
          
          LocalDate fechaActual= LocalDate.now();
          Date fecha=addAccountSeatView.dateFecha.getDate();
-         LocalDate fechaConvertida = fecha.toInstant()
-                                         .atZone(ZoneId.systemDefault())
-                                         .toLocalDate();
          String descripcion=addAccountSeatView.txtDescripcion.getText().trim();
          String destino=addAccountSeatView.cBoxDestiny.getSelectedItem().toString();
          String importText=addAccountSeatView.txtImporte.getText().toString().trim();
@@ -175,6 +173,9 @@ public class AddAccountSeatController implements ActionListener{
              limpiarVista();
              return;
          }
+         LocalDate fechaConvertida = fecha.toInstant()
+                                         .atZone(ZoneId.systemDefault())
+                                         .toLocalDate();
          if(fechaConvertida.isBefore(fechaActual)){
              JOptionPane.showMessageDialog(null,"La fecha no puede ser anterior a la de hoy");
              limpiarVista();
@@ -231,17 +232,43 @@ public class AddAccountSeatController implements ActionListener{
         if(e.getSource()== addAccountSeatView.btnSaveOperation){       
               AsientoTabla asientoTabla= new AsientoTabla();
               getAsientoTabla(asientoTabla);
-              if(asientoTabla.getCuenta()!=null){
+              if(asientoTabla.getCuenta()==null){
+                    limpiarVista();
+              }
+              LocalDate fechaConvertida = asientoTabla.getFecha().toInstant()
+                                         .atZone(ZoneId.systemDefault())
+                                         .toLocalDate();
+              LocalDate fechaAnterior=obtenerFechaAnterior();
+              if(fechaAnterior!=null){
+                    if(fechaConvertida.isBefore(fechaAnterior)  && !fechaConvertida.isEqual(fechaAnterior)){
+                        limpiarVista();
+                        JOptionPane.showMessageDialog(null,"La fecha de la nueva operacion no puede ser menor a la de la operacion anterior");
+                        return;
+                    }
+                    cargarTabla(asientoTabla);
+                    asientoContable.add(asientoTabla);
+                    limpiarVista();
+                        return;
+              }
                     cargarTabla(asientoTabla);
                     asientoContable.add(asientoTabla);
                     limpiarVista();
               }
-              else{
-                  limpiarVista();
-              }
         }
+    public LocalDate obtenerFechaAnterior(){
+            LocalDate fechaAnterior=null;
+            DefaultTableModel tableModel = (DefaultTableModel) addAccountSeatView.tableModel.getModel();
+            DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            for (int i = 0; i < tableModel.getRowCount(); i++) {
+                // Obtiene la fecha en formato String y la convierte a LocalDate
+                String fechaStr = (String) tableModel.getValueAt(i, 0);  
+            if (fechaStr != null && !fechaStr.isEmpty()) {
+                LocalDate fechaActual = LocalDate.parse(fechaStr, formatter1);
+                fechaAnterior = fechaActual;
+        }
+        }
+        return fechaAnterior;
     }
-    
     public void botonGuardarAsientoContable(ActionEvent e) throws ClassNotFoundException, SQLException, IOException{
         if(e.getSource()==addAccountSeatView.btnGuardarAsiento){
            Seat seat =new Seat(
