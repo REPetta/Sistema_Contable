@@ -18,6 +18,8 @@ import java.sql.SQLException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.logging.Level;
@@ -102,10 +104,12 @@ public class AddAccountSeatController implements ActionListener{
         datos[1]=asiento.getDescripcion();
         datos[2]=asiento.getCuenta();
         if (asiento.getDestino().equalsIgnoreCase("HABER")) {
-            datos[4]=String.valueOf(asiento.getImporte());
+            datos[4]="$"+String.valueOf(asiento.getImporte());
+            datos[3]="$"+"0.0";
             
         } else {
-             datos[3]=String.valueOf(asiento.getImporte());
+             datos[3]="$"+String.valueOf(asiento.getImporte());
+             datos[4]="$"+"0.0";
         }
         
        
@@ -153,7 +157,11 @@ public class AddAccountSeatController implements ActionListener{
     //Metodo para obtener fila del asiento//
     public void getAsientoTabla(AsientoTabla asientoTabla) throws ParseException{
          
+         LocalDate fechaActual= LocalDate.now();
          Date fecha=addAccountSeatView.dateFecha.getDate();
+         LocalDate fechaConvertida = fecha.toInstant()
+                                         .atZone(ZoneId.systemDefault())
+                                         .toLocalDate();
          String descripcion=addAccountSeatView.txtDescripcion.getText().trim();
          String destino=addAccountSeatView.cBoxDestiny.getSelectedItem().toString();
          String importText=addAccountSeatView.txtImporte.getText().toString().trim();
@@ -164,6 +172,11 @@ public class AddAccountSeatController implements ActionListener{
          //Verifica que el valor  ingresado es valido sea valido
          if(fecha==null){
              JOptionPane.showMessageDialog(null,"No puede haber ninguna opcion en blanco");
+             limpiarVista();
+             return;
+         }
+         if(fechaConvertida.isBefore(fechaActual)){
+             JOptionPane.showMessageDialog(null,"La fecha no puede ser anterior a la de hoy");
              limpiarVista();
              return;
          }
