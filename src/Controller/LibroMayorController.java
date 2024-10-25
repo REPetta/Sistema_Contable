@@ -117,7 +117,7 @@ public class LibroMayorController implements ActionListener {
         filaInicial[2] = "Inicial"; // Texto "Inicial" en la descripción
         filaInicial[3] = ""; // Columna "Debe" vacía
         filaInicial[4] = ""; // Columna "Haber" vacía
-        filaInicial[5] = String.valueOf(saldo); // Saldo inicial
+        filaInicial[5] ="$"+ String.valueOf(saldo); // Saldo inicial
         modelo.addRow(filaInicial);
         
         for(AccountSeatController asiento : listaAsientos){
@@ -130,13 +130,13 @@ public class LibroMayorController implements ActionListener {
                     datos[1]=asiento.getSeat().getDate().toString();
                     datos[2]=asientoCuenta.getDecripcionOperacion();
                     if(asientoCuenta.getType().toUpperCase().equals("HABER")){
-                        datos[4]=String.valueOf(asientoCuenta.getAmount());
+                        datos[4]="$"+String.valueOf(asientoCuenta.getAmount());
                          saldo-=asientoCuenta.getAmount();
                     }else{
-                        datos[3]=String.valueOf(asientoCuenta.getAmount());
+                        datos[3]="$"+String.valueOf(asientoCuenta.getAmount());
                         saldo+=asientoCuenta.getAmount();
                     }
-                        datos[5]=String.valueOf(saldo);
+                        datos[5]="$"+String.valueOf(saldo);
                     modelo.addRow(datos);
                     }
             }      
@@ -147,7 +147,7 @@ public class LibroMayorController implements ActionListener {
         filaFinal[2] = "Final"; // Texto "Inicial" en la descripción
         filaFinal[3] = ""; // Columna "Debe" vacía
         filaFinal[4] = ""; // Columna "Haber" vacía
-        filaFinal[5] = String.valueOf(saldo); // Saldo inicial
+        filaFinal[5] ="$"+ String.valueOf(saldo); // Saldo inicial
         modelo.addRow(filaFinal);
         
         // Agregar fila separadora después de cada AsientoContable

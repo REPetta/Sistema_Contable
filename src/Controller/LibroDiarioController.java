@@ -100,9 +100,9 @@ public class LibroDiarioController implements ActionListener{
                      }
                 datos[1]=obtenerNombreCuenta(asientoCuenta.getIdAccount());
                 if(asientoCuenta.getType().toUpperCase().equals("HABER")){
-                    datos[3]=String.valueOf(asientoCuenta.getAmount());
+                    datos[3]="$"+String.valueOf(asientoCuenta.getAmount());
                 }else{
-                    datos[2]=String.valueOf(asientoCuenta.getAmount());
+                    datos[2]="$"+String.valueOf(asientoCuenta.getAmount());
                 }
                 modelo.addRow(datos);
             }

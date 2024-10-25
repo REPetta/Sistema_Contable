@@ -2,8 +2,11 @@
 package Controller;
 
 import ConnectionsBD.AccountSeatConnection;
+import ConnectionsBD.UserManagementConnection;
 import Model.Account;
+import Model.AccountSeat;
 import Model.AsientoTabla;
+import Model.Seat;
 import Model.User;
 import View.AddAccountSeat;
 import java.awt.event.ActionEvent;
@@ -23,11 +26,13 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 public class AddAccountSeatController implements ActionListener{
     //Atributos//
-    private AccountSeatConnection conexionAsientoBD=new AccountSeatConnection();
+    private AccountSeatConnection conAsiento=new AccountSeatConnection();
     private AddAccountSeat addAccountSeatView=new AddAccountSeat();
     private MainMenuController mainMenuController;
     private User currentUser=User.getInstancia();
+    private UserManagementConnection conUsuario=new UserManagementConnection();
     DefaultTableModel modelo = new DefaultTableModel();
+    ArrayList<AsientoTabla> asientoContable=new ArrayList<AsientoTabla>();
     //Metodos//
     public AddAccountSeatController(){//Conecta el boton Volver con la Clase
        setCuentasComboBox(); //inicializo el combox//
@@ -51,17 +56,20 @@ public class AddAccountSeatController implements ActionListener{
     if (e.getSource() == addAccountSeatView.btnCancelar) {
         // Limpiar campos
         limpiarVista();
+        limpiarTabla();
     }
 }
 
-    public void limpiarVista() {
+    public void limpiarTabla() {
+        iniciarTabla();
+        }
+     public void limpiarVista(){
         addAccountSeatView.txtDescripcion.setText("");
         addAccountSeatView.txtImporte.setText("");
         addAccountSeatView.cBoxDestiny.setSelectedIndex(0);
         addAccountSeatView.comboCuenta.setSelectedIndex(0);
         addAccountSeatView.dateFecha.setDate(null);
-        iniciarTabla();
-        }
+     }
      
     public void iniciarTabla() {
  
@@ -85,15 +93,15 @@ public class AddAccountSeatController implements ActionListener{
         addAccountSeatView.tableModel.setModel(modelo);
         addAccountSeatView.tableModel.setRowHeight(25);
     }
-    
+    //Metodo para cargar Jtabla
     public void cargarTabla(AsientoTabla asiento){
     String[] datos =new String[5];
     SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
     String fechaFormateada = formato.format(asiento.getFecha());
-    datos[0]=fechaFormateada;
+        datos[0]=fechaFormateada;
         datos[1]=asiento.getDescripcion();
         datos[2]=asiento.getCuenta();
-        if (asiento.getDestino()=="HABER") {
+        if (asiento.getDestino().equalsIgnoreCase("HABER")) {
             datos[4]=String.valueOf(asiento.getImporte());
             
         } else {
@@ -104,6 +112,7 @@ public class AddAccountSeatController implements ActionListener{
         modelo.addRow(datos);   
     
     }
+    //Metodo para cerrar la vista
     public void buttonBack(ActionEvent e){//Metodo que le da al boton volver la accion de salir de la ventana Agregar Asiento y volver al Menu Principal//
        if(e.getSource()==addAccountSeatView.btnBack){
            closeAddAccountSeatView();
@@ -111,24 +120,13 @@ public class AddAccountSeatController implements ActionListener{
            mainMenuController.openMainMenuView();
        }
    }
-   
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        buttonBack(e);
-        cancelSeat(e);
-        try {
-            accionBtnAgregarAtabla(e);
-        } catch (ParseException ex) {
-            Logger.getLogger(AddAccountSeatController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
     
-    //inicializacion para combobox de cuentas//
+    //Inicializacion para combobox de cuentas//
     public ArrayList<Account> cuentas () throws IOException,  ClassNotFoundException,   SQLException{
         AccountSeatConnection conexionCuentas =new AccountSeatConnection();
         return conexionCuentas.getAccount();
      }
-   
+   //Setear el jComboBox
     public void setCuentasComboBox() {
         try {
             // Obtener la lista de cuentas
@@ -152,59 +150,126 @@ public class AddAccountSeatController implements ActionListener{
         }
     }
 
-    
+    //Metodo para obtener fila del asiento//
     public void getAsientoTabla(AsientoTabla asientoTabla) throws ParseException{
+         
          Date fecha=addAccountSeatView.dateFecha.getDate();
          String descripcion=addAccountSeatView.txtDescripcion.getText().trim();
-         String destino=addAccountSeatView.txtDescripcion.getText().trim();
+         String destino=addAccountSeatView.cBoxDestiny.getSelectedItem().toString();
          String importText=addAccountSeatView.txtImporte.getText().toString().trim();
-         // Validar que importText solo contenga números o un número decimal válido
-         Float importe=0.0f;
-         if (importText.matches("^\\d+(\\.\\d+)?$")) {
-            importe = Float.parseFloat(importText);
-            
-         } else {
-            // Si contiene letras o es un formato inválido, establece importe en 0 y muestra un mensaje
-            JOptionPane.showMessageDialog(null, "El campo importe solo puede contener números.");
-            importe = 0.0f;
-        }
+         Float importe;
+         boolean success=esFlotante(importText);
          Object selectedCuenta=addAccountSeatView.comboCuenta.getSelectedItem();
          String cuenta= (selectedCuenta!=null) ? selectedCuenta.toString() : "";
-         //Integer idCuenta=conexionAsientoBD.obtenerIdCuentaPorNombre(addAccountSeatView.comboCuenta.getSelectedItem().toString());
-        if( fecha==null || descripcion.isEmpty() ||  destino.isEmpty() || importe==0 || cuenta.isEmpty()  ){
-                JOptionPane.showMessageDialog(null,"No puede haber ninguna opcion en blanco");
+         //Verifica que el valor  ingresado es valido sea valido
+         if(fecha==null){
+             JOptionPane.showMessageDialog(null,"No puede haber ninguna opcion en blanco");
+             limpiarVista();
+             return;
+         }
+         if(descripcion.isEmpty()){
+             JOptionPane.showMessageDialog(null,"No puede haber ninguna opcion en blanco");
+             limpiarVista();
+             return;
+         }
+         if(destino.isEmpty()){
+             JOptionPane.showMessageDialog(null,"No puede haber ninguna opcion en blanco");
+             limpiarVista();
+             return;
+         }
+         if(!success){
+             JOptionPane.showMessageDialog(null,"El campo monto debe tener valores validos");
+             limpiarVista();
+             return;
+         }else{
+             importe=Float.parseFloat(importText);
+         }
+         if(importe==0){
+                JOptionPane.showMessageDialog(null,"El campo monto no puede ser 0");
                 limpiarVista();
-            }else{
-                asientoTabla.setFecha(fecha);
-                asientoTabla.setDescripcion(descripcion);
-                asientoTabla.setDestino(destino);
-                asientoTabla.setImporte(importe);
-                asientoTabla.setCuenta(cuenta);
-                asientoTabla.setIdCuenta(conexionAsientoBD.obtenerIdCuentaPorNombre(addAccountSeatView.comboCuenta.getSelectedItem().toString()));
-        }
+                return;
+         } 
+         if(cuenta==null){
+             JOptionPane.showMessageDialog(null,"No puede haber ninguna opcion en blanco");
+             limpiarVista();
+             return;
+         }
+         asientoTabla.setFecha(fecha);
+         asientoTabla.setDescripcion(descripcion);
+         asientoTabla.setDestino(destino);
+         asientoTabla.setImporte(importe);
+         asientoTabla.setCuenta(cuenta);
+         asientoTabla.setIdCuenta(conAsiento.obtenerIdCuentaPorNombre(addAccountSeatView.comboCuenta.getSelectedItem().toString()));
+         limpiarVista();
     }
+    //Metodo para validar si se ingresa un flotante y no otro tipo de datos//
+    public boolean esFlotante(String importe){
+        try{
+                Float.parseFloat(importe);
+                return true;
+        }catch(NumberFormatException e){
+
+            return false;
+      }
+}
     
-    public void accionBtnAgregarAtabla(ActionEvent e) throws ParseException{
+    
+    public void botonGuardarOperacion(ActionEvent e) throws ParseException{
         if(e.getSource()== addAccountSeatView.btnSaveOperation){       
               AsientoTabla asientoTabla= new AsientoTabla();
               getAsientoTabla(asientoTabla);
               if(asientoTabla.getCuenta()!=null){
                     cargarTabla(asientoTabla);
-                    addAccountSeatView.txtDescripcion.setText("");
-                    addAccountSeatView.txtImporte.setText("");
-                    addAccountSeatView.cBoxDestiny.setSelectedIndex(0);
-                    addAccountSeatView.comboCuenta.setSelectedIndex(0);
-                    addAccountSeatView.dateFecha.setDate(null);
+                    asientoContable.add(asientoTabla);
+                    limpiarVista();
               }
               else{
-                  addAccountSeatView.txtDescripcion.setText("");
-                  addAccountSeatView.txtImporte.setText("");
-                  addAccountSeatView.cBoxDestiny.setSelectedIndex(0);
-                  addAccountSeatView.comboCuenta.setSelectedIndex(0);
-                  addAccountSeatView.dateFecha.setDate(null);
+                  limpiarVista();
               }
         }
+    }
     
+    public void botonGuardarAsientoContable(ActionEvent e) throws ClassNotFoundException, SQLException, IOException{
+        if(e.getSource()==addAccountSeatView.btnGuardarAsiento){
+           Seat seat =new Seat(
+                   asientoContable.getFirst().getFecha(),
+                   conUsuario.getIdUser(currentUser.getUserName())
+                   );
+           int idSeat=conAsiento.addSeat(seat);
+           for( AsientoTabla asientoCuenta : asientoContable){
+               AccountSeat accountSeat= new AccountSeat(
+                   idSeat,
+                   asientoCuenta.getIdCuenta(),
+                   asientoCuenta.getImporte(),    
+                   asientoCuenta.getDestino(),         
+                   asientoCuenta.getDescripcion()
+               );
+               conAsiento.addAccountSeat(accountSeat);    
+            }
+            JOptionPane.showMessageDialog(null,"Se ha registrado correctamente el asiento");
+            limpiarTabla();
+            asientoContable=new ArrayList<AsientoTabla>();
+        }
+   }
+    
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        buttonBack(e);
+        cancelSeat(e);
+        try {
+            botonGuardarAsientoContable(e);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(AddAccountSeatController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(AddAccountSeatController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(AddAccountSeatController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            botonGuardarOperacion(e);
+        } catch (ParseException ex) {
+            Logger.getLogger(AddAccountSeatController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

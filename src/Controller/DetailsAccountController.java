@@ -25,7 +25,7 @@ public class DetailsAccountController implements ActionListener{
             if (this.selectedAccount != null) {
                 this.detailsAccountView.txtName.setText(this.selectedAccount.getAccountName());
                 this.detailsAccountView.txtCode.setText(String.valueOf(this.selectedAccount.getAccountCode()));
-                this.detailsAccountView.txtAmount.setText(String.valueOf(this.selectedAccount.getAccountBalance()));
+                this.detailsAccountView.txtAmount.setText(String.valueOf("$"+this.selectedAccount.getAccountBalance()));
                 this.detailsAccountView.txtType.setText(this.selectedAccount.getAccountType());
             } else {
                 // Manejo de error si la cuenta es nula
