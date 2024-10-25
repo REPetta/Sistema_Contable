@@ -171,6 +171,7 @@ public class AddAccountSeatController implements ActionListener{
          if(fecha==null){
              JOptionPane.showMessageDialog(null,"No puede haber ninguna opcion en blanco");
              limpiarVista();
+             
              return;
          }
          LocalDate fechaConvertida = fecha.toInstant()
@@ -228,12 +229,13 @@ public class AddAccountSeatController implements ActionListener{
 }
     
     
-    public void botonGuardarOperacion(ActionEvent e) throws ParseException{
+   public void botonGuardarOperacion(ActionEvent e) throws ParseException{
         if(e.getSource()== addAccountSeatView.btnSaveOperation){       
               AsientoTabla asientoTabla= new AsientoTabla();
               getAsientoTabla(asientoTabla);
               if(asientoTabla.getCuenta()==null){
                     limpiarVista();
+                    return;
               }
               LocalDate fechaConvertida = asientoTabla.getFecha().toInstant()
                                          .atZone(ZoneId.systemDefault())
@@ -255,13 +257,13 @@ public class AddAccountSeatController implements ActionListener{
                     limpiarVista();
               }
         }
-    public LocalDate obtenerFechaAnterior(){
+      public LocalDate obtenerFechaAnterior(){
             LocalDate fechaAnterior=null;
             DefaultTableModel tableModel = (DefaultTableModel) addAccountSeatView.tableModel.getModel();
             DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             for (int i = 0; i < tableModel.getRowCount(); i++) {
                 // Obtiene la fecha en formato String y la convierte a LocalDate
-                String fechaStr = (String) tableModel.getValueAt(i, 0);  
+                String fechaStr = (String) tableModel.getValueAt(i, 0);
             if (fechaStr != null && !fechaStr.isEmpty()) {
                 LocalDate fechaActual = LocalDate.parse(fechaStr, formatter1);
                 fechaAnterior = fechaActual;
@@ -269,6 +271,7 @@ public class AddAccountSeatController implements ActionListener{
         }
         return fechaAnterior;
     }
+
     public void botonGuardarAsientoContable(ActionEvent e) throws ClassNotFoundException, SQLException, IOException{
         if(e.getSource()==addAccountSeatView.btnGuardarAsiento){
            Seat seat =new Seat(
@@ -311,6 +314,8 @@ public class AddAccountSeatController implements ActionListener{
             Logger.getLogger(AddAccountSeatController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+ 
 
 }
 /*
