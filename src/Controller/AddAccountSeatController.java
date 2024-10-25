@@ -60,6 +60,7 @@ public class AddAccountSeatController implements ActionListener{
         // Limpiar campos
         limpiarVista();
         limpiarTabla();
+        asientoContable.clear();
     }
 }
 
@@ -199,11 +200,11 @@ public class AddAccountSeatController implements ActionListener{
          }else{
              importe=Float.parseFloat(importText);
          }
-         if(importe==0){
-                JOptionPane.showMessageDialog(null,"El campo monto no puede ser 0");
+         if(importe<=0){
+                JOptionPane.showMessageDialog(null,"El campo monto no puede ser negativo o 0");
                 limpiarVista();
                 return;
-         } 
+         }
          if(cuenta==null){
              JOptionPane.showMessageDialog(null,"No puede haber ninguna opcion en blanco");
              limpiarVista();
@@ -247,16 +248,53 @@ public class AddAccountSeatController implements ActionListener{
                         JOptionPane.showMessageDialog(null,"La fecha de la nueva operacion no puede ser menor a la de la operacion anterior");
                         return;
                     }
-                    cargarTabla(asientoTabla);
-                    asientoContable.add(asientoTabla);
-                    limpiarVista();
+                    if(!fechaConvertida.isEqual(fechaAnterior)){
+                        limpiarVista();
+                        JOptionPane.showMessageDialog(null,"La fecha de la nueva operacion debe ser igual a la operacion anterior");
                         return;
-              }
+                    }
+                 }
+                     if(asientoTabla.getDestino().equalsIgnoreCase("haber") && asientoContable.isEmpty()){
+                        limpiarVista();
+                        JOptionPane.showMessageDialog(null,"El destino del la primera operacion debe ser un deber");
+                        return;
+                        }
+
+                    if(!asientoContable.isEmpty()){
+                        Float montoAux=0.0f;
+                        for( int i =0; i<asientoContable.size() ; i++){
+                             
+                            AsientoTabla asiento=asientoContable.get(i);
+                            if(asientoTabla.getDestino().trim().equalsIgnoreCase("debe") && asientoContable.get(asientoContable.size()-1).getDestino().trim().equalsIgnoreCase("debe")){
+                                JOptionPane.showMessageDialog(null,"Error: El total de debitos debe ser igual al total de creditos");
+                                limpiarVista();
+                                return;
+                            }
+                            if(asiento.getDestino().equalsIgnoreCase("debe")){
+                                montoAux=montoAux+asiento.getImporte();
+                            }else{
+                                montoAux=montoAux-asiento.getImporte();
+                            }       
+                         }
+                        System.out.println(montoAux);
+                        if(asientoTabla.getDestino().equalsIgnoreCase("haber")){
+                            if(montoAux-asientoTabla.getImporte()<0){
+                                JOptionPane.showMessageDialog(null,"Error: El total de debitos debe ser igual al total de creditos");
+                                limpiarVista();
+                                return;
+                          }
+                        }
+                        
+                        cargarTabla(asientoTabla);
+                        asientoContable.add(asientoTabla);
+                        limpiarVista();
+                        return;
+                   }
                     cargarTabla(asientoTabla);
                     asientoContable.add(asientoTabla);
                     limpiarVista();
-              }
         }
+   }
       public LocalDate obtenerFechaAnterior(){
             LocalDate fechaAnterior=null;
             DefaultTableModel tableModel = (DefaultTableModel) addAccountSeatView.tableModel.getModel();
@@ -271,6 +309,7 @@ public class AddAccountSeatController implements ActionListener{
         }
         return fechaAnterior;
     }
+      
 
     public void botonGuardarAsientoContable(ActionEvent e) throws ClassNotFoundException, SQLException, IOException{
         if(e.getSource()==addAccountSeatView.btnGuardarAsiento){
