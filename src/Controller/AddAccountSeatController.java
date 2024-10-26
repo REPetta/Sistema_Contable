@@ -269,11 +269,11 @@ public class AddAccountSeatController implements ActionListener{
                         for( int i =0; i<asientoContable.size() ; i++){
                              
                             AsientoTabla asiento=asientoContable.get(i);
-                            if(asientoTabla.getDestino().trim().equalsIgnoreCase("debe") && asientoContable.get(asientoContable.size()-1).getDestino().trim().equalsIgnoreCase("debe")){
-                                JOptionPane.showMessageDialog(null,"Error: El total de debitos debe ser igual al total de creditos");
-                                limpiarVista();
-                                return;
-                            }
+//                        if(asientoTabla.getDestino().trim().equalsIgnoreCase("debe") && asientoContable.get(asientoContable.size()-1).getDestino().trim().equalsIgnoreCase("debe")){
+//                            JOptionPane.showMessageDialog(null,"Error: El total de debitos debe ser igual al total de creditos");
+//                            limpiarVista();
+//                            return;
+//                        }
                             if(asiento.getDestino().equalsIgnoreCase("debe")){
                                 montoAux=montoAux+asiento.getImporte();
                             }else{

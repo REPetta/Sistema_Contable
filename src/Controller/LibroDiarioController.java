@@ -92,7 +92,7 @@ public class LibroDiarioController implements ActionListener{
                 // Obtener los datos necesarios
                 String[] datos= new String[4];
                  // Verificar si la fecha es diferente a la última fecha añadida
-                 if (ultimaFecha == null || !asiento.getSeat().getDate().equals(ultimaFecha)) {
+                 if (ultimaFecha == null || !asiento.getSeat().getDate().equals(ultimaFecha) || asiento.getSeat().getIdSeat()>asiento.getSeat().getIdSeat()-1) {
                         datos[0] = asiento.getSeat().getDate().toString(); // Solo se añade si es la primera vez
                         ultimaFecha = asiento.getSeat().getDate(); // Actualizar la última fecha
                    } else {

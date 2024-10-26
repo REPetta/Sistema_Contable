@@ -2,6 +2,7 @@
 package ConnectionsBD;
 
 import Controller.AccountSeatController;
+import Model.Account;
 import Model.AccountSeat;
 import Model.Seat;
 import java.io.IOException;
@@ -17,7 +18,7 @@ public class LibrosConnection {
     //Metodo par obtener todos los asientos entre dos fechas dadas//
     public ArrayList<AccountSeatController> obtenerListaAsientos(Date fechaMenor , Date fechaMayor) throws ClassNotFoundException, SQLException, IOException{
         ArrayList<AccountSeatController> listaAsientos=new ArrayList<AccountSeatController>();
-        String sql= "SELECT a.idAsiento, a.fecha , ac.idAsiento , ac.idCuenta, ac.tipo, ac.monto, ac.descripcionOperacion FROM Asiento a INNER JOIN Asiento_Cuenta ac ON a.idAsiento=ac.idAsiento WHERE a.fecha BETWEEN ? AND ? ORDER BY a.fecha ASC;";
+        String sql= "SELECT a.idAsiento, a.fecha , ac.idAsientoCuenta , ac.idCuenta, ac.tipo, ac.monto, ac.descripcionOperacion FROM Asiento a INNER JOIN Asiento_Cuenta ac ON a.idAsiento=ac.idAsiento WHERE a.fecha BETWEEN ? AND  ?  ORDER BY a.fecha ASC,ac.idAsientoCuenta ASC ;";
         ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
         PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
         ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
@@ -70,4 +71,66 @@ public class LibrosConnection {
                 if (objConect != null) try { objConect.close(); } catch (SQLException e) {}
     }     
 } 
+     public String obtenerUltimaFecha(Date fechaMenor , Date fechaMayor , Account cuenta) throws ClassNotFoundException, SQLException, IOException{
+        String fechaFinal="";
+        String sql= "SELECT MAX(a.fecha) AS ultima_fecha\n" +
+"FROM Asiento a \n" +
+"INNER JOIN asiento_cuenta ac ON a.idAsiento = ac.idAsiento \n" +
+"INNER JOIN cuenta c ON ac.idCuenta = c.idCuenta\n" +
+"WHERE a.fecha BETWEEN ? AND  ? AND c.idCuenta = ?  ;";
+        ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
+        PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
+        ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
+          try{
+            ps=objConect.conect().prepareStatement(sql);//Establece la conexion con la base de datos//
+            ps.setDate(1, new java.sql.Date(fechaMenor.getTime() ));
+            ps.setDate(2, new java.sql.Date(fechaMayor.getTime()));
+            ps.setInt(3, cuenta.getIdAccount());
+            rs=ps.executeQuery(); //Ejecuta la consulta y almacena el resultado//
+            
+            if(rs.next()){
+                fechaFinal=rs.getString("ultima_fecha");
+            }
+            return fechaFinal;
+            
+    }catch(SQLException e){
+            e.printStackTrace();
+            throw e;
+        }finally{
+                if(rs!=null) try{rs.close(); }catch(SQLException e){e.printStackTrace(); }
+                if (ps != null) try { ps.close(); } catch (SQLException e) { e.printStackTrace(); }
+                if (objConect != null) try { objConect.close(); } catch (SQLException e) {}
+    }     
+} 
+    public String obtenerFechaInicial(Date fechaMenor , Date fechaMayor , Account cuenta) throws ClassNotFoundException, SQLException, IOException{
+        String fechaFinal="";
+        String sql= "SELECT MIN(a.fecha) AS ultima_fecha\n" +
+"FROM Asiento a \n" +
+"INNER JOIN asiento_cuenta ac ON a.idAsiento = ac.idAsiento \n" +
+"INNER JOIN cuenta c ON ac.idCuenta = c.idCuenta\n" +
+"WHERE a.fecha BETWEEN ? AND  ? AND c.idCuenta = ?  ;";
+        ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
+        PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
+        ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
+          try{
+            ps=objConect.conect().prepareStatement(sql);//Establece la conexion con la base de datos//
+            ps.setDate(1, new java.sql.Date(fechaMenor.getTime() ));
+            ps.setDate(2, new java.sql.Date(fechaMayor.getTime()));
+            ps.setInt(3, cuenta.getIdAccount());
+            rs=ps.executeQuery(); //Ejecuta la consulta y almacena el resultado//
+            
+            if(rs.next()){
+                fechaFinal=rs.getString("ultima_fecha");
+            }
+            return fechaFinal;
+            
+    }catch(SQLException e){
+            e.printStackTrace();
+            throw e;
+        }finally{
+                if(rs!=null) try{rs.close(); }catch(SQLException e){e.printStackTrace(); }
+                if (ps != null) try { ps.close(); } catch (SQLException e) { e.printStackTrace(); }
+                if (objConect != null) try { objConect.close(); } catch (SQLException e) {}
+    }     
+}
 }
