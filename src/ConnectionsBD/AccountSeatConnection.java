@@ -159,8 +159,31 @@ public class AccountSeatConnection {
         return accounts; 
    
     }
-    
-    
+    //Metodo para actualizar el saldo de las cuentas //
+     public void actualizarSaldo(ArrayList<Account> listaCuentas) throws ClassNotFoundException, SQLException, IOException{
+        String sql="UPDATE  Cuenta  SET saldoCuenta=?\n" +
+"	WHERE saldoCuenta!=? and idCuenta=? ;";
+     PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
+     ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
+     try{
+          ps=objConect.conect().prepareStatement(sql);//Establece la conexion con la base de datos//
+          for(Account cuenta:listaCuentas){
+              ps.setFloat(1, cuenta.getAccountBalance());
+              ps.setFloat(2, cuenta.getAccountBalance());
+              ps.setInt(3, cuenta.getIdAccount());
+              ps.executeUpdate();
+            }
+     
+     }catch(ClassNotFoundException | SQLException e){
+            e.printStackTrace();
+            throw e;
+        }finally{
+            if (ps != null) try { ps.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (objConect != null) try { objConect.close(); } catch (SQLException e) { e.printStackTrace(); }
+            }
+        }
+     
+    //Metodo
     public int obtenerIdCuentaPorNombre(String nombreCuenta) {
     int idCuenta = 0;
 

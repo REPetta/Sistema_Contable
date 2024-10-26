@@ -9,6 +9,7 @@ import Model.AsientoTabla;
 import Model.Seat;
 import Model.User;
 import View.AddAccountSeat;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.table.DefaultTableModel;
@@ -33,12 +34,15 @@ public class AddAccountSeatController implements ActionListener{
     private AddAccountSeat addAccountSeatView=new AddAccountSeat();
     private MainMenuController mainMenuController;
     private User currentUser=User.getInstancia();
+    private ArrayList<Account> cuentasActualizar;
     private UserManagementConnection conUsuario=new UserManagementConnection();
     DefaultTableModel modelo = new DefaultTableModel();
     ArrayList<AsientoTabla> asientoContable=new ArrayList<AsientoTabla>();
     //Metodos//
-    public AddAccountSeatController(){//Conecta el boton Volver con la Clase
+    public AddAccountSeatController() throws IOException, ClassNotFoundException, SQLException{//Conecta el boton Volver con la Clase
        setCuentasComboBox(); //inicializo el combox//
+       this.cuentasActualizar=cuentas();
+       cuentasActualizar.remove(0);
        this.addAccountSeatView.setTitle("Agregar Asiento"+" - "+currentUser.getUserName()+" ( "+currentUser.getRol().substring(0, 1).toUpperCase()+currentUser.getRol().substring(1).toLowerCase()+ " ) " );
        this.addAccountSeatView.btnCancelar.addActionListener(this);
        this.addAccountSeatView.btnSaveOperation.addActionListener(this);
@@ -60,6 +64,7 @@ public class AddAccountSeatController implements ActionListener{
         // Limpiar campos
         limpiarVista();
         limpiarTabla();
+        asientoContable.clear();
     }
 }
 
@@ -160,7 +165,6 @@ public class AddAccountSeatController implements ActionListener{
          
          LocalDate fechaActual= LocalDate.now();
          Date fecha=addAccountSeatView.dateFecha.getDate();
-         
          String descripcion=addAccountSeatView.txtDescripcion.getText().trim();
          String destino=addAccountSeatView.cBoxDestiny.getSelectedItem().toString();
          String importText=addAccountSeatView.txtImporte.getText().toString().trim();
@@ -200,11 +204,11 @@ public class AddAccountSeatController implements ActionListener{
          }else{
              importe=Float.parseFloat(importText);
          }
-         if(importe==0){
-                JOptionPane.showMessageDialog(null,"El campo monto no puede ser 0");
+         if(importe<=0){
+                JOptionPane.showMessageDialog(null,"El campo monto no puede ser negativo o 0");
                 limpiarVista();
                 return;
-         } 
+         }
          if(cuenta==null){
              JOptionPane.showMessageDialog(null,"No puede haber ninguna opcion en blanco");
              limpiarVista();
@@ -248,21 +252,147 @@ public class AddAccountSeatController implements ActionListener{
                         JOptionPane.showMessageDialog(null,"La fecha de la nueva operacion no puede ser menor a la de la operacion anterior");
                         return;
                     }
-                    cargarTabla(asientoTabla);
-                    asientoContable.add(asientoTabla);
-                    limpiarVista();
+                    if(!fechaConvertida.isEqual(fechaAnterior)){
+                        limpiarVista();
+                        JOptionPane.showMessageDialog(null,"La fecha de la nueva operacion debe ser igual a la operacion anterior");
                         return;
-              }
+                    }
+                 }
+                     if(asientoTabla.getDestino().equalsIgnoreCase("haber") && asientoContable.isEmpty()){
+                        limpiarVista();
+                        JOptionPane.showMessageDialog(null,"El destino del la primera operacion debe ser un deber");
+                        return;
+                        }
+
+                    if(!asientoContable.isEmpty()){
+                        Float montoAux=0.0f;
+                        for( int i =0; i<asientoContable.size() ; i++){
+                             
+                            AsientoTabla asiento=asientoContable.get(i);
+                            if(asientoTabla.getDestino().trim().equalsIgnoreCase("debe") && asientoContable.get(asientoContable.size()-1).getDestino().trim().equalsIgnoreCase("debe")){
+                                JOptionPane.showMessageDialog(null,"Error: El total de debitos debe ser igual al total de creditos");
+                                limpiarVista();
+                                return;
+                            }
+                            if(asiento.getDestino().equalsIgnoreCase("debe")){
+                                montoAux=montoAux+asiento.getImporte();
+                            }else{
+                                montoAux=montoAux-asiento.getImporte();
+                            }       
+                         }
+                        if(asientoTabla.getDestino().equalsIgnoreCase("haber")){
+                            if(montoAux-asientoTabla.getImporte()<0){
+                                JOptionPane.showMessageDialog(null,"Error: El total de debitos debe ser igual al total de creditos");
+                                limpiarVista();
+                                return;
+                          }
+                        }
+                        if(asientoTabla.getDestino().equalsIgnoreCase("debe")){
+                             for(Account cuenta: cuentasActualizar){
+                                if(cuenta.getIdAccount()==asientoTabla.getIdCuenta()){
+                                    if(cuenta.getEstado().equalsIgnoreCase("pasivo")){        
+                                        if(cuenta.getAccountBalance()-asientoTabla.getImporte()<0){
+                                            JOptionPane.showMessageDialog(null,"Error: El saldo de la cuenta es insuficiente para esta operacion");
+                                            limpiarVista();
+                                            return;
+                                        }
+                                        cuenta.setAccountBalance(cuenta.getAccountBalance()-asientoTabla.getImporte());
+                                        break;
+                                }
+                                cuenta.setAccountBalance(cuenta.getAccountBalance()+asientoTabla.getImporte());
+                                break;
+                            }
+                            }
+                        }
+                        if(asientoTabla.getDestino().equalsIgnoreCase("haber")){
+                             for(Account cuenta : cuentasActualizar){
+                                if(cuenta.getIdAccount()==asientoTabla.getIdCuenta()){
+                                    if(cuenta.getEstado().equalsIgnoreCase("activo") || cuenta.getEstado().equalsIgnoreCase("resultado negativo")){        
+                                        if(cuenta.getAccountBalance()-asientoTabla.getImporte()<0){
+                                            JOptionPane.showMessageDialog(null,"Error: El saldo de la cuenta es insuficiente para esta operacion");
+                                            limpiarVista();
+                                            return;
+                                        }
+                                        cuenta.setAccountBalance(cuenta.getAccountBalance()-asientoTabla.getImporte());
+                                        break;
+                                }
+                                cuenta.setAccountBalance(cuenta.getAccountBalance()+asientoTabla.getImporte());
+                                break;
+                            }
+                                
+                    }
+                             
+                        }
+                        cargarTabla(asientoTabla);
+                        asientoContable.add(asientoTabla);
+                        limpiarVista();
+                        return;
+                   }
+                    for(Account cuenta: cuentasActualizar){
+                            if(cuenta.getIdAccount()==asientoTabla.getIdCuenta()){
+                                if(cuenta.getEstado().equalsIgnoreCase("pasivo")){        
+                                        if(cuenta.getAccountBalance()-asientoTabla.getImporte()<0){
+                                            JOptionPane.showMessageDialog(null,"Error: El saldo de la cuenta es insuficiente para esta operacion");
+                                            limpiarVista();
+                                            return;
+                                        }
+                                        cuenta.setAccountBalance(cuenta.getAccountBalance()-asientoTabla.getImporte());
+                                        break;
+                                }
+                                cuenta.setAccountBalance(cuenta.getAccountBalance()+asientoTabla.getImporte());
+                                break;
+                            }
+                    }
                     cargarTabla(asientoTabla);
                     asientoContable.add(asientoTabla);
                     limpiarVista();
-              }
+                    
         }
-        
-    
-    
+   }
+      public LocalDate obtenerFechaAnterior(){
+            LocalDate fechaAnterior=null;
+            DefaultTableModel tableModel = (DefaultTableModel) addAccountSeatView.tableModel.getModel();
+            DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            for (int i = 0; i < tableModel.getRowCount(); i++) {
+                // Obtiene la fecha en formato String y la convierte a LocalDate
+                String fechaStr = (String) tableModel.getValueAt(i, 0);
+            if (fechaStr != null && !fechaStr.isEmpty()) {
+                LocalDate fechaActual = LocalDate.parse(fechaStr, formatter1);
+                fechaAnterior = fechaActual;
+        }
+        }
+        return fechaAnterior;
+    }
+      public boolean montoFinalValido(){
+          Float monto =0.0f;
+          for( int i =0; i<asientoContable.size() ; i++){
+                AsientoTabla asiento=asientoContable.get(i);
+               if(asiento.getDestino().equalsIgnoreCase("debe")){
+                         monto=monto+asiento.getImporte();
+               }else{
+                         monto=monto-asiento.getImporte();
+                       }    
+                }
+        if(monto!=0){
+            return false;
+        }
+        return true;
+      }
+      
+
     public void botonGuardarAsientoContable(ActionEvent e) throws ClassNotFoundException, SQLException, IOException{
         if(e.getSource()==addAccountSeatView.btnGuardarAsiento){
+            if(asientoContable.isEmpty()==true){
+                JOptionPane.showMessageDialog(null,"No se puede guardar un asiento vacio");
+                return;
+            }
+            if(montoFinalValido()==false){
+                JOptionPane.showMessageDialog(null,"Error: El total de debitos debe ser igual al total de creditos");
+                return;
+            }
+           
+            
+            
            Seat seat =new Seat(
                    asientoContable.getFirst().getFecha(),
                    conUsuario.getIdUser(currentUser.getUserName())
@@ -278,11 +408,17 @@ public class AddAccountSeatController implements ActionListener{
                );
                conAsiento.addAccountSeat(accountSeat);    
             }
+            conAsiento.actualizarSaldo(cuentasActualizar);
             JOptionPane.showMessageDialog(null,"Se ha registrado correctamente el asiento");
             limpiarTabla();
+            setCuentasComboBox();
             asientoContable=new ArrayList<AsientoTabla>();
+            cuentasActualizar=cuentas();
+            cuentasActualizar.remove(0);
+            }
         }
-   }
+
+   
     
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -304,28 +440,6 @@ public class AddAccountSeatController implements ActionListener{
         }
     }
     
-    public LocalDate obtenerFechaAnterior(){
-            LocalDate fechaAnterior=null;
-            DefaultTableModel tableModel = (DefaultTableModel) addAccountSeatView.tableModel.getModel();
-            DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-            for (int i = 0; i < tableModel.getRowCount(); i++) {
-                // Obtiene la fecha en formato String y la convierte a LocalDate
-                String fechaStr = (String) tableModel.getValueAt(i, 0);
-            if (fechaStr != null && !fechaStr.isEmpty()) {
-                LocalDate fechaActual = LocalDate.parse(fechaStr, formatter1);
-                fechaAnterior = fechaActual;
-        }
-        }
-        return fechaAnterior;
-    }
+ 
 
 }
-/*
-  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            String fechaSql = sdf.format(getAsientoTabla().getFecha()); 
-            System.out.println(fechaSql);
-             System.out.println(getAsientoTabla().getDescripcion());
-             System.out.println(getAsientoTabla().getCuenta());
-             System.out.println(getAsientoTabla().getDestino());
-             System.out.println(getAsientoTabla().getImporte());
-             System.out.println(getAsientoTabla().getIdCuenta());*/
