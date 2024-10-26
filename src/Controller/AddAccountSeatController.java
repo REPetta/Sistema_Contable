@@ -33,12 +33,14 @@ public class AddAccountSeatController implements ActionListener{
     private AddAccountSeat addAccountSeatView=new AddAccountSeat();
     private MainMenuController mainMenuController;
     private User currentUser=User.getInstancia();
+    private ArrayList<Account> cuentasActualizar;
     private UserManagementConnection conUsuario=new UserManagementConnection();
     DefaultTableModel modelo = new DefaultTableModel();
     ArrayList<AsientoTabla> asientoContable=new ArrayList<AsientoTabla>();
     //Metodos//
-    public AddAccountSeatController(){//Conecta el boton Volver con la Clase
+    public AddAccountSeatController() throws IOException, ClassNotFoundException, SQLException{//Conecta el boton Volver con la Clase
        setCuentasComboBox(); //inicializo el combox//
+       this.cuentasActualizar=cuentas();
        this.addAccountSeatView.setTitle("Agregar Asiento"+" - "+currentUser.getUserName()+" ( "+currentUser.getRol().substring(0, 1).toUpperCase()+currentUser.getRol().substring(1).toLowerCase()+ " ) " );
        this.addAccountSeatView.btnCancelar.addActionListener(this);
        this.addAccountSeatView.btnSaveOperation.addActionListener(this);
@@ -276,7 +278,6 @@ public class AddAccountSeatController implements ActionListener{
                                 montoAux=montoAux-asiento.getImporte();
                             }       
                          }
-                        System.out.println(montoAux);
                         if(asientoTabla.getDestino().equalsIgnoreCase("haber")){
                             if(montoAux-asientoTabla.getImporte()<0){
                                 JOptionPane.showMessageDialog(null,"Error: El total de debitos debe ser igual al total de creditos");
@@ -284,15 +285,56 @@ public class AddAccountSeatController implements ActionListener{
                                 return;
                           }
                         }
-                        
+                        if(asientoTabla.getDestino().equalsIgnoreCase("debe")){
+                             for(Account cuenta: cuentasActualizar){
+                                if(cuenta.getIdAccount()==asientoTabla.getIdCuenta()){
+                                    if(cuenta.getEstado().equalsIgnoreCase("pasivo")){        
+                                        if(cuenta.getAccountBalance()-asientoTabla.getImporte()<0){
+                                            JOptionPane.showMessageDialog(null,"Error: El saldo de la cuenta es insuficiente para esta operacion");
+                                            limpiarVista();
+                                            return;
+                                        }
+                                }
+                                cuenta.setAccountBalance(cuenta.getAccountBalance()-asientoTabla.getImporte());
+                            }
+                    }
+                        }
+                        if(asientoTabla.getDestino().equalsIgnoreCase("haber")){
+                             for(Account cuenta: cuentasActualizar){
+                                if(cuenta.getIdAccount()==asientoTabla.getIdCuenta()){
+                                    System.out.println(cuenta.getEstado());
+                                    if(cuenta.getEstado().equalsIgnoreCase("activo") || cuenta.getEstado().equalsIgnoreCase("resultado negativo")){        
+                                        if(cuenta.getAccountBalance()-asientoTabla.getImporte()<0){
+                                            JOptionPane.showMessageDialog(null,"Error: El saldo de la cuenta es insuficiente para esta operacion");
+                                            limpiarVista();
+                                            return;
+                                        }
+                                }
+                                cuenta.setAccountBalance(cuenta.getAccountBalance()-asientoTabla.getImporte());
+                            }
+                    }
+                        }
                         cargarTabla(asientoTabla);
                         asientoContable.add(asientoTabla);
                         limpiarVista();
                         return;
                    }
+                    for(Account cuenta: cuentasActualizar){
+                            if(cuenta.getIdAccount()==asientoTabla.getIdCuenta()){
+                                if(cuenta.getEstado().equalsIgnoreCase("pasivo")){        
+                                        if(cuenta.getAccountBalance()-asientoTabla.getImporte()<0){
+                                            JOptionPane.showMessageDialog(null,"Error: El saldo de la cuenta es insuficiente para esta operacion");
+                                            limpiarVista();
+                                            return;
+                                        }
+                                }
+                                cuenta.setAccountBalance(cuenta.getAccountBalance()-asientoTabla.getImporte());
+                            }
+                    }
                     cargarTabla(asientoTabla);
                     asientoContable.add(asientoTabla);
                     limpiarVista();
+                    
         }
    }
       public LocalDate obtenerFechaAnterior(){
@@ -330,7 +372,9 @@ public class AddAccountSeatController implements ActionListener{
             }
             JOptionPane.showMessageDialog(null,"Se ha registrado correctamente el asiento");
             limpiarTabla();
+            setCuentasComboBox();
             asientoContable=new ArrayList<AsientoTabla>();
+            cuentasActualizar=cuentas();
         }
    }
     
@@ -357,12 +401,3 @@ public class AddAccountSeatController implements ActionListener{
  
 
 }
-/*
-  SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            String fechaSql = sdf.format(getAsientoTabla().getFecha()); 
-            System.out.println(fechaSql);
-             System.out.println(getAsientoTabla().getDescripcion());
-             System.out.println(getAsientoTabla().getCuenta());
-             System.out.println(getAsientoTabla().getDestino());
-             System.out.println(getAsientoTabla().getImporte());
-             System.out.println(getAsientoTabla().getIdCuenta());*/
