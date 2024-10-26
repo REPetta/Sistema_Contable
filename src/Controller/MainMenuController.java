@@ -67,7 +67,7 @@ public class MainMenuController implements ActionListener{//Implementa la interf
             closeMainMenuView();
         }
     }
-    public void buttonAddSeat(ActionEvent e){//Metodo que le da al boton Agregar Asiento la funcion de abrir la ventana de Agregar Asiento y cerrar el Menu Principal//
+    public void buttonAddSeat(ActionEvent e) throws IOException, ClassNotFoundException, SQLException{//Metodo que le da al boton Agregar Asiento la funcion de abrir la ventana de Agregar Asiento y cerrar el Menu Principal//
         if(e.getSource()==mainMenuView.btnAddSeat){
             addAccountSeatController=new AddAccountSeatController();
             addAccountSeatController.openAddAccountSeatView();
@@ -114,7 +114,15 @@ public class MainMenuController implements ActionListener{//Implementa la interf
         buttonAddUser(e);
         buttonDelUser(e);
         buttonSearchUser(e);
-        buttonAddSeat(e);
+        try {
+            buttonAddSeat(e);
+        } catch (IOException ex) {
+            Logger.getLogger(MainMenuController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MainMenuController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(MainMenuController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         buttonVerLibroDiario(e);
         buttonVerLibroMayor(e);
         try {

@@ -9,6 +9,7 @@ import Model.AsientoTabla;
 import Model.Seat;
 import Model.User;
 import View.AddAccountSeat;
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.table.DefaultTableModel;
@@ -41,6 +42,7 @@ public class AddAccountSeatController implements ActionListener{
     public AddAccountSeatController() throws IOException, ClassNotFoundException, SQLException{//Conecta el boton Volver con la Clase
        setCuentasComboBox(); //inicializo el combox//
        this.cuentasActualizar=cuentas();
+       cuentasActualizar.remove(0);
        this.addAccountSeatView.setTitle("Agregar Asiento"+" - "+currentUser.getUserName()+" ( "+currentUser.getRol().substring(0, 1).toUpperCase()+currentUser.getRol().substring(1).toLowerCase()+ " ) " );
        this.addAccountSeatView.btnCancelar.addActionListener(this);
        this.addAccountSeatView.btnSaveOperation.addActionListener(this);
@@ -294,25 +296,32 @@ public class AddAccountSeatController implements ActionListener{
                                             limpiarVista();
                                             return;
                                         }
+                                        cuenta.setAccountBalance(cuenta.getAccountBalance()-asientoTabla.getImporte());
+                                        break;
                                 }
-                                cuenta.setAccountBalance(cuenta.getAccountBalance()-asientoTabla.getImporte());
+                                cuenta.setAccountBalance(cuenta.getAccountBalance()+asientoTabla.getImporte());
+                                break;
                             }
-                    }
+                            }
                         }
                         if(asientoTabla.getDestino().equalsIgnoreCase("haber")){
-                             for(Account cuenta: cuentasActualizar){
+                             for(Account cuenta : cuentasActualizar){
                                 if(cuenta.getIdAccount()==asientoTabla.getIdCuenta()){
-                                    System.out.println(cuenta.getEstado());
                                     if(cuenta.getEstado().equalsIgnoreCase("activo") || cuenta.getEstado().equalsIgnoreCase("resultado negativo")){        
                                         if(cuenta.getAccountBalance()-asientoTabla.getImporte()<0){
                                             JOptionPane.showMessageDialog(null,"Error: El saldo de la cuenta es insuficiente para esta operacion");
                                             limpiarVista();
                                             return;
                                         }
+                                        cuenta.setAccountBalance(cuenta.getAccountBalance()-asientoTabla.getImporte());
+                                        break;
                                 }
-                                cuenta.setAccountBalance(cuenta.getAccountBalance()-asientoTabla.getImporte());
+                                cuenta.setAccountBalance(cuenta.getAccountBalance()+asientoTabla.getImporte());
+                                break;
                             }
+                                
                     }
+                             
                         }
                         cargarTabla(asientoTabla);
                         asientoContable.add(asientoTabla);
@@ -327,8 +336,11 @@ public class AddAccountSeatController implements ActionListener{
                                             limpiarVista();
                                             return;
                                         }
+                                        cuenta.setAccountBalance(cuenta.getAccountBalance()-asientoTabla.getImporte());
+                                        break;
                                 }
-                                cuenta.setAccountBalance(cuenta.getAccountBalance()-asientoTabla.getImporte());
+                                cuenta.setAccountBalance(cuenta.getAccountBalance()+asientoTabla.getImporte());
+                                break;
                             }
                     }
                     cargarTabla(asientoTabla);
@@ -351,6 +363,18 @@ public class AddAccountSeatController implements ActionListener{
         }
         return fechaAnterior;
     }
+      public float calcularMontoFinal(){
+          Float monto =0.0f;
+          for( int i =0; i<asientoContable.size() ; i++){
+                AsientoTabla asiento=asientoContable.get(i);
+               if(asiento.getDestino().equalsIgnoreCase("debe")){
+                         monto=monto+asiento.getImporte();
+               }else{
+                         monto=monto-asiento.getImporte();
+                       }    
+                }
+        return monto;
+      }
       
 
     public void botonGuardarAsientoContable(ActionEvent e) throws ClassNotFoundException, SQLException, IOException{
@@ -370,11 +394,13 @@ public class AddAccountSeatController implements ActionListener{
                );
                conAsiento.addAccountSeat(accountSeat);    
             }
+            conAsiento.actualizarSaldo(cuentasActualizar);
             JOptionPane.showMessageDialog(null,"Se ha registrado correctamente el asiento");
             limpiarTabla();
             setCuentasComboBox();
             asientoContable=new ArrayList<AsientoTabla>();
             cuentasActualizar=cuentas();
+            cuentasActualizar.remove(0);
         }
    }
     
