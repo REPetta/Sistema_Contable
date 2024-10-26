@@ -290,7 +290,7 @@ public class AddAccountSeatController implements ActionListener{
                         if(asientoTabla.getDestino().equalsIgnoreCase("debe")){
                              for(Account cuenta: cuentasActualizar){
                                 if(cuenta.getIdAccount()==asientoTabla.getIdCuenta()){
-                                    if(cuenta.getEstado().equalsIgnoreCase("pasivo")){        
+                                    if(cuenta.getEstado().equalsIgnoreCase("pasivo") || cuenta.getEstado().equalsIgnoreCase("resultado positivo")){        
                                         if(cuenta.getAccountBalance()-asientoTabla.getImporte()<0){
                                             JOptionPane.showMessageDialog(null,"Error: El saldo de la cuenta es insuficiente para esta operacion");
                                             limpiarVista();
@@ -330,7 +330,7 @@ public class AddAccountSeatController implements ActionListener{
                    }
                     for(Account cuenta: cuentasActualizar){
                             if(cuenta.getIdAccount()==asientoTabla.getIdCuenta()){
-                                if(cuenta.getEstado().equalsIgnoreCase("pasivo")){        
+                                if(cuenta.getEstado().equalsIgnoreCase("pasivo") || cuenta.getEstado().equalsIgnoreCase("resultado positivo")){        
                                         if(cuenta.getAccountBalance()-asientoTabla.getImporte()<0){
                                             JOptionPane.showMessageDialog(null,"Error: El saldo de la cuenta es insuficiente para esta operacion");
                                             limpiarVista();
