@@ -363,7 +363,7 @@ public class AddAccountSeatController implements ActionListener{
         }
         return fechaAnterior;
     }
-      public float calcularMontoFinal(){
+      public boolean montoFinalValido(){
           Float monto =0.0f;
           for( int i =0; i<asientoContable.size() ; i++){
                 AsientoTabla asiento=asientoContable.get(i);
@@ -373,12 +373,26 @@ public class AddAccountSeatController implements ActionListener{
                          monto=monto-asiento.getImporte();
                        }    
                 }
-        return monto;
+        if(monto!=0){
+            return false;
+        }
+        return true;
       }
       
 
     public void botonGuardarAsientoContable(ActionEvent e) throws ClassNotFoundException, SQLException, IOException{
         if(e.getSource()==addAccountSeatView.btnGuardarAsiento){
+            if(asientoContable.isEmpty()==true){
+                JOptionPane.showMessageDialog(null,"No se puede guardar un asiento vacio");
+                return;
+            }
+            if(montoFinalValido()==false){
+                JOptionPane.showMessageDialog(null,"Error: El total de debitos debe ser igual al total de creditos");
+                return;
+            }
+           
+            
+            
            Seat seat =new Seat(
                    asientoContable.getFirst().getFecha(),
                    conUsuario.getIdUser(currentUser.getUserName())
@@ -401,8 +415,10 @@ public class AddAccountSeatController implements ActionListener{
             asientoContable=new ArrayList<AsientoTabla>();
             cuentasActualizar=cuentas();
             cuentasActualizar.remove(0);
+            }
         }
-   }
+
+   
     
     @Override
     public void actionPerformed(ActionEvent e) {
