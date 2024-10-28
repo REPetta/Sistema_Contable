@@ -43,7 +43,6 @@ public class MainMenuController implements ActionListener{//Implementa la interf
         if(currentUser.getTasks().contains("agregar_usuario")==false){
             this.mainMenuView.btnAddUser.setVisible(false);
             this.mainMenuView.btnDelUser.setVisible(false);
-            this.mainMenuView.btnAddSeat.setVisible(false);
         }
 }
     public void buttonAddUser(ActionEvent e ){               //Accion del boton Agregar Usuario//

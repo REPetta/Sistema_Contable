@@ -16,6 +16,7 @@ public class LibroMayor extends javax.swing.JFrame {
     public LibroMayor() {
         initComponents();
         this.setLocationRelativeTo(null); // Localiza la ventana en el centro de la pantalla//
+        this.setResizable(false); // Desactiva el botón de maximizar
     }
 
     /**

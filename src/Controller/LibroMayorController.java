@@ -5,6 +5,7 @@ import ConnectionsBD.AccountSeatConnection;
 import ConnectionsBD.LibrosConnection;
 import Model.Account;
 import Model.AccountSeat;
+import Model.Seat;
 import Model.User;
 import View.LibroDiario;
 import View.LibroMayor;
@@ -105,6 +106,8 @@ public class LibroMayorController implements ActionListener {
      
      public void actulizarTabla(ArrayList<AccountSeatController> listaAsientos, Account cuenta) throws IOException, SQLException, ClassNotFoundException{
           iniciarTabla();
+          String fechaFinal=librosCon.obtenerUltimaFecha(libroMayorView.jDateChooserDesde.getDate(), libroMayorView.jDateChooserHasta.getDate(), cuenta);
+          String fechaInicial=librosCon.obtenerFechaInicial(libroMayorView.jDateChooserDesde.getDate(), libroMayorView.jDateChooserHasta.getDate(), cuenta);
           // Variable para rastrear la última fecha añadida
           String nombreCuenta=cuenta.getAccountName();
           float saldo=cuenta.getSaldoInicial();
@@ -113,7 +116,7 @@ public class LibroMayorController implements ActionListener {
         modelo.addRow(filaSeparadora);
         String[] filaInicial=new String[6];
         filaInicial[0] = nombreCuenta; // Nombre de la cuenta
-        filaInicial[1] = listaAsientos.isEmpty() ? "" : listaAsientos.get(0).getSeat().getDate().toString(); // Fecha inicial del primer asiento
+        filaInicial[1] = listaAsientos.isEmpty() ? "" : fechaInicial; // Fecha inicial del primer asiento
         filaInicial[2] = "Inicial"; // Texto "Inicial" en la descripción
         filaInicial[3] = ""; // Columna "Debe" vacía
         filaInicial[4] = ""; // Columna "Haber" vacía
@@ -131,10 +134,18 @@ public class LibroMayorController implements ActionListener {
                     datos[2]=asientoCuenta.getDecripcionOperacion();
                     if(asientoCuenta.getType().toUpperCase().equals("HABER")){
                         datos[4]="$"+String.valueOf(asientoCuenta.getAmount());
-                         saldo-=asientoCuenta.getAmount();
+                             if(cuenta.getEstado().equalsIgnoreCase("activo") || cuenta.getEstado().equalsIgnoreCase("resultado negativo")){
+                                    saldo=saldo-asientoCuenta.getAmount();
+                             }else{
+                                 saldo=saldo+asientoCuenta.getAmount();
+                             }
                     }else{
                         datos[3]="$"+String.valueOf(asientoCuenta.getAmount());
-                        saldo+=asientoCuenta.getAmount();
+                        if(cuenta.getEstado().equalsIgnoreCase("pasivo") || cuenta.getEstado().equalsIgnoreCase("resultado positivo")){
+                                    saldo=saldo-asientoCuenta.getAmount();
+                        }else{
+                            saldo=saldo+asientoCuenta.getAmount();
+                        }
                     }
                         datos[5]="$"+String.valueOf(saldo);
                     modelo.addRow(datos);
@@ -143,7 +154,7 @@ public class LibroMayorController implements ActionListener {
         }
         String[] filaFinal=new String[6];
         filaFinal[0] = ""; // Nombre de la cuenta
-        filaFinal[1] = listaAsientos.isEmpty() ? "" : listaAsientos.get(0).getSeat().getDate().toString(); // Fecha inicial del primer asiento
+        filaFinal[1] = listaAsientos.isEmpty() ? "" : fechaFinal; // Fecha Final del primer asiento
         filaFinal[2] = "Final"; // Texto "Inicial" en la descripción
         filaFinal[3] = ""; // Columna "Debe" vacía
         filaFinal[4] = ""; // Columna "Haber" vacía
@@ -154,6 +165,28 @@ public class LibroMayorController implements ActionListener {
         modelo.addRow(filaSeparadora);
      }
      
+     //Metodo para obtener la fecha del ultimo asiento contable
+//     public String obtenerUltimaFecha(ArrayList<AccountSeatController> listaAsientos){
+//         Date ultimaFecha=null;
+//         for(int i=0 ; i<listaAsientos.size() ; i++){
+//             AccountSeatController primerAsiento=listaAsientos.get(i);
+//             if(i<listaAsientos.size()-1){
+//                Seat proximoAsiento= listaAsientos.get(i+1).getSeat();
+//                if(primerAsiento.getSeat().getDate().after(proximoAsiento.getDate())){
+//                      ultimaFecha=primerAsiento.getSeat().getDate();
+//                }else{
+//                    ultimaFecha=proximoAsiento.getDate();
+//                }
+//             }
+//             if(ultimaFecha.before(primerAsiento.getSeat().getDate())){
+//                 ultimaFecha=primerAsiento.getSeat().getDate();
+//             }else{     
+//                 return ultimaFecha.toString();
+//             }
+//         }
+//         return ultimaFecha.toString();
+//     }
+//     
 
      
      public Account obtenerCuentaPorNombre(String nombreCuenta) throws IOException, SQLException, ClassNotFoundException{

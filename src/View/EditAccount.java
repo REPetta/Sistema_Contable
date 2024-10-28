@@ -19,6 +19,7 @@ public class EditAccount extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null); // Localiza la ventana en el centro de la pantalla//
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//Cierra la ventana pero no el programa//
+        this.setResizable(false); // Desactiva el botón de maximizar
     }
 
     /**
