@@ -16,6 +16,7 @@ public class AddAccount extends javax.swing.JFrame {
     public AddAccount() {
         initComponents();
         this.setLocationRelativeTo(null); // Localiza la ventana en el centro de la pantalla//
+        this.setResizable(false); // Desactiva el botón de maximizar
     }
 
     /**

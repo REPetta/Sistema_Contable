@@ -1,6 +1,8 @@
 //Interfaz Grafica del Login del Sistema Contable//
 package View;
 
+import java.awt.Dimension;
+
 public class Login extends javax.swing.JFrame {
 
 
@@ -8,6 +10,9 @@ public class Login extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null); // Localiza la ventana en el centro de la pantalla//
         this.setTitle("Login");  //El nombre la venta sera Login"
+        this.setResizable(false); // Desactiva el botón de maximizar
+      
+
     }
 
     @SuppressWarnings("unchecked")
