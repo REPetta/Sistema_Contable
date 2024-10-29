@@ -110,7 +110,9 @@ public class LibroMayorController implements ActionListener {
           String fechaInicial=librosCon.obtenerFechaInicial(libroMayorView.jDateChooserDesde.getDate(), libroMayorView.jDateChooserHasta.getDate(), cuenta);
           // Variable para rastrear la última fecha añadida
           String nombreCuenta=cuenta.getAccountName();
-          float saldo=cuenta.getSaldoInicial();
+          float saldoInicial=cuenta.getSaldoInicial();
+          float saldoFinal= cuenta.getAccountBalance();
+          float saldo= cuenta.getSaldoInicial();
         // Recorrer la lista de asientos contables
         String[] filaSeparadora = {"", "", "", ""};
         modelo.addRow(filaSeparadora);
@@ -120,7 +122,7 @@ public class LibroMayorController implements ActionListener {
         filaInicial[2] = "Inicial"; // Texto "Inicial" en la descripción
         filaInicial[3] = ""; // Columna "Debe" vacía
         filaInicial[4] = ""; // Columna "Haber" vacía
-        filaInicial[5] ="$"+ String.valueOf(saldo); // Saldo inicial
+        filaInicial[5] ="$"+ String.valueOf(saldoInicial); // Saldo inicial
         modelo.addRow(filaInicial);
         
         for(AccountSeatController asiento : listaAsientos){
@@ -158,7 +160,7 @@ public class LibroMayorController implements ActionListener {
         filaFinal[2] = "Final"; // Texto "Inicial" en la descripción
         filaFinal[3] = ""; // Columna "Debe" vacía
         filaFinal[4] = ""; // Columna "Haber" vacía
-        filaFinal[5] ="$"+ String.valueOf(saldo); // Saldo inicial
+        filaFinal[5] ="$"+ String.valueOf(saldoFinal); // Saldo inicial
         modelo.addRow(filaFinal);
         
         // Agregar fila separadora después de cada AsientoContable

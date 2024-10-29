@@ -187,6 +187,11 @@ public class AddAccountSeatController implements ActionListener{
              limpiarVista();
              return;
          }
+         if(fechaConvertida.isAfter(fechaActual)){
+             JOptionPane.showMessageDialog(null,"La fecha no puede ser posterior a la de hoy");
+             limpiarVista();
+             return;
+         }
          if(descripcion.isEmpty()){
              JOptionPane.showMessageDialog(null,"No puede haber ninguna opcion en blanco");
              limpiarVista();
