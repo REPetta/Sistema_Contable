@@ -8,6 +8,7 @@ import View.AddAccount;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import static java.lang.Integer.parseInt;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,6 +35,27 @@ public class AddAccountController implements ActionListener {
     public void closeAddAccountView(){//Cierra la ventana//
         addAccountView.dispose();
     }
+    //Metodo para validar si se ingresa un flotante y no otro tipo de datos//
+    public boolean esFlotante(String importe){
+        try{
+                Float.parseFloat(importe);
+                return true;
+        }catch(NumberFormatException e){
+
+            return false;
+      }
+        //Metodo para validar si se ingresa un flotante y no otro tipo de datos//
+    }
+    public boolean esEntero (String importe){
+        try{
+                Integer.parseInt(importe);
+                return true;
+        }catch(NumberFormatException e){
+
+            return false;
+      }
+    }
+    
     //Metodo para agregar la cuenta//
     public void buttonAddAccount(ActionEvent e) throws ClassNotFoundException, SQLException, IOException{
         if(e.getSource()==addAccountView.btnAddAccount){       
@@ -55,6 +77,35 @@ public class AddAccountController implements ActionListener {
             addAccountView.comboRSaldo.setSelectedIndex(0);
             return; // Detener el proceso si hay campos vacíos
         }
+            if(esFlotante(addAccountView.txtAmount.getText().trim())==false){
+                JOptionPane.showMessageDialog(null, "Error: Debes ingresar un numero valido");
+                 addAccountView.txtAccountName.setText("");
+                addAccountView.txtCode.setText("");
+                addAccountView.txtAmount.setText("");
+                addAccountView.cBoxType.setSelectedIndex(0);
+                addAccountView.comboRSaldo.setSelectedIndex(0);
+                return;
+            }
+            if(esEntero(addAccountView.txtCode.getText().trim())==false){
+                JOptionPane.showMessageDialog(null, "Error: Debes ingresar un numero valido");
+                 addAccountView.txtAccountName.setText("");
+                addAccountView.txtCode.setText("");
+                addAccountView.txtAmount.setText("");
+                 addAccountView.cBoxType.setSelectedIndex(0);
+                addAccountView.comboRSaldo.setSelectedIndex(0);
+                return;
+            }
+            int aux=Integer.valueOf(addAccountView.txtCode.getText().trim());
+            if( aux<100  || aux>599){
+                 JOptionPane.showMessageDialog(null, "Error: Debes ingresar un numero valido");
+                  addAccountView.txtAccountName.setText("");
+                 addAccountView.txtCode.setText("");
+                    addAccountView.txtAmount.setText("");
+                    addAccountView.cBoxType.setSelectedIndex(0);
+                    addAccountView.comboRSaldo.setSelectedIndex(0);
+                return;         
+        }
+            
                     Account newAccount= new Account();
                     newAccount.setAccountName(addAccountView.txtAccountName.getText().trim());
                     newAccount.setAccountCode(Integer.parseInt(addAccountView.txtCode.getText().trim()));
