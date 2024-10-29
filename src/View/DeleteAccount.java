@@ -20,6 +20,14 @@ public class DeleteAccount extends javax.swing.JFrame {
         this.setLocationRelativeTo(null); // Localiza la ventana en el centro de la pantalla//
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//Cierra la ventana pero no el programa//
         this.setResizable(false); // Desactiva el botón de maximizar
+        txtAmount.setEditable(false);  // Aquí haces que el campo sea solo lectura
+        add(txtAmount);
+        txtCode.setEditable(false);  // Aquí haces que el campo sea solo lectura
+        add(txtCode);
+        txtName.setEditable(false);  // Aquí haces que el campo sea solo lectura
+        add(txtName);
+        txtType.setEditable(false);  // Aquí haces que el campo sea solo lectura
+        add(txtType);
 
     }
 

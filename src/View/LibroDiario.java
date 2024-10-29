@@ -4,6 +4,11 @@
  */
 package View;
 
+import java.awt.Component;
+import javax.swing.JTable;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+
 /**
  *
  * @author Rodrigo
@@ -17,7 +22,11 @@ public class LibroDiario extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null); // Localiza la ventana en el centro de la pantalla//
         this.setResizable(false); // Desactiva el botón de maximizar
+        jTableDiario.getTableHeader().setReorderingAllowed(false);
+        jDateChooserDesde.getDateEditor().setEnabled(false);
+        jDateChooserHasta.getDateEditor().setEnabled(false);
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.

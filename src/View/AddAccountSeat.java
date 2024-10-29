@@ -17,6 +17,8 @@ public class AddAccountSeat extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null); // Localiza la ventana en el centro de la pantalla//
         this.setResizable(false); // Desactiva el botón de maximizar
+        tableModel.getTableHeader().setReorderingAllowed(false);
+        dateFecha.getDateEditor().setEnabled(false);
     }
 
     /**
