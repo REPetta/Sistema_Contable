@@ -27,6 +27,8 @@ public class DeleteUser extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jPanel1.setBackground(new java.awt.Color(204, 204, 255));
+
         btnBack.setText("Volver");
 
         btnDel.setText("Borrar");
@@ -149,7 +151,7 @@ public class DeleteUser extends javax.swing.JFrame {
     public javax.swing.JButton btnBack;
     public javax.swing.JButton btnDel;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
+    public javax.swing.JPanel jPanel1;
     public javax.swing.JTextField txtUserName;
     // End of variables declaration//GEN-END:variables
 }

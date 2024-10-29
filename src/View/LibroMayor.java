@@ -42,6 +42,8 @@ public class LibroMayor extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        jPanel1.setBackground(new java.awt.Color(204, 204, 255));
+
         jTableMayor.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -83,9 +85,9 @@ public class LibroMayor extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(comboCuenta, 0, 122, Short.MAX_VALUE)
                             .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(41, 41, 41)
+                        .addGap(38, 38, 38)
                         .addComponent(btnBuscar)
-                        .addGap(68, 68, 68)
+                        .addGap(71, 71, 71)
                         .addComponent(btnSalir)))
                 .addGap(0, 22, Short.MAX_VALUE))
         );
@@ -106,7 +108,7 @@ public class LibroMayor extends javax.swing.JFrame {
                             .addComponent(comboCuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(33, 33, 33)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(btnSalir)
                             .addComponent(btnBuscar))))
                 .addGap(28, 28, 28)

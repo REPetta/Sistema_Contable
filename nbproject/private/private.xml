@@ -3,7 +3,25 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+<<<<<<< HEAD
             <file>file:/C:/Users/Rodrigo/Desktop/SAII_Proyecto/Sistema_Contable/src/Controller/AddAccountSeatController.java</file>
+=======
+            <file>file:/home/elias/Escritorio/SistemaContable/Sistema_Contable/src/View/AddUser.java</file>
+            <file>file:/home/elias/Escritorio/SistemaContable/Sistema_Contable/src/ConnectionsBD/ConnectionBD.java</file>
+            <file>file:/home/elias/Escritorio/SistemaContable/Sistema_Contable/src/View/DetailsUser.java</file>
+            <file>file:/home/elias/Escritorio/SistemaContable/Sistema_Contable/src/View/Login.java</file>
+            <file>file:/home/elias/Escritorio/SistemaContable/Sistema_Contable/src/View/EditAccount.java</file>
+            <file>file:/home/elias/Escritorio/SistemaContable/Sistema_Contable/src/View/LibroDiario.java</file>
+            <file>file:/home/elias/Escritorio/SistemaContable/Sistema_Contable/src/View/LibroMayor.java</file>
+            <file>file:/home/elias/Escritorio/SistemaContable/Sistema_Contable/src/View/DetailsAccount.java</file>
+            <file>file:/home/elias/Escritorio/SistemaContable/Sistema_Contable/src/View/DeleteUser.java</file>
+            <file>file:/home/elias/Escritorio/SistemaContable/Sistema_Contable/src/View/DetailsUserDelete.java</file>
+            <file>file:/home/elias/Escritorio/SistemaContable/Sistema_Contable/src/View/AddAccountSeat.java</file>
+            <file>file:/home/elias/Escritorio/SistemaContable/Sistema_Contable/src/Controller/AddAccountController.java</file>
+            <file>file:/home/elias/Escritorio/SistemaContable/Sistema_Contable/src/View/AddAccount.java</file>
+            <file>file:/home/elias/Escritorio/SistemaContable/Sistema_Contable/src/View/DeleteAccount.java</file>
+            <file>file:/home/elias/Escritorio/SistemaContable/Sistema_Contable/src/ConnectionsBD/ChartAccountsConnection.java</file>
+>>>>>>> 2ed7492075169c9d2d5dd58c918ba1c5a3e246e9
         </group>
     </open-files>
 </project-private>

@@ -8,9 +8,9 @@ import java.sql.SQLException;
 public class ConnectionBD {
     //Atributos//
     Connection con=null;
-    String url="jdbc:postgresql://localhost/Sistema_Contable";
+    String url="jdbc:postgresql://localhost/sistema_contable";
     String user="postgres";
-    String key="usuario";
+    String key="1234";
     //Metodo para conectar a la BD//
     public Connection conect() throws ClassNotFoundException, SQLException{//Clase encargada de establecer la conexion con la BD//
         Class.forName("org.postgresql.Driver");//Carga el driver jbdc en memoria , si no lo encuentra lanza la primera excepcion//
