@@ -8,12 +8,31 @@ public class Seat {
     private int idSeat;
     private Date date;
     private int idUser;
+    private String descripcion;
     //Contructores//
-    public Seat(int idSeat, Date date,  int idUser) {
+    
+    public Seat(int idSeat, Date date, String descripcion, int idUser) {
         this.idSeat = idSeat;
         this.date = date;
+        this.descripcion=descripcion;
         this.idUser = idUser;
     }
+
+    public Seat(Date date, int idUser, String descripcion) {
+        this.date = date;
+        this.idUser = idUser;
+        this.descripcion = descripcion;
+    }
+    
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+    
 
     public Seat(Date date) {
         this.date = date;

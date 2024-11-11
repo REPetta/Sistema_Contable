@@ -15,7 +15,7 @@ public class AccountSeatConnection {
     
     //Metodo para agregar un asiento a la base de datos//
     public int addSeat(Seat seat) throws ClassNotFoundException, SQLException, IOException{
-        String sql="INSERT INTO asiento(fecha,idusuario) VALUES(?,?) RETURNING idAsiento;";
+        String sql="INSERT INTO asiento(fecha,descripcionAsiento,idusuario) VALUES(?,?,?) RETURNING idAsiento;";
         ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
         PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
         ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
@@ -23,7 +23,8 @@ public class AccountSeatConnection {
         try{
             ps=objConect.conect().prepareStatement(sql);
             ps.setDate(1, new java.sql.Date(seat.getDate().getTime()));
-            ps.setInt(2, seat.getIdUser());
+            ps.setString(2, seat.getDescripcion());
+            ps.setInt(3, seat.getIdUser());
             rs=ps.executeQuery();
             if(rs.next()){
                 generatedId=rs.getInt("idAsiento");
@@ -40,7 +41,7 @@ public class AccountSeatConnection {
         //Metodo para ingregresar en la tabla asiento_cuenta//
     public void addAccountSeat(AccountSeat accountSeat) throws ClassNotFoundException, SQLException, IOException{
         //Atributos//
-        String sql="INSERT  INTO asiento_cuenta (idasiento,idcuenta,tipo,monto,descripcionoperacion) VALUES(?,?,?,?,?);";
+        String sql="INSERT  INTO asiento_cuenta (idasiento,idcuenta,tipo,monto) VALUES(?,?,?,?);";
         ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
         PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
         try{
@@ -49,7 +50,6 @@ public class AccountSeatConnection {
             ps.setInt(2, accountSeat.getIdAccount());
             ps.setString(3, accountSeat.getType());
             ps.setFloat(4, accountSeat.getAmount());
-            ps.setString(5, accountSeat.getDecripcionOperacion());
             ps.executeUpdate();
         
         }catch(ClassNotFoundException | SQLException e){
@@ -64,7 +64,7 @@ public class AccountSeatConnection {
     public ArrayList<Seat> getSeats() throws IOException, ClassNotFoundException, SQLException{
         //Atributos//
         ArrayList<Seat> seats= new ArrayList<>();
-        String sql="SELECT idasiento, numerooperacion, fecha, descripcionasiento, idusuario FROM Asiento ;";
+        String sql="SELECT idasiento, fecha, descripcionAsiento, idusuario FROM Asiento ;";
         ResultSet rs=null;//Variable para almacenar el resultado de la consulta//
         PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
         ConnectionsBD.ConnectionBD objConect = new ConnectionsBD.ConnectionBD();//Crea una instancia de ConnectionBD//
@@ -72,11 +72,15 @@ public class AccountSeatConnection {
             ps=objConect.conect().prepareStatement(sql);//Establece la conexion con la base de datos//
             rs=ps.executeQuery();
             while(rs.next()){
+                
                 Seat seat= new Seat(
+                        
                         rs.getInt("idasiento"),
                         rs.getDate("fecha"),
+                        rs.getString("descripcionAsiento"),
                         rs.getInt("idusuario")
                 );
+                        
                 seats.add(seat);
             }
             return seats;    
@@ -107,8 +111,7 @@ public class AccountSeatConnection {
                         rs.getInt("idasiento"),
                         rs.getInt("idcuenta"),
                         rs.getFloat("monto"),
-                        rs.getString("tipo"),
-                        rs.getString("descripcionoperacion")
+                        rs.getString("tipo")
                 );
                 accounts.add(accountSeat);
             }

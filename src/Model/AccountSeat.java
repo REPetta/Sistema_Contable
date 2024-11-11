@@ -7,26 +7,23 @@ public class AccountSeat {
     private int idAccount;
     private float amount;
     private String type;
-    private String decripcionOperacion;
     //Contructores//
 
     public AccountSeat() {
     }
 
-    public AccountSeat(int idAccount, float amount, String type, String decripcionOperacion) {
+    public AccountSeat(int idAccount, float amount, String type) {
         this.idAccount = idAccount;
         this.amount = amount;
         this.type = type;
-        this.decripcionOperacion = decripcionOperacion;
     }
     
 
-    public AccountSeat( int idSeat ,int idAccount, float amount, String type,String descripcionOperacion) {
+    public AccountSeat( int idSeat ,int idAccount, float amount, String type) {
         this.idSeat=idSeat;
         this.idAccount = idAccount;
         this.amount = amount;
         this.type = type;
-        this.decripcionOperacion=descripcionOperacion;
     }
     
     public int getIdSeat() {
@@ -37,16 +34,6 @@ public class AccountSeat {
     public void setIdSeat(int idSeat) {    
         this.idSeat = idSeat;
     }
-
-    public String getDecripcionOperacion() {
-        return decripcionOperacion;
-    }
-
-    public void setDecripcionOperacion(String decripcionOperacion) {
-        this.decripcionOperacion = decripcionOperacion;
-    }
-
-    
 
     public int getIdAccount() {
         return idAccount;

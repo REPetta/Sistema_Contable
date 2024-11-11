@@ -17,14 +17,14 @@ public class DetailsAccount extends javax.swing.JFrame {
         this.setLocationRelativeTo(null); // Localiza la ventana en el centro de la pantalla//
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//Cierra la ventana pero no el programa//
         this.setResizable(false); // Desactiva el botón de maximizar
-        txtAmount.setEditable(false);  // Aquí haces que el campo sea solo lectura
-        add(txtAmount);
-        txtCode.setEditable(false);  // Aquí haces que el campo sea solo lectura
-        add(txtCode);
-        txtName.setEditable(false);  // Aquí haces que el campo sea solo lectura
-        add(txtName);
-        txtType.setEditable(false);  // Aquí haces que el campo sea solo lectura
-        add(txtType);
+//        txtAmount.setEditable(false);  // Aquí haces que el campo sea solo lectura
+//        add(txtAmount);
+//        txtCode.setEditable(false);  // Aquí haces que el campo sea solo lectura
+//        add(txtCode);
+//        txtName.setEditable(false);  // Aquí haces que el campo sea solo lectura
+//        add(txtName);
+//        txtType.setEditable(false);  // Aquí haces que el campo sea solo lectura
+//        add(txtType);
         
     }
 
@@ -92,23 +92,23 @@ public class DetailsAccount extends javax.swing.JFrame {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(15, 15, 15)
+                .addGap(9, 9, 9)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(12, 12, 12)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(24, 24, 24)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(txtAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
                 .addComponent(btnOk, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18))
         );

@@ -64,6 +64,10 @@ public class AddAccountSeatController implements ActionListener{
         // Limpiar campos
         limpiarVista();
         limpiarTabla();
+        addAccountSeatView.txtDescripcion.setText("");
+        addAccountSeatView.dateFecha.setDate(null);
+        addAccountSeatView.dateFecha.setEnabled(true);
+        addAccountSeatView.txtDescripcion.setEditable(true);
         asientoContable.clear();
     }
 }
@@ -72,11 +76,11 @@ public class AddAccountSeatController implements ActionListener{
         iniciarTabla();
         }
      public void limpiarVista(){
-        addAccountSeatView.txtDescripcion.setText("");
+
         addAccountSeatView.txtImporte.setText("");
         addAccountSeatView.cBoxDestiny.setSelectedIndex(0);
         addAccountSeatView.comboCuenta.setSelectedIndex(0);
-        addAccountSeatView.dateFecha.setDate(null);
+
      }
      
     public void iniciarTabla() {
@@ -176,7 +180,8 @@ public class AddAccountSeatController implements ActionListener{
          if(fecha==null){
              JOptionPane.showMessageDialog(null,"No puede haber ninguna opcion en blanco");
              limpiarVista();
-             
+             addAccountSeatView.txtDescripcion.setText("");
+             addAccountSeatView.dateFecha.setDate(null);
              return;
          }
          LocalDate fechaConvertida = fecha.toInstant()
@@ -190,21 +195,29 @@ public class AddAccountSeatController implements ActionListener{
          if(fechaConvertida.isAfter(fechaActual)){
              JOptionPane.showMessageDialog(null,"La fecha no puede ser posterior a la de hoy");
              limpiarVista();
+             addAccountSeatView.txtDescripcion.setText("");
+             addAccountSeatView.dateFecha.setDate(null);
              return;
          }
          if(descripcion.isEmpty()){
              JOptionPane.showMessageDialog(null,"No puede haber ninguna opcion en blanco");
              limpiarVista();
+             addAccountSeatView.txtDescripcion.setText("");
+             addAccountSeatView.dateFecha.setDate(null);
              return;
          }
          if(destino.isEmpty()){
              JOptionPane.showMessageDialog(null,"No puede haber ninguna opcion en blanco");
              limpiarVista();
+             addAccountSeatView.txtDescripcion.setText("");
+             addAccountSeatView.dateFecha.setDate(null);
              return;
          }
          if(!success){
              JOptionPane.showMessageDialog(null,"El campo monto debe tener valores validos");
              limpiarVista();
+             addAccountSeatView.txtDescripcion.setText("");
+             addAccountSeatView.dateFecha.setDate(null);
              return;
          }else{
              importe=Float.parseFloat(importText);
@@ -212,11 +225,15 @@ public class AddAccountSeatController implements ActionListener{
          if(importe<=0){
                 JOptionPane.showMessageDialog(null,"El campo monto no puede ser negativo o 0");
                 limpiarVista();
+                addAccountSeatView.txtDescripcion.setText("");
+                addAccountSeatView.dateFecha.setDate(null);
                 return;
          }
          if(cuenta==null){
              JOptionPane.showMessageDialog(null,"No puede haber ninguna opcion en blanco");
              limpiarVista();
+             addAccountSeatView.txtDescripcion.setText("");
+             addAccountSeatView.dateFecha.setDate(null);
              return;
          }
          asientoTabla.setFecha(fecha);
@@ -225,6 +242,7 @@ public class AddAccountSeatController implements ActionListener{
          asientoTabla.setImporte(importe);
          asientoTabla.setCuenta(cuenta);
          asientoTabla.setIdCuenta(conAsiento.obtenerIdCuentaPorNombre(addAccountSeatView.comboCuenta.getSelectedItem().toString()));
+         
          limpiarVista();
     }
     //Metodo para validar si se ingresa un flotante y no otro tipo de datos//
@@ -245,6 +263,8 @@ public class AddAccountSeatController implements ActionListener{
               getAsientoTabla(asientoTabla);
               if(asientoTabla.getCuenta()==null){
                     limpiarVista();
+                    addAccountSeatView.txtDescripcion.setText("");
+                    addAccountSeatView.dateFecha.setDate(null);
                     return;
               }
               LocalDate fechaConvertida = asientoTabla.getFecha().toInstant()
@@ -254,17 +274,23 @@ public class AddAccountSeatController implements ActionListener{
               if(fechaAnterior!=null){
                     if(fechaConvertida.isBefore(fechaAnterior)  && !fechaConvertida.isEqual(fechaAnterior)){
                         limpiarVista();
+                        addAccountSeatView.txtDescripcion.setText("");
+                        addAccountSeatView.dateFecha.setDate(null);
                         JOptionPane.showMessageDialog(null,"La fecha de la nueva operacion no puede ser menor a la de la operacion anterior");
                         return;
                     }
                     if(!fechaConvertida.isEqual(fechaAnterior)){
                         limpiarVista();
+                        addAccountSeatView.txtDescripcion.setText("");
+                        addAccountSeatView.dateFecha.setDate(null);
                         JOptionPane.showMessageDialog(null,"La fecha de la nueva operacion debe ser igual a la operacion anterior");
                         return;
                     }
                  }
                      if(asientoTabla.getDestino().equalsIgnoreCase("haber") && asientoContable.isEmpty()){
                         limpiarVista();
+                        addAccountSeatView.txtDescripcion.setText("");
+                        addAccountSeatView.dateFecha.setDate(null);
                         JOptionPane.showMessageDialog(null,"El destino del la primera operacion debe ser un deber");
                         return;
                         }
@@ -289,6 +315,8 @@ public class AddAccountSeatController implements ActionListener{
                             if(montoAux-asientoTabla.getImporte()<0){
                                 JOptionPane.showMessageDialog(null,"Error: El total de debitos debe ser igual al total de creditos");
                                 limpiarVista();
+                                addAccountSeatView.txtDescripcion.setText("");
+                                addAccountSeatView.dateFecha.setDate(null);
                                 return;
                           }
                         }
@@ -299,6 +327,8 @@ public class AddAccountSeatController implements ActionListener{
                                         if(cuenta.getAccountBalance()-asientoTabla.getImporte()<0){
                                             JOptionPane.showMessageDialog(null,"Error: El saldo de la cuenta es insuficiente para esta operacion");
                                             limpiarVista();
+                                            addAccountSeatView.txtDescripcion.setText("");
+                                            addAccountSeatView.dateFecha.setDate(null);
                                             return;
                                         }
                                         cuenta.setAccountBalance(cuenta.getAccountBalance()-asientoTabla.getImporte());
@@ -316,6 +346,8 @@ public class AddAccountSeatController implements ActionListener{
                                         if(cuenta.getAccountBalance()-asientoTabla.getImporte()<0){
                                             JOptionPane.showMessageDialog(null,"Error: El saldo de la cuenta es insuficiente para esta operacion");
                                             limpiarVista();
+                                            addAccountSeatView.txtDescripcion.setText("");
+                                            addAccountSeatView.dateFecha.setDate(null);
                                             return;
                                         }
                                         cuenta.setAccountBalance(cuenta.getAccountBalance()-asientoTabla.getImporte());
@@ -331,6 +363,8 @@ public class AddAccountSeatController implements ActionListener{
                         cargarTabla(asientoTabla);
                         asientoContable.add(asientoTabla);
                         limpiarVista();
+                        addAccountSeatView.dateFecha.setEnabled(false);
+                        addAccountSeatView.txtDescripcion.setEditable(false);
                         return;
                    }
                     for(Account cuenta: cuentasActualizar){
@@ -339,6 +373,8 @@ public class AddAccountSeatController implements ActionListener{
                                         if(cuenta.getAccountBalance()-asientoTabla.getImporte()<0){
                                             JOptionPane.showMessageDialog(null,"Error: El saldo de la cuenta es insuficiente para esta operacion");
                                             limpiarVista();
+                                            addAccountSeatView.txtDescripcion.setText("");
+                                            addAccountSeatView.dateFecha.setDate(null);
                                             return;
                                         }
                                         cuenta.setAccountBalance(cuenta.getAccountBalance()-asientoTabla.getImporte());
@@ -351,6 +387,8 @@ public class AddAccountSeatController implements ActionListener{
                     cargarTabla(asientoTabla);
                     asientoContable.add(asientoTabla);
                     limpiarVista();
+                    addAccountSeatView.dateFecha.setEnabled(false);
+                    addAccountSeatView.txtDescripcion.setEditable(false);
                     
         }
    }
@@ -399,17 +437,19 @@ public class AddAccountSeatController implements ActionListener{
             
             
            Seat seat =new Seat(
+                   
                    asientoContable.getFirst().getFecha(),
-                   conUsuario.getIdUser(currentUser.getUserName())
+                   conUsuario.getIdUser(currentUser.getUserName()),
+                   asientoContable.getFirst().getDescripcion()
                    );
            int idSeat=conAsiento.addSeat(seat);
+           
            for( AsientoTabla asientoCuenta : asientoContable){
                AccountSeat accountSeat= new AccountSeat(
                    idSeat,
                    asientoCuenta.getIdCuenta(),
                    asientoCuenta.getImporte(),    
-                   asientoCuenta.getDestino(),         
-                   asientoCuenta.getDescripcion()
+                   asientoCuenta.getDestino()        
                );
                conAsiento.addAccountSeat(accountSeat);    
             }
@@ -417,6 +457,10 @@ public class AddAccountSeatController implements ActionListener{
             JOptionPane.showMessageDialog(null,"Se ha registrado correctamente el asiento");
             limpiarTabla();
             setCuentasComboBox();
+            addAccountSeatView.txtDescripcion.setText("");
+            addAccountSeatView.dateFecha.setDate(null);
+            addAccountSeatView.dateFecha.setEnabled(true);
+            addAccountSeatView.txtDescripcion.setEditable(true);
             asientoContable=new ArrayList<AsientoTabla>();
             cuentasActualizar=cuentas();
             cuentasActualizar.remove(0);

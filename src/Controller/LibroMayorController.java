@@ -16,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -88,7 +89,7 @@ public class LibroMayorController implements ActionListener {
                 return;
             }
            // Obtener la lista de asientos contables entre las fechas seleccionadas
-            ArrayList<AccountSeatController> listaAsientos= librosCon.obtenerListaAsientos(fechaDesde, fechaHasta);
+            ArrayList<AccountSeatController> listaAsientos= librosCon.obtenerListaFinal(fechaHasta);
             String nombreCuenta=this.libroMayorView.comboCuenta.getSelectedItem().toString();
             Account cuenta= obtenerCuentaPorNombre(nombreCuenta);
             // Actualizar la tabla con los resultados
@@ -103,16 +104,52 @@ public class LibroMayorController implements ActionListener {
         }
     }
     }
+     public float obtenerSaldoInicial(ArrayList<AccountSeatController> listaAsientos, Account cuenta){
+         float saldo=0.0f;
+         // Obtener la fecha límite y restarle un día
+        Calendar calFechaLimite = Calendar.getInstance();
+        calFechaLimite.setTime(libroMayorView.jDateChooserDesde.getDate());
+        calFechaLimite.add(Calendar.DAY_OF_MONTH, -1);
+        Date fechaLimite = calFechaLimite.getTime();
+         for(AccountSeatController asiento : listaAsientos){
+            // Obtener los detalles de cada Asiento_Cuenta
+            for(AccountSeat asientoCuenta : asiento.getAccountSeats()){
+                // Obtener los datos necesarios
+                if (asiento.getSeat().getDate().after(fechaLimite)){
+                 return saldo;
+            }
+                if(cuenta.getIdAccount()==asientoCuenta.getIdAccount()){
+                      if(asientoCuenta.getType().toUpperCase().equals("HABER")){
+                             if(cuenta.getEstado().equalsIgnoreCase("activo") || cuenta.getEstado().equalsIgnoreCase("resultado negativo")){
+                                    saldo=saldo-asientoCuenta.getAmount();
+                             }else{
+                                 saldo=saldo+asientoCuenta.getAmount();
+                             }
+                    }else{
+                        if(cuenta.getEstado().equalsIgnoreCase("pasivo") || cuenta.getEstado().equalsIgnoreCase("resultado positivo")){
+                                    saldo=saldo-asientoCuenta.getAmount();
+                        }else{
+                            saldo=saldo+asientoCuenta.getAmount();
+                        }
+                    }
+                }
+            }
+             
+     }
+         
+        return 0;
+     }
+     
+
      
      public void actulizarTabla(ArrayList<AccountSeatController> listaAsientos, Account cuenta) throws IOException, SQLException, ClassNotFoundException{
           iniciarTabla();
           String fechaFinal=librosCon.obtenerUltimaFecha(libroMayorView.jDateChooserDesde.getDate(), libroMayorView.jDateChooserHasta.getDate(), cuenta);
           String fechaInicial=librosCon.obtenerFechaInicial(libroMayorView.jDateChooserDesde.getDate(), libroMayorView.jDateChooserHasta.getDate(), cuenta);
+    
           // Variable para rastrear la última fecha añadida
           String nombreCuenta=cuenta.getAccountName();
-          float saldoInicial=cuenta.getSaldoInicial();
-          float saldoFinal= cuenta.getAccountBalance();
-          float saldo= cuenta.getSaldoInicial();
+          float saldo=obtenerSaldoInicial(listaAsientos,cuenta);
         // Recorrer la lista de asientos contables
         String[] filaSeparadora = {"", "", "", ""};
         modelo.addRow(filaSeparadora);
@@ -122,18 +159,20 @@ public class LibroMayorController implements ActionListener {
         filaInicial[2] = "Inicial"; // Texto "Inicial" en la descripción
         filaInicial[3] = ""; // Columna "Debe" vacía
         filaInicial[4] = ""; // Columna "Haber" vacía
-        filaInicial[5] ="$"+ String.valueOf(saldoInicial); // Saldo inicial
+        filaInicial[5] ="$"+ String.valueOf(saldo); // Saldo inicial
         modelo.addRow(filaInicial);
         
+        listaAsientos= librosCon.obtenerListaAsientos(libroMayorView.jDateChooserDesde.getDate(),libroMayorView.jDateChooserHasta.getDate());
         for(AccountSeatController asiento : listaAsientos){
             // Obtener los detalles de cada Asiento_Cuenta
+            
             for(AccountSeat asientoCuenta : asiento.getAccountSeats()){
                 // Obtener los datos necesarios
                 if(cuenta.getIdAccount()==asientoCuenta.getIdAccount()){
                     String[] datos= new String[6];
                     datos[0]="";
                     datos[1]=asiento.getSeat().getDate().toString();
-                    datos[2]=asientoCuenta.getDecripcionOperacion();
+                    datos[2]=asiento.getSeat().getDescripcion().toString();
                     if(asientoCuenta.getType().toUpperCase().equals("HABER")){
                         datos[4]="$"+String.valueOf(asientoCuenta.getAmount());
                              if(cuenta.getEstado().equalsIgnoreCase("activo") || cuenta.getEstado().equalsIgnoreCase("resultado negativo")){
@@ -160,7 +199,7 @@ public class LibroMayorController implements ActionListener {
         filaFinal[2] = "Final"; // Texto "Inicial" en la descripción
         filaFinal[3] = ""; // Columna "Debe" vacía
         filaFinal[4] = ""; // Columna "Haber" vacía
-        filaFinal[5] ="$"+ String.valueOf(saldoFinal); // Saldo inicial
+        filaFinal[5] ="$"+ String.valueOf(saldo); // Saldo inicial
         modelo.addRow(filaFinal);
         
         // Agregar fila separadora después de cada AsientoContable
