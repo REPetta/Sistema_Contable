@@ -6,6 +6,8 @@ import Connection.UserConnection;
 import Model.SingletonUser;
 import Model.User;
 import View.LoginView;
+import static View.LoginView.blinkingFields;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
@@ -54,6 +56,7 @@ public class Login implements ActionListener{
                 loginView.txtUser.setText("");
                 loginView.txtPassword.setText("");
             }
+           
             loginView.txtUser.setText("");
             loginView.txtPassword.setText("");
        }
@@ -63,10 +66,12 @@ public class Login implements ActionListener{
     public boolean validateUser(User user , String pass){        
         if(user==null){
             JOptionPane.showMessageDialog(null,"El usuario ingresado no es valido");
+            blinkingFields(loginView.txtUser);
             return false;
         }
         if(!user.getPassword().equals(pass)){
             JOptionPane.showMessageDialog(null,"La contreseña ingresada no es correcta");
+            blinkingFields(loginView.txtPassword);
             return false;
         }
         return true;
@@ -77,14 +82,18 @@ public class Login implements ActionListener{
         if(userName==null || userName.isEmpty() ){
             if(!pass.isEmpty()){
                 JOptionPane.showMessageDialog(null,"El campo NOMBRE DE USUARIO no puede estar vacio");
+                blinkingFields(loginView.txtUser);
                 return false;
                 }else{
                     JOptionPane.showMessageDialog(null,"No puede haber campos vacios");
+                    blinkingFields(loginView.txtUser);
+                    blinkingFields(loginView.txtPassword);
                     return false;
                         }
                 }
          if( pass==null || pass.isEmpty() ){
                    JOptionPane.showMessageDialog(null,"El campo CONTRASEÑA no puede estar vacio");
+                   blinkingFields(loginView.txtPassword);
                    return false;
              }
         return true;

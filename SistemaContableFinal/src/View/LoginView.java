@@ -2,6 +2,13 @@ package View;
 
 //Interfaz Grafica del LoginView del Sistema Contable//
 
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JTextField;
+import javax.swing.Timer;
+
+
 
 
 public class LoginView extends javax.swing.JFrame {
@@ -12,9 +19,29 @@ public class LoginView extends javax.swing.JFrame {
         this.setLocationRelativeTo(null); // Localiza la ventana en el centro de la pantalla//
         this.setTitle("Login");  //El nombre la venta sera LoginView"
         this.setResizable(false); // Desactiva el botón de maximizar
-      
-
     }
+    //Metodo para hacer titildear un campo//
+    public  static void blinkingFields(JTextField field){
+        Color originColor= field.getBackground();
+        Timer timer= new Timer(200, new ActionListener() {
+            private int contador=0;
+            private boolean red =true;
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                  if(contador>=6){
+                    ((Timer) e.getSource()).stop();
+                    field.setBackground(originColor);
+            }else{
+                field.setBackground(red ? Color.red : originColor);
+                red=!red;
+                contador++;
+            }
+        }
+     });
+        timer.start();           
+ }
+                
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
