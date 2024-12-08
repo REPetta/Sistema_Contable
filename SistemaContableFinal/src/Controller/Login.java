@@ -11,9 +11,11 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 public class Login implements ActionListener{
     
@@ -37,40 +39,57 @@ public class Login implements ActionListener{
     //Metodo para ingresar en la aplicacion//
    public void buttonIngress(ActionEvent e) throws SQLException{
        if(e.getSource()==loginView.btnIngress){
-           
-            String userName=loginView.txtUser.getText();
-            String pass=new String(loginView.txtPassword.getPassword());
-            
-            if(nonEmptyFields(userName,pass)){
+            String [] fields={
+                loginView.txtUser.getText(),
+                new String(loginView.txtPassword.getPassword())
+            };
+                   
+            if(nonEmptyFields(fields)){
                 UserConnection con= new UserConnection();
-                User user= con.getUserValid(userName);
-                if(validateUser(user,pass)){
-                    JOptionPane.showMessageDialog(null, "Bienvenido al Sistema "+ userName);
+                User user= con.getUserValid(fields[0]);
+                if(validateUser(user,fields[1])){
+                    JOptionPane.showMessageDialog(null, "Bienvenido al Sistema "+ user.getUserName(), "Confirmacion" , JOptionPane.INFORMATION_MESSAGE);
                     instance=SingletonUser.getInstance();
-                    instance.setUserName(userName);
+                    instance.setUserName(user.getUserName());
                     instance.setTasks(user.getTasks());
                     mainMenu= new MainMenu();
                     closeLoginView();
                     mainMenu.openMainMenuView();
                 }
-                loginView.txtUser.setText("");
-                loginView.txtPassword.setText("");
+               fieldsClear();
             }
            
-            loginView.txtUser.setText("");
-            loginView.txtPassword.setText("");
+            fieldsClear();
        }
    }
    
+   //Metodo para limpiar los campos//
+   public void fieldsClear(){
+       loginView.txtUser.setText("");
+       loginView.txtPassword.setText("");
+   }
+   
    // Metodo para validar el usuario//
-    public boolean validateUser(User user , String pass){        
+    public boolean validateUser(User user , String pass){
+       
         if(user==null){
-            JOptionPane.showMessageDialog(null,"El usuario ingresado no es valido");
+            JOptionPane.showMessageDialog(
+                null,
+                "El usuario ingresado no es valido\"\n" ,
+                "Error",
+                JOptionPane.ERROR_MESSAGE
+             );
             blinkingFields(loginView.txtUser);
+            blinkingFields(loginView.txtPassword);
             return false;
         }
         if(!user.getPassword().equals(pass)){
-            JOptionPane.showMessageDialog(null,"La contreseña ingresada no es correcta");
+            JOptionPane.showMessageDialog(
+                null,
+                "La contraseña ingresada no es valida \n" ,
+                "Error",
+                JOptionPane.ERROR_MESSAGE
+             );
             blinkingFields(loginView.txtPassword);
             return false;
         }
@@ -78,24 +97,29 @@ public class Login implements ActionListener{
     }
     
     //Metodo para validar que no haya campos vacios en la interfaz del login//
-    public boolean nonEmptyFields(String userName, String pass){
-        if(userName==null || userName.isEmpty() ){
-            if(!pass.isEmpty()){
-                JOptionPane.showMessageDialog(null,"El campo NOMBRE DE USUARIO no puede estar vacio");
-                blinkingFields(loginView.txtUser);
-                return false;
-                }else{
-                    JOptionPane.showMessageDialog(null,"No puede haber campos vacios");
-                    blinkingFields(loginView.txtUser);
-                    blinkingFields(loginView.txtPassword);
-                    return false;
-                        }
-                }
-         if( pass==null || pass.isEmpty() ){
-                   JOptionPane.showMessageDialog(null,"El campo CONTRASEÑA no puede estar vacio");
-                   blinkingFields(loginView.txtPassword);
-                   return false;
+    public boolean nonEmptyFields(String[] fields){
+       String[] fieldNames={"Nombre de Usuario","Contraseña"};
+       StringBuilder bugs= new StringBuilder();
+       JTextField[] jtextFields={loginView.txtUser, loginView.txtPassword};
+       boolean hasBugs= false;
+       
+       for (int i=0; i<fields.length; i++){
+             if(fields[i].isEmpty()){
+                 bugs.append("-El campo ").append(fieldNames[i]).append(" no puede estar vacio.\n ");
+                 blinkingFields(jtextFields[i]);
+                 hasBugs= true;
              }
+         }
+         if(hasBugs){
+             JOptionPane.showMessageDialog(
+                null,
+                "Se han encontrado los siguientes problemas:\n" + bugs,
+                "Error",
+                JOptionPane.ERROR_MESSAGE
+             );
+             
+             return false;
+         }
         return true;
         }
     

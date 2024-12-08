@@ -13,13 +13,14 @@ public class MainMenu implements ActionListener {
     private final MainMenuView mainMenuView;
     private Login login;
     private final SingletonUser currentUser= SingletonUser.getInstance();
+    private AddUser addUser;
  
     
     //Contructor//
     public MainMenu(){
         mainMenuView=new MainMenuView();
         initializeListeners();
-        this.mainMenuView.setTitle("Menu Principal"+"-"+currentUser.getUserName().toUpperCase()+"("+getRol(currentUser)+")");
+        this.mainMenuView.setTitle("Menu Principal"+"-"+currentUser.getUserName().toUpperCase()+"("+currentUser.getRol()+")");
         displayBasedRol(currentUser);
         }
     
@@ -37,17 +38,10 @@ public class MainMenu implements ActionListener {
         this.mainMenuView.btnShowAccounts.addActionListener(this);    
     }
     
-    //Metodo para obtener el rol del usuario en funcion de las tareas que tiene permitidas//
-    public final String getRol( SingletonUser current){
-        if(current.getTasks().contains("agregar_usuario")){
-            return "ADMIN";
-        }
-        return "COMMON";
-    }
     
     //Metodo para ocultar ciertos botones en funcion del rol del usuario//
     public final void displayBasedRol(SingletonUser current){
-        if(getRol(current).equalsIgnoreCase("COMMON")){
+        if(currentUser.getRol().equalsIgnoreCase("COMMON")){
             this.mainMenuView.btnAddUser.setVisible(false);
             this.mainMenuView.btnDelUser.setVisible(false);
         }
@@ -62,7 +56,14 @@ public class MainMenu implements ActionListener {
     public void closeMainMenuView(){
         this.mainMenuView.dispose();
     }
-    
+    //Metodo para darle funcionalida al boton agregar usuario//
+    public void buttonAddUser(ActionEvent e){
+        if(e.getSource()==mainMenuView.btnAddUser){
+            closeMainMenuView();
+            addUser=new AddUser();
+            addUser.openAddUserView();
+        }
+    }
     //Metodo para darle funcionalidad al boton Salir//
     public void buttonExit(ActionEvent e){
         if(e.getSource()==mainMenuView.btnExit){
@@ -76,6 +77,7 @@ public class MainMenu implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         buttonExit(e);
+        buttonAddUser(e);
     }
     
     

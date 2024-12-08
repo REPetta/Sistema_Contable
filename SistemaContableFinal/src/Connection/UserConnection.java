@@ -1,6 +1,7 @@
 //Clase encargada de las consultas de usuario//
 package Connection;
 
+import Model.SingletonUser;
 import Model.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -45,6 +46,48 @@ public class UserConnection {
             }
             return user;
      }
-        
     
-}
+    //Metodo para validar si el usuario ya existe//
+    public boolean isUserExist(String userName) throws SQLException{
+        String sql="SELECT * FROM Usuario WHERE username=?;";
+        Connections con= new Connections();
+            try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
+                ps.setString(1, userName);
+                try(ResultSet rs=ps.executeQuery()){
+                    if(rs.next()){
+                        return true;
+                    }
+                }
+                }catch(SQLException e){
+                     System.err.println("Error al validar el usuario: " + e.getMessage());
+                     throw e; 
+                }
+        return false;
+    }
+    
+    //Metodo para cargar el usuario en la base de datos//
+    public boolean addUser(User user , String rol) throws SQLException{
+        String sql="INSERT INTO Usuario(nombre,apellido,dni,estado,username,password,idperfil) VALUES(?,?,?,'alta',?,?,?);";
+         Connections con= new Connections();
+            try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
+                ps.setString(1, user.getName());
+                ps.setString(2, user.getLastName());
+                ps.setInt(3, user.getDni());
+                ps.setString(4, user.getUserName());
+                ps.setString(5, user.getPassword());
+                if(rol.equalsIgnoreCase("ADMINISTRADOR")){
+                    ps.setInt(6, 1);
+                }else{
+                    ps.setInt(6, 2);
+                }
+                
+                int rowsAffected=ps.executeUpdate();
+                return rowsAffected>0;
+                
+                }catch(SQLException e){
+                    System.err.println("Error al cargar el usuario: " + e.getMessage());
+                     throw e; 
+                }
+            }
+    }
+    
