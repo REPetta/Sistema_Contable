@@ -30,7 +30,6 @@ public class MainMenu implements ActionListener {
     public final void initializeListeners(){  
         this.mainMenuView.btnAddSeat.addActionListener(this);
         this.mainMenuView.btnAddUser.addActionListener(this);
-        this.mainMenuView.btnDelUser.addActionListener(this);
         this.mainMenuView.btnDiaryBook.addActionListener(this);
         this.mainMenuView.btnExit.addActionListener(this);
         this.mainMenuView.btnLedger.addActionListener(this);
@@ -42,10 +41,17 @@ public class MainMenu implements ActionListener {
     
     //Metodo para ocultar ciertos botones en funcion del rol del usuario//
     public final void displayBasedRol(SingletonUser current){
-        if(currentUser.getRol().equalsIgnoreCase("COMMON")){
+        if(currentUser.getRol().equalsIgnoreCase("Contador")){
             this.mainMenuView.btnAddUser.setVisible(false);
-            this.mainMenuView.btnDelUser.setVisible(false);
             this.mainMenuView.btnSearchUser.setVisible(false);
+        }
+        if(currentUser.getRol().equalsIgnoreCase("Vendedor")){
+            this.mainMenuView.btnAddUser.setVisible(false);
+            this.mainMenuView.btnSearchUser.setVisible(false);
+            this.mainMenuView.btnAddSeat.setVisible(false);
+            this.mainMenuView.btnDiaryBook.setVisible(false);
+            this.mainMenuView.btnLedger.setVisible(false);
+            this.mainMenuView.btnShowAccounts.setVisible(false);
         }
     }
     

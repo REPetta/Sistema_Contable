@@ -44,9 +44,12 @@ public class SingletonUser {
        //Metodo para obtener el rol del usuario en funcion de las tareas que tiene permitidas//
     public final String getRol( ){
         if(this.getTasks().contains("agregar_usuario")){
-            return "ADMIN";
+            return "ADMINISTRADOR";
         }
-        return "COMMON";
+        if(this.getTasks().contains("gestion_ventas")){
+            return "VENDEDOR";
+        }
+        return "CONTADOR";
     }
     
     

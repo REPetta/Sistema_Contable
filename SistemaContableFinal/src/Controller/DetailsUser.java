@@ -15,7 +15,6 @@ import javax.swing.JOptionPane;
 public final class DetailsUser implements ActionListener{
     
     private final DetailsUserView detailsUserView;
-    private MainMenu mainMenu;
     private SearchUser userSearch;
     private final SingletonUser currentUser= SingletonUser.getInstance();
     private final User searchUser;
@@ -36,10 +35,15 @@ public final class DetailsUser implements ActionListener{
         detailsUserView.viewLastName.setText(user.getLastName());
         detailsUserView.viewDni.setText( String.valueOf(user.getDni()));
         detailsUserView.viewUserName.setText(user.getUserName());
+        System.out.println(user.getTasks());
         if(user.getTasks().contains("agregar_usuario")){
             detailsUserView.viewRol.setText("Administrador");
         }else{
-            detailsUserView.viewRol.setText("Estandar");
+                if(user.getTasks().contains("gestion_ventas") ){
+                    detailsUserView.viewRol.setText("Vendedor");
+                }else{
+                    detailsUserView.viewRol.setText("Contador");
+            }
         }
     }
     

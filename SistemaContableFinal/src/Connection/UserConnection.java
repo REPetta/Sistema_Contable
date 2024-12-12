@@ -78,8 +78,12 @@ public class UserConnection {
                 ps.setString(5, user.getPassword());
                 if(rol.equalsIgnoreCase("ADMINISTRADOR")){
                     ps.setInt(6, 1);
-                }else{
+                }
+               if(rol.equalsIgnoreCase("CONTADOR")){
                     ps.setInt(6, 2);
+                }
+                if(rol.equalsIgnoreCase("VENDEDOR")){
+                    ps.setInt(6, 3);
                 }
                 
                 int rowsAffected=ps.executeUpdate();

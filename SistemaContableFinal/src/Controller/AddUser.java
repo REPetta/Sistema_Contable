@@ -159,8 +159,8 @@ public class AddUser implements ActionListener{
                     }
                 }
                 if(fieldNames[i].equalsIgnoreCase("Rol")){ //Valida el rol//
-                    if(!fields[i].equalsIgnoreCase("ADMINISTRADOR") && !fields[i].equalsIgnoreCase("ESTANDAR")){
-                        invalidFields.append("- El campo ").append(fieldNames[i]).append(" debe ser 'ADMINISTRADOR' o 'ESTANDAR'. \n ");
+                    if(!fields[i].equalsIgnoreCase("ADMINISTRADOR") && !fields[i].equalsIgnoreCase("CONTADOR")  && !fields[i].equalsIgnoreCase("VENDEDOR")){
+                        invalidFields.append("- El campo ").append(fieldNames[i]).append(" debe ser 'ADMINISTRADOR' , 'CONTADOR' o 'VENDEDOR'. \n ");
                         blinkingFields(jtextFields[i]);
                     }
                 }
