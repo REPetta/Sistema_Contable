@@ -11,7 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserConnection {
- 
+    
+     //Metodo para buscar un usuario en base de datos y traer su datos//
     public User getUserValid(String userName ) throws SQLException{
     String sql ="SELECT u.* , t.tarea  FROM Usuario u INNER JOIN Perfiles p ON u.idPerfil=p.idPerfil INNER JOIN Perfiles_Tareas pt ON p.idPerfil=pt.idPerfil INNER JOIN Tareas t ON pt.idtarea=t.idTarea  WHERE userName=? AND estado='alta'; ";
     User user =null;
@@ -89,5 +90,22 @@ public class UserConnection {
                      throw e; 
                 }
             }
+    
+   //Metodo para dar de baja un usuario//
+      public boolean delUser(User user ) throws SQLException{
+        String sql="UPDATE Usuario SET estado = 'baja' WHERE userName=?;";
+         Connections con= new Connections();
+            try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
+                ps.setString(1, user.getUserName());
+                int columnsAffected=ps.executeUpdate();
+                return columnsAffected>0;
+                
+                }catch(SQLException e){
+                    System.err.println("Error al cargar el usuario: " + e.getMessage());
+                     throw e; 
+                }
+            }
+    
+    
     }
     

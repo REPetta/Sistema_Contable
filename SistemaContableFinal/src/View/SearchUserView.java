@@ -1,6 +1,12 @@
 //Clase encargada de la vista de Dar de Baja Usuario//
 package View;
 
+import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JTextField;
+import javax.swing.Timer;
+
 public class SearchUserView extends javax.swing.JFrame {
 
     public SearchUserView() {
@@ -9,6 +15,27 @@ public class SearchUserView extends javax.swing.JFrame {
         this.setResizable(false); // Desactiva el botón de maximizar
 
     }
+      //Metodo para hacer titildear un campo//
+    public  static void blinkingFields(JTextField field){
+        Color originColor= field.getBackground();
+        Timer timer= new Timer(200, new ActionListener() {
+            private int contador=0;
+            private boolean red =true;
+            
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                  if(contador>=6){
+                    ((Timer) e.getSource()).stop();
+                    field.setBackground(originColor);
+            }else{
+                field.setBackground(red ? Color.red : originColor);
+                red=!red;
+                contador++;
+            }
+        }
+     });
+        timer.start();           
+ }
 
     /**
      * This method is called from within the constructor to initialize the form.

@@ -29,12 +29,12 @@ public class AddUser implements ActionListener{
         
     
     }
-     //Metodo para abrir la ventana del menu principal//
+     //Metodo para abrir la ventana del agregar el usuario//
     public void openAddUserView(){
         this.addUserView.setVisible(true);
     }
     
-    //Metodo para cerrar la ventana del menu principal//
+    //Metodo para cerrar la ventana del agregar el usuario//
     public void closeAddUserView(){
         this.addUserView.dispose();
     }

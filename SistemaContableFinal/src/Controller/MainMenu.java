@@ -14,6 +14,7 @@ public class MainMenu implements ActionListener {
     private Login login;
     private final SingletonUser currentUser= SingletonUser.getInstance();
     private AddUser addUser;
+    private SearchUser searchUser;
  
     
     //Contructor//
@@ -44,6 +45,7 @@ public class MainMenu implements ActionListener {
         if(currentUser.getRol().equalsIgnoreCase("COMMON")){
             this.mainMenuView.btnAddUser.setVisible(false);
             this.mainMenuView.btnDelUser.setVisible(false);
+            this.mainMenuView.btnSearchUser.setVisible(false);
         }
     }
     
@@ -64,6 +66,16 @@ public class MainMenu implements ActionListener {
             addUser.openAddUserView();
         }
     }
+    
+    //Metodo para dar funcionalidad al boton buscar usuario//
+    public void buttonSearchUser(ActionEvent e){
+        if(e.getSource()==mainMenuView.btnSearchUser){
+            closeMainMenuView();
+            searchUser = new SearchUser();
+            searchUser.openSearchUserView();
+        }
+    }
+    
     //Metodo para darle funcionalidad al boton Salir//
     public void buttonExit(ActionEvent e){
         if(e.getSource()==mainMenuView.btnExit){
@@ -78,6 +90,7 @@ public class MainMenu implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         buttonExit(e);
         buttonAddUser(e);
+        buttonSearchUser(e);
     }
     
     
