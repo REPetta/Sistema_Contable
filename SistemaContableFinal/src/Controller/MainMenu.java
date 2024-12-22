@@ -5,6 +5,10 @@ import Model.SingletonUser;
 import View.MainMenuView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class MainMenu implements ActionListener {
@@ -15,6 +19,7 @@ public class MainMenu implements ActionListener {
     private final SingletonUser currentUser= SingletonUser.getInstance();
     private AddUser addUser;
     private SearchUser searchUser;
+    private ShowAccounts chartAccounts;
  
     
     //Contructor//
@@ -81,7 +86,14 @@ public class MainMenu implements ActionListener {
             searchUser.openSearchUserView();
         }
     }
-    
+    //Metodo para acceder al plan de cuentas//
+    public void buttonShowAccounts(ActionEvent e) throws SQLException, ClassNotFoundException, IOException{
+        if(e.getSource()==mainMenuView.btnShowAccounts){
+            closeMainMenuView();
+            chartAccounts= new ShowAccounts();
+            chartAccounts.openShowAccountsView();
+        }
+    }
     //Metodo para darle funcionalidad al boton Salir//
     public void buttonExit(ActionEvent e){
         if(e.getSource()==mainMenuView.btnExit){
@@ -97,6 +109,15 @@ public class MainMenu implements ActionListener {
         buttonExit(e);
         buttonAddUser(e);
         buttonSearchUser(e);
+        try {
+            buttonShowAccounts(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     
