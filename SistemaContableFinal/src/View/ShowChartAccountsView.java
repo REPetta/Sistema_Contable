@@ -38,9 +38,7 @@ public class ShowChartAccountsView extends javax.swing.JFrame {
         treeAccounts = new javax.swing.JTree();
         btnExit = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        btnDelAccount = new javax.swing.JButton();
         btnAddAccount = new javax.swing.JButton();
-        btnDetalis = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
 
@@ -75,17 +73,7 @@ public class ShowChartAccountsView extends javax.swing.JFrame {
         jLabel1.setBackground(new java.awt.Color(204, 204, 255));
         jLabel1.setText("Plan de cuentas");
 
-        btnDelAccount.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/eliminar.png"))); // NOI18N
-        btnDelAccount.setText("Dar de Baja Cuenta");
-        btnDelAccount.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDelAccountActionPerformed(evt);
-            }
-        });
-
         btnAddAccount.setText("Agregar Cuenta");
-
-        btnDetalis.setText("Ver Detalles de Cuenta");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -99,13 +87,9 @@ public class ShowChartAccountsView extends javax.swing.JFrame {
                         .addComponent(btnAddAccount)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnDetalis)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 104, Short.MAX_VALUE)
                         .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(35, 35, 35)
-                        .addComponent(btnDelAccount)
-                        .addGap(24, 24, 24))
+                        .addGap(273, 273, 273))
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(15, 15, 15)
                 .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -119,24 +103,16 @@ public class ShowChartAccountsView extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnDetalis)
-                            .addComponent(btnAddAccount))
+                        .addComponent(btnAddAccount)
                         .addComponent(jSeparator1, javax.swing.GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
                         .addComponent(jSeparator2))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btnDelAccount)
-                        .addComponent(btnExit)))
+                    .addComponent(btnExit))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void btnDelAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDelAccountActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnDelAccountActionPerformed
 
     /**
      * @param args the command line arguments
@@ -178,8 +154,6 @@ public class ShowChartAccountsView extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton btnAddAccount;
-    public javax.swing.JButton btnDelAccount;
-    public javax.swing.JButton btnDetalis;
     public javax.swing.JButton btnExit;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;

@@ -31,6 +31,9 @@ public class Account {
         this.balance = balance;
         this.receiveBalance = receiveBalance;
     }
+
+    public Account() {
+    }
     
     
 

@@ -35,7 +35,6 @@ public final class DetailsUser implements ActionListener{
         detailsUserView.viewLastName.setText(user.getLastName());
         detailsUserView.viewDni.setText( String.valueOf(user.getDni()));
         detailsUserView.viewUserName.setText(user.getUserName());
-        System.out.println(user.getTasks());
         if(user.getTasks().contains("agregar_usuario")){
             detailsUserView.viewRol.setText("Administrador");
         }else{

@@ -25,7 +25,7 @@ public class AddUser implements ActionListener{
     public AddUser () {
         addUserView= new AddUserView();
         initializeListeners();
-        this.addUserView.setTitle("Menu Principal"+"-"+currentUser.getUserName().toUpperCase()+"("+currentUser.getRol()+")");
+        this.addUserView.setTitle("Agregar Usuario"+"-"+currentUser.getUserName().toUpperCase()+"("+currentUser.getRol()+")");
         
     
     }

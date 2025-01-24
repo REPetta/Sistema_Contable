@@ -3,8 +3,8 @@ package Controller;
 
 import Connection.AccountConnection;
 import Model.Account;
-import Model.AccountNode;
 import Model.CustomTreeModel;
+import Model.AccountNode;
 import Model.SingletonUser;
 import View.ShowChartAccountsView;
 import java.awt.event.ActionEvent;
@@ -12,6 +12,9 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -24,6 +27,8 @@ public class ShowAccounts implements ActionListener{
 
     private final AccountConnection con=new AccountConnection();
     private ChartAccounts chartAccounts =new ChartAccounts();
+    private AddAccount addAccount;
+    private DetailsAccount detailsAccount;
    
 
     //Constructor//
@@ -40,15 +45,12 @@ public class ShowAccounts implements ActionListener{
     //Metodo para inicializar los listeners//
     public final void initializeListeners(){
         this.showAccountsView.btnAddAccount.addActionListener(this);
-          this.showAccountsView.btnDelAccount.addActionListener(this);
-          this.showAccountsView.btnDetalis.addActionListener(this);
-          this.showAccountsView.btnExit.addActionListener(this);
+        this.showAccountsView.btnExit.addActionListener(this);
     }
     //Metodo para desplagar los botones segun el rol//
     public final void displayBasedRol(SingletonUser currentUser){
          if(currentUser.getTasks().contains("agregar_usuario")==false){
             this.showAccountsView.btnAddAccount.setVisible(false);
-            this.showAccountsView.btnDelAccount.setVisible(false);
           }
     }
     //Metodo para hacer visible la ventana de la vista//
@@ -110,8 +112,20 @@ public class ShowAccounts implements ActionListener{
         if (selectedNode != null && selectedNode.getUserObject() instanceof AccountNode ) {
             AccountNode nodoSeleccionado = (AccountNode) selectedNode.getUserObject();
         
-        // Aquí puedes realizar operaciones sobre el nodo seleccionado (mostrar detalles, editar, eliminar)
-        // Ejemplo: mostrarDetallesCuenta(nodoSeleccionado);
+        // Verificar si el nodo seleccionado es un hijo (no tiene más subcuentas)
+        if (nodoSeleccionado.getAccount().getReceiveBalance() == 1) { // 1 indica que recibe saldo (es un hijo)
+            try {
+                showDetails(nodoSeleccionado);
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(
+                    showAccountsView, // Componente padre
+                    "Por favor, seleccione una cuenta válida para ver los detalles.", // Mensaje
+                     "Cuenta no válida", // Título del cuadro de diálogo
+                    JOptionPane.WARNING_MESSAGE // Tipo de mensaje
+    );
+            }
+        }
+
     }
         }
     
@@ -137,7 +151,23 @@ public class ShowAccounts implements ActionListener{
         }
         return null;
     }
-
+    
+    //Metodo para conectar el boton agregar cuenta con su funcionalidad//
+    public void buttonAddAccount(ActionEvent e){
+        if(e.getSource()==showAccountsView.btnAddAccount){
+            closeShowAccountsView();
+            addAccount=new AddAccount();
+            addAccount.openAddAccountView();
+        }
+    }
+    //Metodo para ver los detalles de la cuenta//
+    public void showDetails(AccountNode nodoSeleccionado) throws SQLException{
+            this.showAccountsView.setVisible(false);
+            detailsAccount=new DetailsAccount(this);
+            detailsAccount.loadDetails(nodoSeleccionado.getAccount());
+            detailsAccount.openDetailsAccountView();
+            
+    }
     //Metodo que le da al boton Salir la funcion de cerrar el Menu Principal y volver al Login//
     public void buttonExit(ActionEvent e){
         if(e.getSource()==showAccountsView.btnExit){
@@ -146,9 +176,13 @@ public class ShowAccounts implements ActionListener{
             mainMenu.openMainMenuView();
         }
     }
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         buttonExit(e);
+        buttonAddAccount(e);
+
+        }
         
     }
-}
+
