@@ -13,6 +13,7 @@ public class Account {
     private double balance;
     private  int receiveBalance;
     private  String state;
+    private int idAccount;
 
    //Contructor//
     public Account( String accountName, int code, String type, double balance, int receiveBalance, String state) {
@@ -33,6 +34,16 @@ public class Account {
     }
 
     public Account() {
+    }
+
+    public Account(String accountName, int code, String type, double balance, int receiveBalance, String state, int idAccount) {
+        this.accountName = accountName;
+        this.code = code;
+        this.type = type;
+        this.balance = balance;
+        this.receiveBalance = receiveBalance;
+        this.state = state;
+        this.idAccount = idAccount;
     }
     
     
@@ -84,6 +95,14 @@ public class Account {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public int getIdAccount() {
+        return idAccount;
+    }
+
+    public void setIdAccount(int idAccount) {
+        this.idAccount = idAccount;
     }
 
     

@@ -20,7 +20,7 @@ public class MainMenu implements ActionListener {
     private AddUser addUser;
     private SearchUser searchUser;
     private ShowAccounts chartAccounts;
- 
+    private AddAccountSeat addAccountSeat;
     
     //Contructor//
     public MainMenu(){
@@ -94,6 +94,14 @@ public class MainMenu implements ActionListener {
             chartAccounts.openShowAccountsView();
         }
     }
+    //Metodo para darle funcionalidad al boton agregar asiento//
+    public void buttonAddAccountSeat(ActionEvent e) throws IOException, ClassNotFoundException, SQLException{
+        if(e.getSource()==mainMenuView.btnAddSeat){
+            closeMainMenuView();
+            addAccountSeat=new AddAccountSeat();
+            addAccountSeat.openAddAccountSeatView();
+        }
+    }
     //Metodo para darle funcionalidad al boton Salir//
     public void buttonExit(ActionEvent e){
         if(e.getSource()==mainMenuView.btnExit){
@@ -116,6 +124,15 @@ public class MainMenu implements ActionListener {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
+            Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            buttonAddAccountSeat(e);
+        } catch (IOException ex) {
+            Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
             Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

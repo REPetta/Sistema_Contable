@@ -11,7 +11,7 @@ public class SingletonUser {
 
     private String userName;
     private List<String> tasks;
-    
+
     //Constructor//
     public SingletonUser(){}
     
@@ -40,6 +40,7 @@ public class SingletonUser {
     public void setTasks(List<String> tasks) {
         this.tasks = tasks;
     }
+
     
        //Metodo para obtener el rol del usuario en funcion de las tareas que tiene permitidas//
     public final String getRol( ){

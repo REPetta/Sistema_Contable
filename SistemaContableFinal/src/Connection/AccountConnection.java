@@ -2,6 +2,7 @@
 package Connection;
 
 import Model.Account;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -32,7 +33,7 @@ public class AccountConnection {
     //Metodo para obtener las cuentas validas de la base de datos//    //Metodo para obtener las cuentas validas de la base de datos//
     public List<Account> getAccounts() throws SQLException{
         List<Account> accounts= new ArrayList<>();
-        String sql ="SELECT * FROM  Cuenta WHERE estado='alta' ORDER BY codigo;";
+        String sql ="SELECT * FROM  Cuenta WHERE estado='alta'  ORDER BY codigo;";
         Connections con= new Connections();
             try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
                   try(ResultSet rs=ps.executeQuery()){
@@ -43,7 +44,8 @@ public class AccountConnection {
                                   rs.getString("tipo"),
                                   rs.getDouble("saldoCuenta"),
                                   rs.getInt("recibeSaldo"),
-                                  rs.getString("estado")
+                                  rs.getString("estado"),
+                                  rs.getInt("idCuenta")
                           );
                           accounts.add(account);
                       }
@@ -123,6 +125,29 @@ public class AccountConnection {
         return false;
         }
     
+    //Metodo para actualizar el saldo de las cuentas //
+     public void actualizarSaldo(List<Account> listaCuentas) throws ClassNotFoundException, SQLException, IOException{
+        String sql="UPDATE  Cuenta  SET saldoCuenta=?\n" +
+"	WHERE saldoCuenta!=? and idCuenta=? ;";
+     PreparedStatement ps=null;//Variable para preparar y ejecutar la consulta //
+     Connections con= new Connections();
+     try{
+          ps=con.connect().prepareStatement(sql);//Establece la conexion con la base de datos//
+          for(Account cuenta:listaCuentas){
+              ps.setDouble(1, cuenta.getBalance());
+              ps.setDouble(2, cuenta.getBalance());
+              ps.setInt(3, cuenta.getIdAccount());
+              ps.executeUpdate();
+            }
+     
+     }catch(SQLException e){
+            e.printStackTrace();
+            throw e;
+        }finally{
+            if (ps != null) try { ps.close(); } catch (SQLException e) { e.printStackTrace(); }
+            if (con != null) con.close();
+            }
+        }
 }
     
     

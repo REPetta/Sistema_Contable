@@ -109,7 +109,22 @@ public class UserConnection {
                      throw e; 
                 }
             }
+    //Metodo para obrener el id de un usuario//
+      public int getUserId(String userName) throws SQLException{
+          String sql="SELECT * FROM Usuario Where estado='alta' AND userName=?;";
+          int idUser=0;
+           Connections con= new Connections();
+            try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
+                ps.setString(1, userName);
+                try(ResultSet rs=ps.executeQuery()){
+                    if(rs.next()){
+                        idUser=rs.getInt("idUsuario");
+                    }
+                }catch(SQLException e){
+                        e.printStackTrace();
+                    }
+        }
+        return idUser;
     
-    
-    }
-    
+      }
+}
