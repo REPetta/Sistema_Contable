@@ -174,9 +174,6 @@ public class AddAccountSeat implements ActionListener{
     if (e.getSource() == view.btnCancelar) {
         // Limpiar campos
         limpiarVista();
-        limpiarTabla();
-        view.txtDescripcion.setText("");
-        view.dateFecha.setDate(null);
         view.dateFecha.setEnabled(true);
         view.txtDescripcion.setEditable(true);
         asientoContable.clear();
@@ -198,8 +195,7 @@ public class AddAccountSeat implements ActionListener{
          if(fecha==null){
              JOptionPane.showMessageDialog(null,"No puede haber ninguna opcion en blanco");
              limpiarVista();
-             view.txtDescripcion.setText("");
-             view.dateFecha.setDate(null);
+            
              return;
          }
          LocalDate fechaConvertida = fecha.toInstant()
@@ -213,29 +209,21 @@ public class AddAccountSeat implements ActionListener{
          if(fechaConvertida.isAfter(fechaActual)){
              JOptionPane.showMessageDialog(null,"La fecha no puede ser posterior a la de hoy");
              limpiarVista();
-             view.txtDescripcion.setText("");
-             view.dateFecha.setDate(null);
              return;
          }
          if(descripcion.isEmpty()){
              JOptionPane.showMessageDialog(null,"No puede haber ninguna opcion en blanco");
              limpiarVista();
-             view.txtDescripcion.setText("");
-             view.dateFecha.setDate(null);
              return;
          }
          if(destino.isEmpty()){
              JOptionPane.showMessageDialog(null,"No puede haber ninguna opcion en blanco");
              limpiarVista();
-             view.txtDescripcion.setText("");
-             view.dateFecha.setDate(null);
              return;
          }
          if(!success){
              JOptionPane.showMessageDialog(null,"El campo monto debe tener valores validos");
              limpiarVista();
-             view.txtDescripcion.setText("");
-             view.dateFecha.setDate(null);
              return;
          }else{
              importe=Float.parseFloat(importText);
@@ -243,21 +231,16 @@ public class AddAccountSeat implements ActionListener{
          if(importe<=0){
                 JOptionPane.showMessageDialog(null,"El campo monto no puede ser negativo o 0");
                 limpiarVista();
-                view.txtDescripcion.setText("");
-                view.dateFecha.setDate(null);
                 return;
          }
          if(cuenta==null){
              JOptionPane.showMessageDialog(null,"No puede haber ninguna opcion en blanco");
              limpiarVista();
-             view.txtDescripcion.setText("");
-             view.dateFecha.setDate(null);
              return;
          }
          
          asientoTabla.setDestiny(destino);
          asientoTabla.setAmount(importe);
-         System.out.println(asientoTabla.getAmount());
          asientoTabla.setAccount(cuenta);
          asientoTabla.setIdCuenta(seatCon.obtenerIdCuentaPorNombre(view.comboCuenta.getSelectedItem().toString()));
          
@@ -279,8 +262,6 @@ public class AddAccountSeat implements ActionListener{
               getAsiento(asiento);
               if(asientoTabla.getAccount()==null){
                     limpiarVista();
-                    view.txtDescripcion.setText("");
-                    view.dateFecha.setDate(null);
                     return;
               }
               LocalDate fechaConvertida = asiento.getSeatDate().toInstant()
@@ -499,9 +480,10 @@ public class AddAccountSeat implements ActionListener{
            mainMenu.openMainMenuView();
        }
    }
-  
+ 
     @Override
     public void actionPerformed(ActionEvent e) {
+        cancelSeat(e);
         try {
             botonGuardarOperacion(e);
         } catch (ParseException ex) {

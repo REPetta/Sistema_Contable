@@ -127,4 +127,25 @@ public class UserConnection {
         return idUser;
     
       }
+      //Metodo para retornar una lista de usuarios//
+      public List<User> getUsers() throws SQLException{
+           String sql="SELECT * FROM Usuario as u INNER JOIN Asiento as a ON u.idUsuario=a.idUsuario Where u.estado='alta' ;";
+           List<User> usuarios= new ArrayList<>();
+             Connections con= new Connections();
+            try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
+                try(ResultSet rs=ps.executeQuery()){
+                    while(rs.next()){
+                       User usuario=new User();
+                       usuario.setName(rs.getString("nombre"));
+                       usuario.setLastName(rs.getString("apellido"));
+                       usuario.setDni(rs.getInt("dni"));
+                       usuario.setUserName(rs.getString("userName"));
+                       usuarios.add(usuario);
+                    }
+            }catch(SQLException e){
+                        e.printStackTrace();
+      }
+    }
+            return usuarios;
+}
 }

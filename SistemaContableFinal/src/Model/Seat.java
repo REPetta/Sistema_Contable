@@ -16,6 +16,7 @@ public class Seat {
     private int idSeat;
     private Date seatDate;
     private String seatDescrip;
+    private String userName;
 
     public Seat(int idUsuario, int idSeat, Date seatDate, String seatDescrip) {
         this.idUsuario = idUsuario;
@@ -27,6 +28,14 @@ public class Seat {
     public Seat() {
     }
 
+    public Seat(int idUsuario, int idSeat, Date seatDate, String seatDescrip, String userName) {
+        this.idUsuario = idUsuario;
+        this.idSeat = idSeat;
+        this.seatDate = seatDate;
+        this.seatDescrip = seatDescrip;
+        this.userName = userName;
+    }
+   
     public Seat(int idUsuario, Date seatDate, String seatDescrip) {
         this.idUsuario = idUsuario;
         this.seatDate = seatDate;
@@ -63,6 +72,14 @@ public class Seat {
 
     public void setSeatDescrip(String seatDescrip) {
         this.seatDescrip = seatDescrip;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
     
 }

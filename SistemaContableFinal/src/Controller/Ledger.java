@@ -1,0 +1,371 @@
+//Comportamiento de la vista LibroMayor//
+package Controller;
+
+
+import Connection.AccountConnection;
+import Connection.BooksConnection;
+import Model.Account;
+import Model.AccountSeat;
+import Model.AccountSeatBook;
+import Model.Seat;
+import Model.SingletonUser;
+import Model.User;
+import View.LedgerView;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+
+public class Ledger implements ActionListener {
+    private LedgerView libroMayorView;
+    private BooksConnection librosCon;
+    private AccountConnection cuentasCon;
+    DefaultTableModel modelo = new DefaultTableModel();
+    private MainMenu mainMenuController;
+    private SingletonUser currentUser=SingletonUser.getInstance();
+    
+    public Ledger(){
+        this.libroMayorView=new LedgerView();
+        this.librosCon=new BooksConnection();
+        this.cuentasCon=new AccountConnection();
+        setCuentasComboBox();
+        this.libroMayorView.setTitle("Ver Libro Mayor"+" - "+currentUser.getUserName()+" ( "+currentUser.getRol().substring(0, 1).toUpperCase()+currentUser.getRol().substring(1).toLowerCase()+ " ) " );
+        initializeListeners();
+        iniciarTabla();
+    }
+    
+    public void initializeListeners(){
+         this.libroMayorView.btnBuscar.addActionListener(this);
+        this.libroMayorView.btnSalir.addActionListener(this);
+    }
+    public void openLedger(){
+        this.libroMayorView.setVisible(true);
+    }
+    public void closeLedger(){
+        this.libroMayorView.dispose();
+        }
+     public void btnBuscar(ActionEvent e) throws ClassNotFoundException, SQLException, IOException{
+        if(e.getSource()==libroMayorView.btnBuscar){
+        try{
+            // Obtener las fechas seleccionadas de los DateChooser
+            
+            Date fechaDesde = libroMayorView.jDateChooserDesde.getDate();
+            Date fechaHasta = libroMayorView.jDateChooserHasta.getDate();
+            Object selectedItem = libroMayorView.comboCuenta.getSelectedItem();
+            
+            
+             // Validar que ambas fechas estén seleccionadas
+            if (fechaDesde == null || fechaHasta == null) {
+                JOptionPane.showMessageDialog(null, "Por favor, selecciona ambas fechas.");
+                libroMayorView.jDateChooserDesde.setDate(null);
+                libroMayorView.jDateChooserHasta.setDate(null);
+                libroMayorView.comboCuenta.setSelectedIndex(0);
+                limpiarVista();
+                return;
+            }
+            // Validar que la fecha hasta sea mayor o igual que la fecha desde
+            if (fechaHasta.before(fechaDesde)) {
+                JOptionPane.showMessageDialog(null, "Error: La fecha hasta debe ser mayor o igual a la fecha desde.");
+                libroMayorView.jDateChooserDesde.setDate(null);
+                libroMayorView.jDateChooserHasta.setDate(null); 
+                libroMayorView.comboCuenta.setSelectedIndex(0);
+                limpiarVista();
+            return;
+        }
+            // Validar que se haya seleccionado un elemento en el comboBox
+            
+            if (selectedItem == null) {
+                JOptionPane.showMessageDialog(null, "Por favor, selecciona una cuenta del comboBox.");
+                libroMayorView.jDateChooserDesde.setDate(null);
+                libroMayorView.jDateChooserHasta.setDate(null);
+                libroMayorView.comboCuenta.setSelectedIndex(0);
+                limpiarVista();
+                return;
+            }
+           // Obtener la lista de asientos contables entre las fechas seleccionadas
+            ArrayList<AccountSeatBook> listaAsientos= librosCon.obtenerListaFinal(fechaHasta);
+            String nombreCuenta=this.libroMayorView.comboCuenta.getSelectedItem().toString();
+            Account cuenta= obtenerCuentaPorNombre(nombreCuenta);
+            // Actualizar la tabla con los resultados
+             actulizarTabla(listaAsientos,cuenta);
+             libroMayorView.jDateChooserDesde.setDate(null);
+             libroMayorView.jDateChooserHasta.setDate(null);
+             libroMayorView.comboCuenta.setSelectedIndex(0);
+            
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Ocurrió un error al buscar los asientos.");
+        }
+    }
+    }
+     public double obtenerSaldoInicial(ArrayList<AccountSeatBook> listaAsientos, Account cuenta){
+         double saldo=0.0;
+         // Obtener la fecha límite y restarle un día
+        Calendar calFechaLimite = Calendar.getInstance();
+        calFechaLimite.setTime(libroMayorView.jDateChooserDesde.getDate());
+        calFechaLimite.add(Calendar.DAY_OF_MONTH, -1);
+        Date fechaLimite = calFechaLimite.getTime();
+         for(AccountSeatBook asiento : listaAsientos){
+            // Obtener los detalles de cada Asiento_Cuenta
+            for(AccountSeat asientoCuenta : asiento.getAccountSeats()){
+                // Obtener los datos necesarios
+                if (asiento.getSeat().getSeatDate().after(fechaLimite)){
+                 return saldo;
+            }
+                if(cuenta.getIdAccount()==asientoCuenta.getIdCuenta()){
+                      if(asientoCuenta.getDestiny().toUpperCase().equals("HABER")){
+                             if(cuenta.getType().equalsIgnoreCase("activo") || cuenta.getType().equalsIgnoreCase("resultado negativo")){
+                                    saldo=saldo-asientoCuenta.getAmount();
+                             }else{
+                                 saldo=saldo+asientoCuenta.getAmount();
+                             }
+                    }else{
+                        if(cuenta.getType().equalsIgnoreCase("pasivo") || cuenta.getType().equalsIgnoreCase("resultado positivo")){
+                                    saldo=saldo-asientoCuenta.getAmount();
+                        }else{
+                            saldo=saldo+asientoCuenta.getAmount();
+                        }
+                    }
+                }
+            }
+             
+     }
+         
+        return 0;
+     }
+     
+
+     
+     public void actulizarTabla(ArrayList<AccountSeatBook> listaAsientos, Account cuenta) throws IOException, SQLException, ClassNotFoundException{
+          iniciarTabla();
+          String fechaFinal=librosCon.obtenerUltimaFecha(libroMayorView.jDateChooserDesde.getDate(), libroMayorView.jDateChooserHasta.getDate(), cuenta);
+          String fechaInicial=librosCon.obtenerFechaInicial(libroMayorView.jDateChooserDesde.getDate(), libroMayorView.jDateChooserHasta.getDate(), cuenta);
+    
+          // Variable para rastrear la última fecha añadida
+          String nombreCuenta=cuenta.getAccountName();
+          double saldo=obtenerSaldoInicial(listaAsientos,cuenta);
+        // Recorrer la lista de asientos contables
+        String[] filaSeparadora = {"", "", "", ""};
+        modelo.addRow(filaSeparadora);
+        String[] filaInicial=new String[6];
+        filaInicial[0] = nombreCuenta; // Nombre de la cuenta
+        filaInicial[1] = listaAsientos.isEmpty() ? "" : fechaInicial; // Fecha inicial del primer asiento
+        filaInicial[2] = "Inicial"; // Texto "Inicial" en la descripción
+        filaInicial[3] = ""; // Columna "Debe" vacía
+        filaInicial[4] = ""; // Columna "Haber" vacía
+        filaInicial[5] ="$"+ String.valueOf(saldo); // Saldo inicial
+        modelo.addRow(filaInicial);
+        
+        listaAsientos= librosCon.obtenerListaAsientos(libroMayorView.jDateChooserDesde.getDate(),libroMayorView.jDateChooserHasta.getDate());
+        for(AccountSeatBook asiento : listaAsientos){
+            // Obtener los detalles de cada Asiento_Cuenta
+            
+            for(AccountSeat asientoCuenta : asiento.getAccountSeats()){
+                // Obtener los datos necesarios
+                if(cuenta.getIdAccount()==asientoCuenta.getIdCuenta()){
+                    String[] datos= new String[6];
+                    datos[0]="";
+                    datos[1]=asiento.getSeat().getSeatDate().toString();
+                    datos[2]=asiento.getSeat().getSeatDescrip().toString();
+                    if(asientoCuenta.getDestiny().toUpperCase().equals("HABER")){
+                        datos[4]="$"+String.valueOf(asientoCuenta.getAmount());
+                             if(cuenta.getType().equalsIgnoreCase("activo") || cuenta.getType().equalsIgnoreCase("resultado negativo")){
+                                    saldo=saldo-asientoCuenta.getAmount();
+                             }else{
+                                 saldo=saldo+asientoCuenta.getAmount();
+                             }
+                    }else{
+                        datos[3]="$"+String.valueOf(asientoCuenta.getAmount());
+                        if(cuenta.getType().equalsIgnoreCase("pasivo") || cuenta.getType().equalsIgnoreCase("resultado positivo")){
+                                    saldo=saldo-asientoCuenta.getAmount();
+                        }else{
+                            saldo=saldo+asientoCuenta.getAmount();
+                        }
+                    }
+                        datos[5]="$"+String.valueOf(saldo);
+                    modelo.addRow(datos);
+                    }
+            }      
+        }
+        String[] filaFinal=new String[6];
+        filaFinal[0] = ""; // Nombre de la cuenta
+        filaFinal[1] = listaAsientos.isEmpty() ? "" : fechaFinal; // Fecha Final del primer asiento
+        filaFinal[2] = "Final"; // Texto "Inicial" en la descripción
+        filaFinal[3] = ""; // Columna "Debe" vacía
+        filaFinal[4] = ""; // Columna "Haber" vacía
+        filaFinal[5] ="$"+ String.valueOf(saldo); // Saldo inicial
+        modelo.addRow(filaFinal);
+        
+        // Agregar fila separadora después de cada AsientoContable
+        modelo.addRow(filaSeparadora);
+     }
+     
+     //Metodo para obtener la fecha del ultimo asiento contable
+//     public String obtenerUltimaFecha(ArrayList<AccountSeatController> listaAsientos){
+//         Date ultimaFecha=null;
+//         for(int i=0 ; i<listaAsientos.size() ; i++){
+//             AccountSeatController primerAsiento=listaAsientos.get(i);
+//             if(i<listaAsientos.size()-1){
+//                Seat proximoAsiento= listaAsientos.get(i+1).getSeat();
+//                if(primerAsiento.getSeat().getDate().after(proximoAsiento.getDate())){
+//                      ultimaFecha=primerAsiento.getSeat().getDate();
+//                }else{
+//                    ultimaFecha=proximoAsiento.getDate();
+//                }
+//             }
+//             if(ultimaFecha.before(primerAsiento.getSeat().getDate())){
+//                 ultimaFecha=primerAsiento.getSeat().getDate();
+//             }else{     
+//                 return ultimaFecha.toString();
+//             }
+//         }
+//         return ultimaFecha.toString();
+//     }
+//     
+
+     
+     public Account obtenerCuentaPorNombre(String nombreCuenta) throws IOException, SQLException, ClassNotFoundException{
+         cuentasCon =new AccountConnection();
+         List<Account> arrayCuentas=cuentasCon.getAccounts();
+         for(Account cuenta : arrayCuentas  ){
+             // Verificar si la cuenta es nula o si el nombre de la cuenta es nulo
+                if (cuenta == null || cuenta.getAccountName() == null) {
+                    continue; // Saltar a la siguiente iteración si es nulo
+            }
+        
+                // Usar equalsIgnoreCase para comparar cadenas sin importar mayúsculas o minúsculas
+                if (cuenta.getAccountName().equalsIgnoreCase(nombreCuenta)) {
+                    return cuenta;
+                 }   
+             }
+    
+         return null; // Retorna null si no se encontró ninguna cuenta con ese nombre
+     }
+     
+     public void iniciarTabla(){
+         modelo = new DefaultTableModel() {
+            public boolean isCellEditable(int fila, int columna) {
+                if (columna == 1 && columna == 2 && columna == 3) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        };
+        modelo.addColumn("Cuenta");
+        modelo.addColumn("Fecha");
+        modelo.addColumn("Operacion");
+        modelo.addColumn("Debe");
+        modelo.addColumn("Haber");
+        modelo.addColumn("Saldo");
+        
+        libroMayorView.jTableMayor.setRowHeight(15);
+        libroMayorView.jTableMayor.setModel(modelo);
+        libroMayorView.jTableMayor.setRowHeight(25);
+        
+        libroMayorView.jTableMayor.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+
+            // Verificar si la fila es una fila separadora (todos los valores son vacíos)
+            boolean esFilaSeparadora = 
+                                       (modelo.getValueAt(row, 0) == null || modelo.getValueAt(row, 0).toString().isEmpty()) &&
+                                       (modelo.getValueAt(row, 1) == null || modelo.getValueAt(row, 1).toString().isEmpty()) &&
+                                       (modelo.getValueAt(row, 2) == null || modelo.getValueAt(row, 2).toString().isEmpty()) &&
+                                       (modelo.getValueAt(row, 3) == null || modelo.getValueAt(row, 3).toString().isEmpty()) &&
+                                       (modelo.getValueAt(row, 4) == null || modelo.getValueAt(row, 4).toString().isEmpty()) &&
+                                        (modelo.getValueAt(row, 5) == null || modelo.getValueAt(row, 5).toString().isEmpty());
+
+            if (esFilaSeparadora) {
+                cell.setBackground(Color.BLACK);
+                cell.setForeground(Color.WHITE); // Texto blanco para contraste
+            } else {
+                // Restaurar color normal para las demás filas
+                cell.setBackground(Color.WHITE);
+                cell.setForeground(Color.BLACK);
+            }
+
+            return cell;
+        }
+    });
+     }
+     
+     public void limpiarVista(){
+         libroMayorView.jDateChooserDesde.setDate(null);
+         libroMayorView.jDateChooserHasta.setDate(null);
+         libroMayorView.comboCuenta.setSelectedIndex(0);
+         iniciarTabla();
+     }
+     //inicializacion para combobox de cuentas//
+    public List<Account> cuentas () throws IOException,  ClassNotFoundException,   SQLException{
+        cuentasCon =new AccountConnection();
+        return cuentasCon.getAccounts();
+     }
+   
+    public void setCuentasComboBox() {
+        try {
+            // Obtener la lista de cuentas
+            List<Account> cuentas = cuentas(); // Asegúrate de que este método esté disponible en el contexto
+
+            // Crear un modelo para el JComboBox
+            DefaultComboBoxModel<String> model = 
+
+                new DefaultComboBoxModel<>();
+
+            // Llenar el modelo con los nombres de las cuentas
+            model.addElement("");
+            for (Account cuenta : cuentas) {
+                model.addElement(cuenta.getAccountName()); // Agregar el nombre de la cuenta
+            }
+
+            // Setear el modelo en el JComboBox
+            libroMayorView.comboCuenta.setModel(model); 
+    // Asegúrate de que addSeatView tenga cbbCuentas
+        } catch (IOException | SQLException | ClassNotFoundException e) {
+            e.printStackTrace(); // Manejar la excepción según sea necesario
+        }
+    }
+     
+     public void buttonBack(ActionEvent e){//Metodo que le da al boton volver la accion de salir de la ventana Agregar Asiento y volver al Menu Principal//
+       if(e.getSource()==libroMayorView.btnSalir){
+           this.libroMayorView.dispose();
+           mainMenuController=new MainMenu();
+           mainMenuController.openMainMenuView();
+       }
+   }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        buttonBack(e);
+        try {
+            btnBuscar(e);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Ledger.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(Ledger.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Ledger.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+     
+    
+    }
+    
+    
+

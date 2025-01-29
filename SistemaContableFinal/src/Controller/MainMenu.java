@@ -3,6 +3,7 @@ package Controller;
 
 import Model.SingletonUser;
 import View.MainMenuView;
+import View.SalesSystemView;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
@@ -21,6 +22,10 @@ public class MainMenu implements ActionListener {
     private SearchUser searchUser;
     private ShowAccounts chartAccounts;
     private AddAccountSeat addAccountSeat;
+    private Ledger ledger;
+    private DiaryBook diaryBook;
+    private ShowSeats showSeats;
+    private SalesSystemView salesView;
     
     //Contructor//
     public MainMenu(){
@@ -41,6 +46,7 @@ public class MainMenu implements ActionListener {
         this.mainMenuView.btnSales.addActionListener(this);
         this.mainMenuView.btnSearchUser.addActionListener(this);
         this.mainMenuView.btnShowAccounts.addActionListener(this);    
+        this.mainMenuView.btnSeats.addActionListener(this);
     }
     
     
@@ -49,6 +55,7 @@ public class MainMenu implements ActionListener {
         if(currentUser.getRol().equalsIgnoreCase("Contador")){
             this.mainMenuView.btnAddUser.setVisible(false);
             this.mainMenuView.btnSearchUser.setVisible(false);
+            this.mainMenuView.btnSeats.setVisible(false);
         }
         if(currentUser.getRol().equalsIgnoreCase("Vendedor")){
             this.mainMenuView.btnAddUser.setVisible(false);
@@ -57,6 +64,7 @@ public class MainMenu implements ActionListener {
             this.mainMenuView.btnDiaryBook.setVisible(false);
             this.mainMenuView.btnLedger.setVisible(false);
             this.mainMenuView.btnShowAccounts.setVisible(false);
+            this.mainMenuView.btnSeats.setVisible(false);
         }
     }
     
@@ -102,6 +110,38 @@ public class MainMenu implements ActionListener {
             addAccountSeat.openAddAccountSeatView();
         }
     }
+    //Metodo para darle la funcionladad al boton ver libro diario//
+    public void buttonShowDiaryBook(ActionEvent e){
+        if(e.getSource()==mainMenuView.btnDiaryBook){
+            closeMainMenuView();
+            diaryBook=new DiaryBook();
+            diaryBook.openDiaryBook();
+        }
+    } //Metodo para darle la funcionladad al boton ver libro diario//
+    public void buttonShowLedger(ActionEvent e){
+        if(e.getSource()==mainMenuView.btnLedger){
+            closeMainMenuView();
+            ledger=new Ledger();
+            ledger.openLedger();
+        }
+    }
+    //Metodo para mostrar los asientos //
+    public void buttonShowSeats(ActionEvent e){
+        if(e.getSource()==mainMenuView.btnSeats){
+            closeMainMenuView();
+            showSeats= new ShowSeats();
+            showSeats.openSeatsView();
+        }
+    }
+    //Metodo para el boton de ventas//
+    public void buttonSales(ActionEvent e){
+        if(e.getSource()==mainMenuView.btnSales){
+            closeMainMenuView();
+            salesView=new SalesSystemView();
+            
+        }
+    }
+    
     //Metodo para darle funcionalidad al boton Salir//
     public void buttonExit(ActionEvent e){
         if(e.getSource()==mainMenuView.btnExit){
@@ -117,6 +157,8 @@ public class MainMenu implements ActionListener {
         buttonExit(e);
         buttonAddUser(e);
         buttonSearchUser(e);
+        buttonShowSeats(e);
+        buttonSales(e);
         try {
             buttonShowAccounts(e);
         } catch (SQLException ex) {
@@ -135,6 +177,8 @@ public class MainMenu implements ActionListener {
         } catch (SQLException ex) {
             Logger.getLogger(MainMenu.class.getName()).log(Level.SEVERE, null, ex);
         }
+        buttonShowLedger(e);
+        buttonShowDiaryBook(e);
     }
     
     
