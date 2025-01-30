@@ -131,16 +131,23 @@ public class UserConnection {
       public List<User> getUsers() throws SQLException{
            String sql="SELECT * FROM Usuario as u INNER JOIN Asiento as a ON u.idUsuario=a.idUsuario Where u.estado='alta' ;";
            List<User> usuarios= new ArrayList<>();
+           int i=0;
              Connections con= new Connections();
             try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
                 try(ResultSet rs=ps.executeQuery()){
-                    while(rs.next()){
-                       User usuario=new User();
-                       usuario.setName(rs.getString("nombre"));
-                       usuario.setLastName(rs.getString("apellido"));
-                       usuario.setDni(rs.getInt("dni"));
-                       usuario.setUserName(rs.getString("userName"));
-                       usuarios.add(usuario);
+                    while(rs.next()){                      
+                       String userName = rs.getString("userName");
+                        // Verificar si el usuario ya existe en la lista
+                        boolean existe = usuarios.stream().anyMatch(u -> u.getUserName().equals(userName));
+                         if (!existe) {
+                            User usuario=new User();
+                            usuario.setName(rs.getString("nombre"));
+                            usuario.setLastName(rs.getString("apellido"));
+                            usuario.setDni(rs.getInt("dni"));
+                            usuario.setUserName(rs.getString("userName"));
+                            usuarios.add(usuario);
+                        }
+  
                     }
             }catch(SQLException e){
                         e.printStackTrace();

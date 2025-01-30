@@ -55,12 +55,14 @@ public class ShowSeats implements ActionListener{
         this.cuentasCon=new AccountConnection();
         this.seatViews.setTitle("Ver Libro Diario"+" - "+currentUser.getUserName()+" ( "+currentUser.getRol().substring(0, 1).toUpperCase()+currentUser.getRol().substring(1).toLowerCase()+ " ) " );
         initializeListeners();
+        setUsuarioComboBox();
         iniciarTabla();
     }
     
     public void initializeListeners(){
          this.seatViews.btnBuscar.addActionListener(this);
          this.seatViews.btnSalir.addActionListener(this);
+         
     }
     
     public void openSeatsView(){
@@ -115,37 +117,80 @@ public class ShowSeats implements ActionListener{
         // Recorrer la lista de asientos contables
         String[] filaSeparadora = {"", "", "", "",""};
         modelo.addRow(filaSeparadora);
-        for(AccountSeatBook asiento : listaAsientos){
-            // Obtener los detalles de cada Asiento_Cuenta
-            for(AccountSeat asientoCuenta : asiento.getAccountSeats()){
-                // Obtener los datos necesarios
-                String[] datos= new String[5];
-                 // Verificar si la fecha es diferente a la última fecha añadida
-                 if (ultimaFecha == null || !asiento.getSeat().getSeatDate().equals(ultimaFecha) || asiento.getSeat().getIdSeat()!=idAsiento) {
+        if(this.seatViews.jComboBoxUser.getSelectedItem().equals("")){
+            for(AccountSeatBook asiento : listaAsientos){
+                // Obtener los detalles de cada Asiento_Cuenta
+                for(AccountSeat asientoCuenta : asiento.getAccountSeats()){
+                    // Obtener los datos necesarios
+                    String[] datos= new String[5];
+                    // Verificar si la fecha es diferente a la última fecha añadida
+                    if (ultimaFecha == null || !asiento.getSeat().getSeatDate().equals(ultimaFecha) || asiento.getSeat().getIdSeat()!=idAsiento) {
                         datos[0] = asiento.getSeat().getSeatDate().toString(); // Solo se añade si es la primera vez
                         ultimaFecha = asiento.getSeat().getSeatDate(); // Actualizar la última fecha
-                   } else {
+                    } else {
                         datos[0] = ""; // Dejar vacía si es la misma fecha
-                     }
-                datos[1]=obtenerNombreCuenta(asientoCuenta.getIdCuenta());
-                if(asientoCuenta.getDestiny().toUpperCase().equals("HABER")){
-                    datos[3]="$"+String.valueOf(asientoCuenta.getAmount());
-                }else{
-                    datos[2]="$"+String.valueOf(asientoCuenta.getAmount());
-                }
-                if(ultimoUserName==null || !asiento.getSeat().getUserName().equalsIgnoreCase(ultimoUserName) || asiento.getSeat().getIdSeat()!=idAsiento){
-                    datos[4]=asiento.getSeat().getUserName();
+                         }
+                    datos[1]=obtenerNombreCuenta(asientoCuenta.getIdCuenta());
+                    if(asientoCuenta.getDestiny().toUpperCase().equals("HABER")){
+                        datos[3]="$"+String.valueOf(asientoCuenta.getAmount());
+                    }else{
+                        datos[2]="$"+String.valueOf(asientoCuenta.getAmount());
                     }
-                else{
-                    datos[4]="";
+                    if(ultimoUserName==null || !asiento.getSeat().getUserName().equalsIgnoreCase(ultimoUserName) || asiento.getSeat().getIdSeat()!=idAsiento){
+                        datos[4]=asiento.getSeat().getUserName();
+                        }
+                    else{
+                        datos[4]="";
+                    }
+                    modelo.addRow(datos);
+                    ultimoUserName=asiento.getSeat().getUserName();
+                    idAsiento=asiento.getSeat().getIdSeat();
                 }
-                modelo.addRow(datos);
-                ultimoUserName=asiento.getSeat().getUserName();
-                idAsiento=asiento.getSeat().getIdSeat();
-            }
             
-        // Agregar fila separadora después de cada AsientoContable
-        modelo.addRow(filaSeparadora);
+            // Agregar fila separadora después de cada AsientoContable
+            modelo.addRow(filaSeparadora);
+            }
+            this.seatViews.jComboBoxUser.setSelectedIndex(0);
+        }
+        else{
+             for(AccountSeatBook asiento : listaAsientos){
+                  // Obtener los detalles de cada Asiento_Cuenta
+                  if(this.seatViews.jComboBoxUser.getSelectedItem().equals(asiento.getSeat().getUserName())){
+                    for(AccountSeat asientoCuenta : asiento.getAccountSeats()){
+                         // Obtener los datos necesarios
+                        String[] datos= new String[5];
+                        // Verificar si la fecha es diferente a la última fecha añadida
+                         if (ultimaFecha == null || !asiento.getSeat().getSeatDate().equals(ultimaFecha) || asiento.getSeat().getIdSeat()!=idAsiento) {
+                            datos[0] = asiento.getSeat().getSeatDate().toString(); // Solo se añade si es la primera vez
+                            ultimaFecha = asiento.getSeat().getSeatDate(); // Actualizar la última fecha
+                        } else {
+                            datos[0] = ""; // Dejar vacía si es la misma fecha
+                            }
+                        datos[1]=obtenerNombreCuenta(asientoCuenta.getIdCuenta());
+                        if(asientoCuenta.getDestiny().toUpperCase().equals("HABER")){
+                            datos[3]="$"+String.valueOf(asientoCuenta.getAmount());
+                        }else{
+                            datos[2]="$"+String.valueOf(asientoCuenta.getAmount());
+                         }
+                        if(ultimoUserName==null || !asiento.getSeat().getUserName().equalsIgnoreCase(ultimoUserName) || asiento.getSeat().getIdSeat()!=idAsiento){
+                            datos[4]=asiento.getSeat().getUserName();
+                            }
+                        else{
+                         datos[4]="";
+                        }
+                        modelo.addRow(datos);
+                        ultimoUserName=asiento.getSeat().getUserName();
+                        idAsiento=asiento.getSeat().getIdSeat();
+                    }
+                }
+                  // Agregar fila separadora después de cada AsientoContable
+                  if(asiento.getSeat().getUserName().equals(this.seatViews.jComboBoxUser.getSelectedItem())){
+                      modelo.addRow(filaSeparadora);
+                  }
+                  
+             }
+                         this.seatViews.jComboBoxUser.setSelectedIndex(0);
+
         }
     }
     
@@ -234,7 +279,7 @@ public class ShowSeats implements ActionListener{
         return userCon.getUsers();
      }
    
-    public void setCuentasComboBox() {
+    public void setUsuarioComboBox() {
         try {
             // Obtener la lista de cuentas
             List<User> usuarios = usuarios(); // Asegúrate de que este método esté disponible en el contexto

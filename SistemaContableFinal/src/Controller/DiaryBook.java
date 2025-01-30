@@ -107,9 +107,12 @@ public class DiaryBook implements ActionListener{
                 // Obtener los datos necesarios
                 String[] datos= new String[4];
                  // Verificar si la fecha es diferente a la última fecha añadida
-                 if (ultimaFecha == null || !asiento.getSeat().getSeatDate().equals(ultimaFecha) || asiento.getSeat().getIdSeat()!=idAsiento) {
+                 System.out.println(ultimaFecha);
+                 System.out.println(idAsiento);
+                 if (ultimaFecha == null ||  asiento.getSeat().getIdSeat()!=idAsiento) {
                         datos[0] = asiento.getSeat().getSeatDate().toString(); // Solo se añade si es la primera vez
                         ultimaFecha = asiento.getSeat().getSeatDate(); // Actualizar la última fecha
+                         idAsiento=asiento.getSeat().getIdSeat();
                    } else {
                         datos[0] = ""; // Dejar vacía si es la misma fecha
                      }
@@ -120,9 +123,9 @@ public class DiaryBook implements ActionListener{
                     datos[2]="$"+String.valueOf(asientoCuenta.getAmount());
                 }
                 modelo.addRow(datos);
-                idAsiento=+1;
+                
             }
-            
+           
         // Agregar fila separadora después de cada AsientoContable
         modelo.addRow(filaSeparadora);
         
