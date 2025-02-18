@@ -16,7 +16,7 @@ import java.util.List;
 public class CustomerConnection {
     
     //Metodo para agregar un cliente//
-    public void addItem(Customer customer) throws SQLException{
+    public void addCustomer(Customer customer) throws SQLException{
         
             String sql= "INSERT INTO Customer(nombreCliente,apellidoCliente,razonSocial,dni,condicionIva,tipoCliente,email) VALUES (?,?,?,?,?,?,?);";
             Connections con= new Connections();
@@ -34,7 +34,7 @@ public class CustomerConnection {
                 }
         }
     //Metodo para obtener una lista de clientes//
-    public List<Customer> getItems() throws SQLException{
+    public List<Customer> getCustomers() throws SQLException{
         String sql= "SELECT * FROM Cliente";
         Customer customer;
         List<Customer> customers=new ArrayList<>();
