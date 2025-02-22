@@ -214,28 +214,6 @@ public class Ledger implements ActionListener {
         modelo.addRow(filaSeparadora);
      }
      
-     //Metodo para obtener la fecha del ultimo asiento contable
-//     public String obtenerUltimaFecha(ArrayList<AccountSeatController> listaAsientos){
-//         Date ultimaFecha=null;
-//         for(int i=0 ; i<listaAsientos.size() ; i++){
-//             AccountSeatController primerAsiento=listaAsientos.get(i);
-//             if(i<listaAsientos.size()-1){
-//                Seat proximoAsiento= listaAsientos.get(i+1).getSeat();
-//                if(primerAsiento.getSeat().getDate().after(proximoAsiento.getDate())){
-//                      ultimaFecha=primerAsiento.getSeat().getDate();
-//                }else{
-//                    ultimaFecha=proximoAsiento.getDate();
-//                }
-//             }
-//             if(ultimaFecha.before(primerAsiento.getSeat().getDate())){
-//                 ultimaFecha=primerAsiento.getSeat().getDate();
-//             }else{     
-//                 return ultimaFecha.toString();
-//             }
-//         }
-//         return ultimaFecha.toString();
-//     }
-//     
 
      
      public Account obtenerCuentaPorNombre(String nombreCuenta) throws IOException, SQLException, ClassNotFoundException{

@@ -107,8 +107,6 @@ public class DiaryBook implements ActionListener{
                 // Obtener los datos necesarios
                 String[] datos= new String[4];
                  // Verificar si la fecha es diferente a la última fecha añadida
-                 System.out.println(ultimaFecha);
-                 System.out.println(idAsiento);
                  if (ultimaFecha == null ||  asiento.getSeat().getIdSeat()!=idAsiento) {
                         datos[0] = asiento.getSeat().getSeatDate().toString(); // Solo se añade si es la primera vez
                         ultimaFecha = asiento.getSeat().getSeatDate(); // Actualizar la última fecha
