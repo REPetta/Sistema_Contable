@@ -30,6 +30,17 @@ public class Customer {
         this.email = email;
     }
 
+    public Customer(String clientName, String clientSurname, String socialReason, int dni, String ivaCondition, String clientType, String email) {
+        this.clientName = clientName;
+        this.clientSurname = clientSurname;
+        this.socialReason = socialReason;
+        this.dni = dni;
+        this.ivaCondition = ivaCondition;
+        this.clientType = clientType;
+        this.email = email;
+    }
+    
+
     public int getIdClient() {
         return idClient;
     }

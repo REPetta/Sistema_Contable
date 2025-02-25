@@ -2,7 +2,6 @@
 package Connection;
 
 import Model.Customer;
-import Model.Item;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -16,9 +15,9 @@ import java.util.List;
 public class CustomerConnection {
     
     //Metodo para agregar un cliente//
-    public void addCustomer(Customer customer) throws SQLException{
+        public boolean addCustomer(Customer customer) throws SQLException{
         
-            String sql= "INSERT INTO Customer(nombreCliente,apellidoCliente,razonSocial,dni,condicionIva,tipoCliente,email) VALUES (?,?,?,?,?,?,?);";
+            String sql= "INSERT INTO Cliente(nombreCliente,apellidoCliente,razonSocial,dni,condicionIva,tipoCliente,email) VALUES (?,?,?,?,?,?,?);";
             Connections con= new Connections();
             try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
                 ps.setString(1, customer.getClientName());
@@ -28,6 +27,10 @@ public class CustomerConnection {
                 ps.setString(5,customer.getIvaCondition());
                 ps.setString(6, customer.getClientType());
                 ps.setString(7, customer.getEmail());
+                
+                int rowsAffected=ps.executeUpdate();
+                return rowsAffected>0;
+                
             }catch(SQLException e){
                     System.err.println("Error al cargar el usuario: " + e.getMessage());
                      throw e; 
@@ -59,5 +62,22 @@ public class CustomerConnection {
                 }
             }
         return customers;
+    }
+    //Metodo para validar si el usuario ya existe//
+    public boolean isClientExist(int dni) throws SQLException{
+        String sql="SELECT * FROM Cliente WHERE dni=?;";
+        Connections con= new Connections();
+            try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
+                ps.setInt(1, dni);
+                try(ResultSet rs=ps.executeQuery()){
+                    if(rs.next()){
+                        return true;
+                    }
+                }
+                }catch(SQLException e){
+                     System.err.println("Error al validar el Cliente: " + e.getMessage());
+                     throw e; 
+                }
+        return false;
     }
 }

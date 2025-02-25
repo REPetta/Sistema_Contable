@@ -25,7 +25,7 @@ public class MainMenu implements ActionListener {
     private Ledger ledger;
     private DiaryBook diaryBook;
     private ShowSeats showSeats;
-    private SalesSystemView salesView;
+    private SalesSystem salesView;
     
     //Contructor//
     public MainMenu(){
@@ -137,8 +137,8 @@ public class MainMenu implements ActionListener {
     public void buttonSales(ActionEvent e){
         if(e.getSource()==mainMenuView.btnSales){
             closeMainMenuView();
-            salesView=new SalesSystemView();
-            
+            salesView=new SalesSystem();
+            salesView.openSalesSystemView();
         }
     }
     

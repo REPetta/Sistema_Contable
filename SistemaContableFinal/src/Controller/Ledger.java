@@ -49,7 +49,7 @@ public class Ledger implements ActionListener {
     }
     
     public void initializeListeners(){
-         this.libroMayorView.btnBuscar.addActionListener(this);
+        this.libroMayorView.btnBuscar.addActionListener(this);
         this.libroMayorView.btnSalir.addActionListener(this);
     }
     public void openLedger(){

@@ -14,7 +14,7 @@ public class AddCustomerView extends javax.swing.JFrame {
     public AddCustomerView() {
         initComponents();
         this.setLocationRelativeTo(null); // Localiza la ventana en el centro de la pantalla//
-        this.setTitle("Agregar Usuario");  //El nombre la venta sera Agregar Usuario"
+        this.setTitle("Agregar Cliente");  //El nombre la venta sera Agregar Usuario"
         this.setResizable(false); // Desactiva el botón de maximizar
 
     }
