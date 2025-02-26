@@ -10,7 +10,7 @@ public class SalesSystem implements ActionListener {
     //Atributos//
     private MainMenu mainMenu;
     private final SingletonUser currentUser= SingletonUser.getInstance();
-    private AddCustomer addCustomer;
+    private CustomerManagement customerManagement;
     private final SalesSystemView view;
     //Constructor//
     public SalesSystem(){
@@ -57,8 +57,8 @@ public class SalesSystem implements ActionListener {
     public void buttonAddCustomer(ActionEvent e){
         if(e.getSource()==view.btnCustomer){
             closeSalesSystemView();
-            addCustomer=new AddCustomer();
-            addCustomer.openAddCustomerView();
+           customerManagement=new CustomerManagement();
+            customerManagement.openCustomerManagementView();
         }
     }
     //Metodo para darle funcionalidad al boton Salir//

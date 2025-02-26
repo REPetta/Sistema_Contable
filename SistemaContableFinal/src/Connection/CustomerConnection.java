@@ -17,7 +17,7 @@ public class CustomerConnection {
     //Metodo para agregar un cliente//
         public boolean addCustomer(Customer customer) throws SQLException{
         
-            String sql= "INSERT INTO Cliente(nombreCliente,apellidoCliente,razonSocial,dni,condicionIva,tipoCliente,email) VALUES (?,?,?,?,?,?,?);";
+            String sql= "INSERT INTO Cliente(nombreCliente,apellidoCliente,razonSocial,dni,condicionIva,tipoCliente,email,estado) VALUES (?,?,?,?,?,?,?,?);";
             Connections con= new Connections();
             try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
                 ps.setString(1, customer.getClientName());
@@ -27,6 +27,7 @@ public class CustomerConnection {
                 ps.setString(5,customer.getIvaCondition());
                 ps.setString(6, customer.getClientType());
                 ps.setString(7, customer.getEmail());
+                ps.setString(8, "alta");
                 
                 int rowsAffected=ps.executeUpdate();
                 return rowsAffected>0;
@@ -36,9 +37,49 @@ public class CustomerConnection {
                      throw e; 
                 }
         }
+     // Método para actualizar un cliente existente
+public boolean updateCustomer(Customer customer) throws SQLException {
+    String sql = "UPDATE Cliente SET nombreCliente=?, apellidoCliente=?, razonSocial=?, condicionIva=?, tipoCliente=?, email=?, estado=? WHERE dni=?;";
+    Connections con = new Connections();
+    
+    try (PreparedStatement ps = con.connect().prepareStatement(sql)) {
+        ps.setString(1, customer.getClientName());
+        ps.setString(2, customer.getClientSurname());
+        ps.setString(3, customer.getSocialReason());
+        ps.setString(4, customer.getIvaCondition());
+        ps.setString(5, customer.getClientType());
+        ps.setString(6, customer.getEmail());
+        ps.setString(7, "alta");  // Puedes cambiarlo si el estado es dinámico
+        ps.setInt(8, customer.getDni()); // Se usa el DNI como identificador para la actualización
+
+        int rowsAffected = ps.executeUpdate();
+        return rowsAffected > 0;
+
+    } catch (SQLException e) {
+        System.err.println("Error al actualizar el cliente: " + e.getMessage());
+        throw e; 
+    }
+}
+// Método para dar de baja a un cliente (cambiar estado a "baja")
+public boolean desactivateCustomer(int dni) throws SQLException {
+    String sql = "UPDATE Cliente SET estado=? WHERE dni=?;";
+    Connections con = new Connections();
+
+    try (PreparedStatement ps = con.connect().prepareStatement(sql)) {
+        ps.setString(1, "baja"); // Solo actualiza el estado a "baja"
+        ps.setInt(2, dni); // Filtra por el DNI del cliente
+
+        int rowsAffected = ps.executeUpdate();
+        return rowsAffected > 0;
+
+    } catch (SQLException e) {
+        System.err.println("Error al dar de baja al cliente: " + e.getMessage());
+        throw e; 
+    }
+}
     //Metodo para obtener una lista de clientes//
     public List<Customer> getCustomers() throws SQLException{
-        String sql= "SELECT * FROM Cliente";
+        String sql= "SELECT * FROM Cliente WHERE estado='alta';";
         Customer customer;
         List<Customer> customers=new ArrayList<>();
         Connections con= new Connections();
@@ -63,6 +104,32 @@ public class CustomerConnection {
             }
         return customers;
     }
+    //Metodo para obtener una un usuario//
+    public Customer getCustomer(int dni) throws SQLException{
+        String sql= "SELECT * FROM Cliente AS c WHERE c.estado='alta' AND c.dni=?;";
+        Customer customer=new Customer();
+        Connections con= new Connections();
+            try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
+                ps.setInt(1, dni);
+                 try(ResultSet rs=ps.executeQuery()){
+                     if(rs.next()){
+                         customer.setIdClient(rs.getInt("idCliente"));
+                         customer.setClientName(rs.getString("nombreCliente"));
+                         customer.setClientSurname(rs.getString("apellidoCliente"));
+                         customer.setSocialReason(rs.getString("razonSocial"));
+                         customer.setDni(rs.getInt("dni"));
+                         customer.setIvaCondition(rs.getString("condicionIva"));
+                         customer.setClientType(rs.getString("tipoCliente"));
+                         customer.setEmail(rs.getString("email"));
+                     }
+                 }catch(SQLException e){
+                    System.err.println("Error al cargar el usuario: " + e.getMessage());
+                     throw e; 
+                }
+            }
+            return customer;
+    }
+    
     //Metodo para validar si el usuario ya existe//
     public boolean isClientExist(int dni) throws SQLException{
         String sql="SELECT * FROM Cliente WHERE dni=?;";

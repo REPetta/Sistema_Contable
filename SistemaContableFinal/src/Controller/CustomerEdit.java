@@ -1,16 +1,13 @@
 
 package Controller;
 
-import Connection.AccountConnection;
 import Connection.CustomerConnection;
-import Model.Account;
 import Model.Customer;
 import Model.SingletonUser;
-import View.AddCustomerView;
+import View.CustomerEditView;
 import static View.LoginView.blinkingFields;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,65 +19,48 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
-
-public class AddCustomer implements ActionListener {
-    
+public class CustomerEdit implements ActionListener{
     private final SingletonUser currentUser= SingletonUser.getInstance();
-    private final AddCustomerView view;
-    private CustomerConnection con;
-    private CustomerManagement customerManagement;
+    private final CustomerEditView view;
+    private CustomerConnection con=new CustomerConnection();
+    private ClientManagement clientManagement;
+    private final int numberDNI;
     
-    public AddCustomer (){
-        view=new AddCustomerView();
-        this.view.setTitle("Agregar Cliente"+"-"+currentUser.getUserName().toUpperCase()+"("+currentUser.getRol()+")");
+    public CustomerEdit(int dni) throws SQLException{
+        numberDNI=dni;
+        view= new CustomerEditView();
+        this.view.setTitle("Modificar Cliente"+"-"+currentUser.getUserName().toUpperCase()+"("+currentUser.getRol()+")");
         setRazonSocial();
         setCondicionIVA();
         setTipoCliente();
         initializeListeners();
+        loadClient(dni);
+    }
+    //Metodo para cargar los datos del cliente a editar//
+    public final void loadClient(int dni) throws SQLException{
+        Customer customer= con.getCustomer(dni);
+        this.view.txtName.setText(customer.getClientName());
+        this.view.txtLastName.setText(customer.getClientSurname());
+        this.view.txtEmail.setText(customer.getEmail());
+        this.view.jComboRS.setSelectedItem(customer.getSocialReason());
+        this.view.jComboIVA.setSelectedItem(customer.getIvaCondition());
+        this.view.jComboTCustomer.setSelectedItem(customer.getClientType());
     }
     //Metodo  para inicializar los listener con los botones//
     public final void initializeListeners(){
-        this.view.btnAdd.addActionListener(this);
-        this.view.btnBack.addActionListener(this);
+        this.view.btnEdit.addActionListener(this);
+        this.view.btnExit.addActionListener(this);
     }
      //Metodo para abri la ventana//
-   public void openAddCustomerView(){
+   public void openCustomerEditView(){
        this.view.setVisible(true);
    }
    //Metodo para cerrar la ventana//
-   public void closeAddCustomerView(){
+   public void closeCustomerEditView(){
        this.view.dispose();
    }
-   //Metodo para limpiar los campos//
-   public void fieldsClear(){
-       view.txtName.setText("");
-       view.txtLastName.setText("");
-       view.txtDni.setText("");
-       view.txtEmail.setText("");
-       view.jComboIVA.setSelectedIndex(0);
-       view.jComboRS.setSelectedIndex(0);
-       view.jComboTCustomer.setSelectedIndex(0);
-   }
-   //Metodo para validar el dni//
-  public boolean isValidDni(String dni) {
-    try {
-        // Verifica que sea un número entero
-        int dniNumber = Integer.parseInt(dni);
-        // Verifica que sea un mayor a 0
-        if (dniNumber<0){
-            return false;
-        }
-         // Verifica que sea un menor a 100 millones
-        if(dniNumber>99999999){
-            return false;
-        }
-    } catch (NumberFormatException e) {
-        // Si no es un número entero, no es válido
-        return false;
-    }
-        //Si pasa todas las validaciones es un dni valido
-        return true;
-  }
+  
+   
   // Método para validar si los campos están vacíos o tienen un formato incorrecto
 public boolean validateFields(Object[] fields, String[] fieldNames) {
     boolean hasBugs = false;
@@ -94,14 +74,14 @@ public boolean validateFields(Object[] fields, String[] fieldNames) {
                 bugs.append("- El campo ").append(fieldNames[i]).append(" no puede estar vacío.\n");
                 blinkingFields(textField); // Método para hacer titilar el campo vacío
                 hasBugs = true;
-                fieldsClear();
+
             }
         } else if (fields[i] instanceof JComboBox) {
             JComboBox<?> comboBox = (JComboBox<?>) fields[i];
             if (comboBox.getSelectedItem() == null || comboBox.getSelectedItem().toString().trim().isEmpty()) {
                 bugs.append("- El campo ").append(fieldNames[i]).append(" no puede estar vacío.\n");
                 hasBugs = true;
-                fieldsClear();
+
             }
         }
     }
@@ -115,34 +95,7 @@ public boolean validateFields(Object[] fields, String[] fieldNames) {
             JOptionPane.ERROR_MESSAGE
         );
         return false;
-    } else {
-        // Verifica los formatos específicos
-StringBuilder invalidFields = new StringBuilder();
-for (int i = 0; i < fields.length; i++) {
-    if (fieldNames[i].equalsIgnoreCase("DNI")) {
-        JTextField textField = (JTextField) fields[i];
-        String dni = textField.getText();
-        // Valida el código con el nuevo método
-        if (!isValidDni(dni)) {
-            invalidFields.append("- El campo ").append(fieldNames[i]).append(" no tiene un formato válido.\n");
-            blinkingFields(textField);
-            fieldsClear();
-        }
-    
-    }
-}
-        
-        // Si hay errores de formato, muestra el mensaje
-        if (!invalidFields.isEmpty()) {
-            JOptionPane.showMessageDialog(
-                null,
-                "Se han encontrado los siguientes problemas:\n" + invalidFields,
-                "Error",
-                JOptionPane.ERROR_MESSAGE
-            );
-            return false;
-        }
-    }
+    } 
     return true;
 }
    //Metodo para setear la razon social//
@@ -203,12 +156,11 @@ for (int i = 0; i < fields.length; i++) {
 
     }
      //Metodo para agregar el cliente//
-     public void buttonAddCustomer(ActionEvent e) throws SQLException{
-         if(e.getSource()==view.btnAdd){
+     public void buttonEditCustomer(ActionEvent e) throws SQLException{
+         if(e.getSource()==view.btnEdit){
                Object[] fields = {
             view.txtName,
             view.txtLastName,
-            view.txtDni,
             view.txtEmail,
             view.jComboRS,
             view.jComboIVA,
@@ -217,7 +169,6 @@ for (int i = 0; i < fields.length; i++) {
         String[] fieldNames = {
             "Nombre",
             "Apellido",
-            "DNI",
             "Email",
             "Razon Social",
             "Condicion IVA",
@@ -237,73 +188,63 @@ for (int i = 0; i < fields.length; i++) {
                   Customer customer= new Customer();
                     
                     String name = ((JTextField) fields[0]).getText().trim();
-                    int dni = Integer.parseInt(((JTextField) fields[2]).getText().trim());
                     String surName= ((JTextField) fields[1]).getText().trim();
-                    String email=((JTextField) fields[3]).getText().trim();
-                    String razonSocial  = ((JComboBox<?>) fields[4]).getSelectedItem().toString().trim();
-                    String  ivaCondition = ((JComboBox<?>) fields[5]).getSelectedItem().toString().trim();
-                    String clientType=((JComboBox<?>) fields[6]).getSelectedItem().toString().trim();
+                    String email=((JTextField) fields[2]).getText().trim();
+                    String razonSocial  = ((JComboBox<?>) fields[3]).getSelectedItem().toString().trim();
+                    String  ivaCondition = ((JComboBox<?>) fields[4]).getSelectedItem().toString().trim();
+                    String clientType=((JComboBox<?>) fields[5]).getSelectedItem().toString().trim();
                     
                     customer.setClientName(name);
                     customer.setClientSurname(surName);
-                    customer.setDni(dni);
                     customer.setEmail(email);
+                    customer.setDni(numberDNI);
                     customer.setSocialReason(razonSocial);
                     customer.setIvaCondition(ivaCondition);
                     customer.setClientType(clientType);
                     
-                    if(!con.isClientExist(customer.getDni())){    //Si el usuario no existe en la base lo carga , en caso contrario retorna un mensaje de error//
-                        boolean load=con.addCustomer(customer);
+                   
+                        boolean load=con.updateCustomer(customer);
+           
                             if(load){
                                 JOptionPane.showMessageDialog(
                                 null,
-                                "El cliente ha sido editado exitosamente  \n",
+                                "El cliente ha sido modificado exitosamente  \n",
                                  "Confirmacion",
                                  JOptionPane.INFORMATION_MESSAGE
                                 );
-                                fieldsClear();
+
                             }else{
                                 JOptionPane.showMessageDialog(
                                 null,
-                                "El Cliente no ha podido ser editado \n",
+                                "El Cliente no ha podido ser modificado \n",
                                  "Error",
                                  JOptionPane.ERROR_MESSAGE
                                 );
-                                fieldsClear();
+
                             }
-                    }else{
-                    JOptionPane.showMessageDialog(
-                                null,
-                                "El Cliente  "+ customer.getClientName()+" ya existe \n",
-                                 "Error",
-                                 JOptionPane.ERROR_MESSAGE
-                                );
-                    fieldsClear();
-                     }
+                    
                   }
             
             }
-            fieldsClear();
+ 
     }
-            } 
-     
-     
-    //Metodo para salir
-    public void buttonExit(ActionEvent e){
-        if(e.getSource()==view.btnBack){
-           closeAddCustomerView();
-           customerManagement=new CustomerManagement();
-           customerManagement.openCustomerManagementView();
+            }
+
+     public void buttonExit(ActionEvent e){
+         if(e.getSource()==view.btnExit){
+            closeCustomerEditView();
+            clientManagement = new ClientManagement();
+            clientManagement.openClientManagementView();
+         }
+     }
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        buttonExit(e);
+        try {
+            buttonEditCustomer(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(CustomerEdit.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        try {
-            buttonAddCustomer(e);
-        } catch (SQLException ex) {
-            Logger.getLogger(AddCustomer.class.getName()).log(Level.SEVERE, null, ex);
-        }
-            buttonExit(e);
-    }
 }
