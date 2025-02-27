@@ -12,6 +12,7 @@ public class Item {
     private String itemDescription;
     private double unitPrice;
     private int stock;
+    private int itemCode;
 
     public Item() {
     }
@@ -24,6 +25,24 @@ public class Item {
         this.stock = stock;
     }
 
+    public Item(int idItem, String itemName, String itemDescription, double unitPrice, int stock, int itemCode) {
+        this.idItem = idItem;
+        this.itemName = itemName;
+        this.itemDescription = itemDescription;
+        this.unitPrice = unitPrice;
+        this.stock = stock;
+        this.itemCode = itemCode;
+    }
+
+    public int getItemCode() {
+        return itemCode;
+    }
+
+    public void setItemCode(int itemCode) {
+        this.itemCode = itemCode;
+    }
+
+    
     public int getIdItem() {
         return idItem;
     }

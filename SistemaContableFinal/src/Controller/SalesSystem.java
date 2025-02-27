@@ -11,6 +11,7 @@ public class SalesSystem implements ActionListener {
     private MainMenu mainMenu;
     private final SingletonUser currentUser= SingletonUser.getInstance();
     private CustomerManagement customerManagement;
+    private ItemsManagement itemsManagement;
     private final SalesSystemView view;
     //Constructor//
     public SalesSystem(){
@@ -54,11 +55,19 @@ public class SalesSystem implements ActionListener {
         this.view.dispose();
     }
     //Metodo para darle funcionalida al boton agregar cliente//
-    public void buttonAddCustomer(ActionEvent e){
+    public void buttonCustomer(ActionEvent e){
         if(e.getSource()==view.btnCustomer){
             closeSalesSystemView();
            customerManagement=new CustomerManagement();
             customerManagement.openCustomerManagementView();
+        }
+    }
+    //Metodo para darle funcionalida al boton agregar cliente//
+    public void buttonItem(ActionEvent e){
+        if(e.getSource()==view.btnItems){
+            closeSalesSystemView();
+            itemsManagement=new ItemsManagement();
+            itemsManagement.openItemsManagementView();
         }
     }
     //Metodo para darle funcionalidad al boton Salir//
@@ -73,7 +82,8 @@ public class SalesSystem implements ActionListener {
     
     @Override
     public void actionPerformed(ActionEvent e) {
-        buttonAddCustomer(e);
+        buttonCustomer(e);
+        buttonItem(e);
         buttonExit(e);
     }
 

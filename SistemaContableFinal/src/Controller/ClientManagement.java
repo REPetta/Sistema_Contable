@@ -43,6 +43,7 @@ public class ClientManagement implements ActionListener {
    public void closeClientManagementView(){
        this.view.dispose();
    }
+    
    //Metodo para cargar los clientes//
 public final void setClientesBox() {
         try {
