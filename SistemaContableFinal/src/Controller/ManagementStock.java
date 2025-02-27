@@ -134,8 +134,11 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
 public int newNumberStock(){
     // Pedir al usuario que ingrese un número
         String input = JOptionPane.showInputDialog("Ingrese un número:");
+        if (input == null || input.trim().isEmpty()) {
+            return 0; // Puedes devolver un valor especial (-1) para indicar que se canceló
+        }
         // Convertir el String a un número entero
-        int numero=0;
+        int numero;
         try {
              numero = Integer.parseInt(input);
             if(numero<0 || numero>10000){

@@ -95,7 +95,7 @@ public boolean desactivateItem(int itemCode) throws SQLException {
 }
   // Método para dar de baja a un cliente (cambiar estado a "baja")
 public boolean increaseStock(int itemCode,int newStock) throws SQLException {
-    String sql = "UPDATE Articulo SET stock=? WHERE codigoArticulo=?;";
+    String sql = "UPDATE Articulo SET stock =stock + ? WHERE codigoArticulo=?;";
     Connections con = new Connections();
 
     try (PreparedStatement ps = con.connect().prepareStatement(sql)) {
