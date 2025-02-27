@@ -166,9 +166,18 @@ public int newNumberStock(){
                 setCombosBox();
                 return;
             }
-          itemsCon =new ItemConnection();
-          boolean update=itemsCon.desactivateItem(itemCode);
-          delSuccessful(update);
+           int confirm = JOptionPane.showConfirmDialog(
+                        null,
+                        "¿Estás seguro de que deseas dar de baja a este Articulo?",
+                        "Confirmación",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+            );
+                  if(confirm == JOptionPane.YES_OPTION) { // Si el usuario confirma, intenta agregarlo//
+                        itemsCon =new ItemConnection();
+                        boolean update=itemsCon.desactivateItem(itemCode);
+                        delSuccessful(update);
+                    }
         }
     }
     //Metodo para aumentas el Stock//

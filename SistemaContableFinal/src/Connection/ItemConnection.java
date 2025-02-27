@@ -17,13 +17,13 @@ public class ItemConnection {
     //Metodo para agregar un item//
     public boolean addItem(Item item) throws SQLException{
         
-            String sql= "INSERT INTO Item(nombreArticulo,descripcion,precioUnitario,stock,estado , codigoArticulo) VALUES (?,?,?,?,?,?);";
+            String sql= "INSERT INTO Articulo(nombreArticulo,descripcion,precioUnitario,stock,estado , codigoArticulo) VALUES (?,?,?,?,?,?);";
             Connections con= new Connections();
             try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
                 ps.setString(1, item.getItemName());
                 ps.setString(2, item.getItemDescription());
                 ps.setDouble(3, item.getUnitPrice());
-                ps.setInt(4, item.getStock());
+                ps.setInt(4, 0);
                 ps.setString(5, "alta");
                 ps.setInt(6, item.getItemCode());
                 
@@ -34,6 +34,23 @@ public class ItemConnection {
                      throw e; 
                 }
         }
+    //Metodo para validar que el item exista//
+    public boolean isItemExist(int itemCode) throws SQLException{
+        String sql="SELECT * FROM Articulo WHERE codigoArticulo=?;";
+        Connections con= new Connections();
+            try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
+                ps.setInt(1, itemCode);
+                try(ResultSet rs=ps.executeQuery()){
+                    if(rs.next()){
+                        return true;
+                    }
+                }
+                }catch(SQLException e){
+                     System.err.println("Error al validar el Cliente: " + e.getMessage());
+                     throw e; 
+                }
+        return false;
+    }
     //Metodo para obtener una lista de items//
     public List<Item> getItems() throws SQLException{
         String sql= "SELECT * FROM Articulo WHERE estado='alta';";

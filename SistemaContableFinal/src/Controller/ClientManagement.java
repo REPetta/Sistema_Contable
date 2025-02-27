@@ -134,9 +134,18 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
                 setClientesBox();
                 return;
             }
-          clientesCon =new CustomerConnection();
-          boolean update=clientesCon.desactivateCustomer(dni);
-          delSuccessful(update);
+           int confirm = JOptionPane.showConfirmDialog(
+                        null,
+                        "¿Estás seguro de que deseas dar de baja a este Cliente?",
+                        "Confirmación",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+            );
+                  if(confirm == JOptionPane.YES_OPTION) { // Si el usuario confirma, intenta agregarlo//
+                        clientesCon =new CustomerConnection();
+                        boolean update=clientesCon.desactivateCustomer(dni);
+                        delSuccessful(update);
+        }
         }
     }
     //Metodo para salir//
