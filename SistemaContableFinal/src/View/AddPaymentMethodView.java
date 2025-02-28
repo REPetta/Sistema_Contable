@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package View;
 
 import java.awt.Color;
@@ -16,9 +13,7 @@ import javax.swing.Timer;
  */
 public class AddPaymentMethodView extends javax.swing.JFrame {
 
-    /**
-     * Creates new form AddAccount
-     */
+    
     public AddPaymentMethodView() {
         initComponents();
         this.setLocationRelativeTo(null); // Localiza la ventana en el centro de la pantalla//

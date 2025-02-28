@@ -41,6 +41,11 @@ public class PaymentManagementView extends javax.swing.JFrame {
         btnAddMethod.setText("Agregar Metodo");
 
         btnManMethod.setText("Gestionar Metodo");
+        btnManMethod.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnManMethodActionPerformed(evt);
+            }
+        });
 
         btnBack.setText("Volver");
 
@@ -66,7 +71,7 @@ public class PaymentManagementView extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(36, 36, 36)
                 .addComponent(btnAddMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(57, 57, 57)
+                .addGap(45, 45, 45)
                 .addComponent(btnManMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnBack, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -98,6 +103,10 @@ public class PaymentManagementView extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnManMethodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManMethodActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnManMethodActionPerformed
 
     /**
      * @param args the command line arguments

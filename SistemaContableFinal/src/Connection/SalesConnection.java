@@ -21,16 +21,20 @@ import java.util.List;
 public class SalesConnection {
     
     //Metodo para agregar un tipoVenta//
-    public void addTypeSale(SaleType tipoVenta) throws SQLException{
+    public boolean addTypeSale(SaleType tipoVenta) throws SQLException{
         
-            String sql= "INSERT INTO TipoVenta(descripcion,estado,plazoPago,cuotas,descuento) VALUES (?,?,?,?,?);";
+            String sql= "INSERT INTO TipoVenta(descripcion,estado,plazoPago,codigo,cuotas,descuento) VALUES (?,?,?,?,?,?);";
             Connections con= new Connections();
             try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
                 ps.setString(1, tipoVenta.getSaleDescription());
-                ps.setString(2, Character.toString(tipoVenta.getSaleState()));
+                ps.setString(2, "disponible");
                 ps.setInt(3, tipoVenta.getPaymentTerm());
-                ps.setInt(4, tipoVenta.getQuotas());
-                ps.setDouble(5, tipoVenta.getDiscount());
+                ps.setInt(4, tipoVenta.getCode());
+                ps.setInt(5, tipoVenta.getQuotas());
+                ps.setDouble(6, tipoVenta.getDiscount());
+                
+                 int rowsAffected=ps.executeUpdate();
+                return rowsAffected>0;
             }catch(SQLException e){
                     System.err.println("Error al cargar el usuario: " + e.getMessage());
                      throw e; 
@@ -48,10 +52,11 @@ public class SalesConnection {
                          saleType=new SaleType();
                          saleType.setIdSaleType(rs.getInt("idTipoVenta"));
                          saleType.setSaleDescription(rs.getString("descripcion"));
-                         saleType.setSaleState(rs.getString("estado").charAt(0));
+                         saleType.setSaleState(rs.getString("estado"));
                          saleType.setPaymentTerm(rs.getInt("plazoPago"));
                          saleType.setQuotas(rs.getInt("cuotas"));
                          saleType.setDiscount(rs.getDouble("descuento"));
+                         saleType.setCode(rs.getInt("codigo"));
                          saleTypes.add(saleType);
                      }
                  }catch(SQLException e){
@@ -60,6 +65,50 @@ public class SalesConnection {
                 }
             }
         return saleTypes;
+    }
+     //Metodo para obtener una un usuario//
+    public SaleType  getMethod(int code) throws SQLException{
+        String sql= "SELECT * FROM TipoVenta WHERE  codigo=?;";
+        SaleType method=new SaleType();
+        Connections con= new Connections();
+            try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
+                ps.setInt(1, code);
+                 try(ResultSet rs=ps.executeQuery()){
+                     if(rs.next()){
+                         method.setSaleDescription(rs.getString("descripcion"));
+                         method.setSaleState(rs.getString("estado"));
+                         method.setPaymentTerm(rs.getInt("plazoPago"));
+                         method.setQuotas(rs.getInt("cuotas"));
+                         method.setDiscount(rs.getDouble("descuento"));
+                     }
+                 }catch(SQLException e){
+                    System.err.println("Error al cargar el usuario: " + e.getMessage());
+                     throw e; 
+                }
+            }
+            return method;
+    }
+    public boolean updateMethod(SaleType method) throws SQLException{
+        String sql = "UPDATE TipoVenta SET descripcion=?, estado=?, plazoPago=?, cuotas=?, descuento=? WHERE codigo=?;";
+    Connections con = new Connections();
+    System.out.print("Entro aca");
+    try (PreparedStatement ps = con.connect().prepareStatement(sql)) {
+        ps.setString(1, method.getSaleDescription());
+        ps.setString(2, method.getSaleState());
+        ps.setInt(3, method.getPaymentTerm());
+        ps.setInt(4, method.getQuotas());
+        ps.setDouble(5, method.getDiscount());
+        ps.setInt(6, method.getCode());
+        System.out.print(method.getCode());
+        System.out.print("Entro aca");
+        int rowsAffected = ps.executeUpdate();
+        System.out.print(rowsAffected);
+        return rowsAffected > 0;
+        
+    } catch (SQLException e) {
+        System.err.println("Error al actualizar el cliente: " + e.getMessage());
+        throw e;
+    }
     }
       //Metodo para cargar una factura//
     public void addBill(Bill factura, int idVenta) throws SQLException{
@@ -202,6 +251,22 @@ public class SalesConnection {
                      throw e; 
                 }
      }
-     
+     //Metodo para sabe si exitste ese metodo de pago//
+     public boolean isMethodExist(int code) throws SQLException{
+        String sql="SELECT * FROM TipoVenta WHERE codigo=?;";
+        Connections con= new Connections();
+            try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
+                ps.setInt(1, code);
+                try(ResultSet rs=ps.executeQuery()){
+                    if(rs.next()){
+                        return true;
+                    }
+                }
+                }catch(SQLException e){
+                     System.err.println("Error al validar el Cliente: " + e.getMessage());
+                     throw e; 
+                }
+        return false;
+    }
      }
 

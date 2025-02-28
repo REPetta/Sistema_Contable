@@ -13,6 +13,7 @@ public class SalesSystem implements ActionListener {
     private CustomerManagement customerManagement;
     private ItemsManagement itemsManagement;
     private final SalesSystemView view;
+    private PaymentManagement paymentManagement;
     //Constructor//
     public SalesSystem(){
         view=new SalesSystemView();
@@ -27,6 +28,7 @@ public class SalesSystem implements ActionListener {
         this.view.btnCustomer.addActionListener(this);
         this.view.btnFac.addActionListener(this);
         this.view.btnSales.addActionListener(this);
+        this.view.btnPayment.addActionListener(this);
     }
 //    //Metodo para ocultar ciertos botones en funcion del rol del usuario//
 //    public final void displayBasedRol(SingletonUser current){
@@ -70,6 +72,14 @@ public class SalesSystem implements ActionListener {
             itemsManagement.openItemsManagementView();
         }
     }
+    //Metodo para darle funcionalida al boton forma de pago/
+    public void buttonPayment(ActionEvent e){
+        if(e.getSource()==view.btnPayment){
+            closeSalesSystemView();
+            paymentManagement=new PaymentManagement();
+            paymentManagement.openView();
+        }
+    }
     //Metodo para darle funcionalidad al boton Salir//
     public void buttonExit(ActionEvent e){
         if(e.getSource()==view.btnSalir){
@@ -85,6 +95,7 @@ public class SalesSystem implements ActionListener {
         buttonCustomer(e);
         buttonItem(e);
         buttonExit(e);
+        buttonPayment(e);
     }
 
     

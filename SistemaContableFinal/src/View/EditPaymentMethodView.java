@@ -68,7 +68,7 @@ public class EditPaymentMethodView extends javax.swing.JFrame {
         type1 = new javax.swing.JLabel();
         txtQuots = new javax.swing.JTextField();
         type2 = new javax.swing.JLabel();
-        txtState = new javax.swing.JTextField();
+        jStateBox = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -114,13 +114,13 @@ public class EditPaymentMethodView extends javax.swing.JFrame {
                     .addComponent(type1)
                     .addComponent(type))
                 .addGap(24, 24, 24)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(130, 130, 130)
                         .addComponent(btnExit))
-                    .addComponent(txtQuots, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtState, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtQuots)
+                    .addComponent(txtDiscount)
+                    .addComponent(jStateBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(26, 26, 26))
         );
         jPanel1Layout.setVerticalGroup(
@@ -145,7 +145,7 @@ public class EditPaymentMethodView extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(type2)
-                    .addComponent(txtState, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jStateBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -223,11 +223,11 @@ public class EditPaymentMethodView extends javax.swing.JFrame {
     public javax.swing.JButton btnExit;
     public javax.swing.JLabel code;
     public javax.swing.JPanel jPanel1;
+    public javax.swing.JComboBox<String> jStateBox;
     public javax.swing.JTextField txtDescrip;
     public javax.swing.JTextField txtDiscount;
     public javax.swing.JTextField txtPaymentTime;
     public javax.swing.JTextField txtQuots;
-    public javax.swing.JTextField txtState;
     public javax.swing.JLabel type;
     public javax.swing.JLabel type1;
     public javax.swing.JLabel type2;

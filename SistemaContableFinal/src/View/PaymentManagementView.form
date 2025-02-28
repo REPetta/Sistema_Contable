@@ -50,7 +50,7 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace min="-2" pref="36" max="-2" attributes="0"/>
                   <Component id="btnAddMethod" min="-2" pref="133" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
                   <Component id="btnManMethod" min="-2" pref="131" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
                   <Component id="btnBack" min="-2" pref="133" max="-2" attributes="0"/>
@@ -87,6 +87,9 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Gestionar Metodo"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnManMethodActionPerformed"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
           </AuxValues>

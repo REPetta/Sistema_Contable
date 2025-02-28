@@ -9,23 +9,33 @@ public class SaleType {
     
     private int idSaleType;
     private String saleDescription;
-    private char saleState;
+    private String saleState;
     private int paymentTerm;
     private int quotas;
     private double  discount;
+    private int code;
 
     public SaleType() {
     }
 
-    public SaleType(int idSaleType, String saleDescription, char saleState, int paymentTerm, int quotas, double discount) {
+    public SaleType(int idSaleType, String saleDescription, String saleState, int paymentTerm, int quotas, double discount,int code) {
         this.idSaleType = idSaleType;
         this.saleDescription = saleDescription;
         this.saleState = saleState;
         this.paymentTerm = paymentTerm;
         this.quotas = quotas;
         this.discount = discount;
+        this.code=code;
     }
 
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+    
     public int getIdSaleType() {
         return idSaleType;
     }
@@ -42,11 +52,11 @@ public class SaleType {
         this.saleDescription = saleDescription;
     }
 
-    public char getSaleState() {
+    public String getSaleState() {
         return saleState;
     }
 
-    public void setSaleState(char saleState) {
+    public void setSaleState(String saleState) {
         this.saleState = saleState;
     }
 
