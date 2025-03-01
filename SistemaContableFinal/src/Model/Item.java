@@ -13,6 +13,7 @@ public class Item {
     private double unitPrice;
     private int stock;
     private int itemCode;
+    private int stockMin;
 
     public Item() {
     }
@@ -25,15 +26,24 @@ public class Item {
         this.stock = stock;
     }
 
-    public Item(int idItem, String itemName, String itemDescription, double unitPrice, int stock, int itemCode) {
+    public Item(int idItem, String itemName, String itemDescription, double unitPrice, int stock, int itemCode, int stockMin) {
         this.idItem = idItem;
         this.itemName = itemName;
         this.itemDescription = itemDescription;
         this.unitPrice = unitPrice;
         this.stock = stock;
         this.itemCode = itemCode;
+        this.stockMin=stockMin;
     }
 
+    public int getStockMin() {
+        return stockMin;
+    }
+
+    public void setStockMin(int stockMin) {
+        this.stockMin = stockMin;
+    }
+     
     public int getItemCode() {
         return itemCode;
     }

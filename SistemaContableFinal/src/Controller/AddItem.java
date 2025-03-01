@@ -46,6 +46,8 @@ public class AddItem implements ActionListener {
        view.txtItemCode.setText("");
        view.txtCost.setText("");
        view.txtDescrip.setText("");
+       view.txtStock.setText("");
+       view.txtStockMin.setText("");
    }
    //Metodo para validar si los campos estan vacios  o tienen un formato incorrecto//
     public boolean validateFields(String[] fields,String[] fieldNames){
@@ -53,6 +55,8 @@ public class AddItem implements ActionListener {
             view.txtName,
              view.txtItemCode,
              view.txtCost,
+             view.txtStock,
+             view.txtStockMin
         };
           boolean hasBugs= false;
          StringBuilder bugs=new StringBuilder(); //Esta parte construye un string con el mensaje de error//
@@ -87,6 +91,18 @@ public class AddItem implements ActionListener {
                 }
                 if(fieldNames[i].equalsIgnoreCase("Precio Unitario")){ //Valida el rol//
                     if(!isValidCost(fields[i])){
+                        invalidFields.append("- El campo ").append(fieldNames[i]).append(" no esta en un formato valido. \n ");
+                        blinkingFields(jtextFields[i]);
+                    }
+                }
+                if(fieldNames[i].equalsIgnoreCase("Stock Actual")){ //Valida el rol//
+                    if(!isValidCode(fields[i])){
+                        invalidFields.append("- El campo ").append(fieldNames[i]).append(" no esta en un formato valido. \n ");
+                        blinkingFields(jtextFields[i]);
+                    }
+                }
+                if(fieldNames[i].equalsIgnoreCase("Stock Minimo")){ //Valida el rol//
+                    if(!isValidCode(fields[i])){
                         invalidFields.append("- El campo ").append(fieldNames[i]).append(" no esta en un formato valido. \n ");
                         blinkingFields(jtextFields[i]);
                     }
@@ -146,12 +162,17 @@ public class AddItem implements ActionListener {
                     view.txtName.getText().trim(),
                     view.txtItemCode.getText().trim(),
                     view.txtCost.getText().trim(),
+                    view.txtStock.getText().trim(),
+                    view.txtStockMin.getText().trim(),
                     view.txtDescrip.getText().trim()
+                    
         };
         String[] fieldNames = {
             "Nombre de Articulo",
             "Codigo de Articulo",
             "Precio Unitario",
+            "Stock Actual",
+            "Stock Minimo",
             "Descripcion",
         };
           // Validar los campos
@@ -170,11 +191,15 @@ public class AddItem implements ActionListener {
                     String name = fields[0];
                     int itemCode = Integer.parseInt(fields[1]);
                     double itemPrice= Double.parseDouble(fields[2]);
-                    String descripcion=fields[3];
+                    int stock= Integer.parseInt(fields[3]);
+                    int stockMin=  Integer.parseInt(fields[4]);
+                    String descripcion=fields[5];
             
                     item.setItemName(name);
                     item.setItemCode(itemCode);
                     item.setUnitPrice(itemPrice);
+                    item.setStock(stock);
+                    item.setStockMin(stockMin);
                     item.setItemDescription(descripcion);
                     
                     if(!itemCon.isItemExist(itemCode)){    //Si el usuario no existe en la base lo carga , en caso contrario retorna un mensaje de error//

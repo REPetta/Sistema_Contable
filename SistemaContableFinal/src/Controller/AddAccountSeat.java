@@ -129,6 +129,8 @@ public class AddAccountSeat implements ActionListener{
      //Metodo para limpiar la tabla//
       public void limpiarTabla() {
         iniciarTabla();
+        view.txtDescripcion.setText("");
+        view.dateFecha.setDate(null);
         }
       //Metodo para limpiar la vista//
      public void limpiarVista(){
@@ -136,7 +138,7 @@ public class AddAccountSeat implements ActionListener{
         view.txtImporte.setText("");
         view.cBoxDestiny.setSelectedIndex(0);
         view.comboCuenta.setSelectedIndex(0);
-
+        
      }
       //Metodo para cargar Jtabla
     public void cargarTabla(AccountSeat asiento , Date fecha){
@@ -173,10 +175,12 @@ public class AddAccountSeat implements ActionListener{
       public void cancelSeat(ActionEvent e) {
     if (e.getSource() == view.btnCancelar) {
         // Limpiar campos
-        limpiarVista();
         view.dateFecha.setEnabled(true);
         view.txtDescripcion.setEditable(true);
+        limpiarVista();
         asientoContable.clear();
+        limpiarTabla(); 
+        
     }
 }
       //Metodo para obtener fila del asiento//

@@ -32,6 +32,7 @@ public class ManagementStock implements ActionListener {
     public final void initializeListeners(){
             this.view.btnBack.addActionListener(this);
             this.view.btnDel.addActionListener(this);
+            this.view.btnEditStock.addActionListener(this);
             this.view.btnAddStock.addActionListener(this);
     }
       //Metodo para abri la ventana//
@@ -111,6 +112,26 @@ public class ManagementStock implements ActionListener {
                   setCombosBox();
           }
     }
+      //Metodo para los mensajes del dar de baja cliente//
+    public void editSuccessful(boolean successful){
+        if(successful){
+              JOptionPane.showMessageDialog(
+                                null,
+                                "El Stock Minimo  ha sido dado modificado correctamente  \n",
+                                 "Confirmacion",
+                                 JOptionPane.INFORMATION_MESSAGE
+                                );
+              setCombosBox();
+                            }else{
+                                JOptionPane.showMessageDialog(
+                                null,
+                                "El Stock Minimo  no ha podido ser modificado \n",
+                                 "Error",
+                                 JOptionPane.ERROR_MESSAGE
+                                );
+                  setCombosBox();
+          }
+    }
      //Metodo para obtener el dni del cliente//
 public int getItemCodeSelected(){
     String selectedItem = (String) view.jComboItems.getSelectedItem();
@@ -152,7 +173,49 @@ public int newNumberStock(){
         }
         return numero;
     }
-
+public double newNumberCost(){
+    // Pedir al usuario que ingrese un número
+        String input = JOptionPane.showInputDialog("Ingrese un número:");
+        if (input == null || input.trim().isEmpty()) {
+            return 0; // Puedes devolver un valor especial (-1) para indicar que se canceló
+        }
+        // Convertir el String a un número entero
+        double numero;
+        try {
+             numero = Double.parseDouble(input);
+            if(numero<0 || numero>10000){
+                JOptionPane.showMessageDialog(null, "Por favor, ingrese un número válido.");
+                return -1;
+            }
+            
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Por favor, ingrese un número válido.");
+            return -1;
+        }
+        return numero;
+    }
+//Metodo para editar el stockMinimo//
+public int newNumberStockMin(){
+    // Pedir al usuario que ingrese un número
+        String input = JOptionPane.showInputDialog("Ingrese un número:");
+        if (input == null || input.trim().isEmpty()) {
+            return 0; // Puedes devolver un valor especial (-1) para indicar que se canceló
+        }
+        // Convertir el String a un número entero
+        int numero;
+        try {
+             numero = Integer.parseInt(input);
+            if(numero<0 || numero>10000){
+                JOptionPane.showMessageDialog(null, "Por favor, ingrese un número válido.");
+                return 0;
+            }
+            
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Por favor, ingrese un número válido.");
+            return 0;
+        }
+        return numero;
+    }
     //Metodo para salir//
     public void buttonExit(ActionEvent e){
         if(e.getSource()==view.btnBack){
@@ -195,14 +258,40 @@ public int newNumberStock(){
             if(newStock==0){
                 return;
             }
+            double newCost=newNumberCost();
+            if(newCost==-1){
+                return;
+            }
                 itemsCon =new ItemConnection();
-                boolean update=itemsCon.increaseStock(itemCode,newStock);
+                boolean update=itemsCon.increaseStock(itemCode,newStock,newCost);
                 increaseSuccessful(update);
+        }
+    }
+    //Metodo para cambiar el stock minimo//
+    public void buttonEditStockMin(ActionEvent e) throws SQLException{
+        if(e.getSource()==view.btnEditStock){
+            int itemCode= getItemCodeSelected();
+            if(itemCode==0){
+                setCombosBox();
+                return;
+            }
+            int newStockMin=newNumberStockMin();
+            if(newStockMin==0){
+                return;
+            }
+             itemsCon =new ItemConnection();
+            boolean update=itemsCon.editStockMin(newStockMin,itemCode);
+             editSuccessful(update);
         }
     }
     @Override
     public void actionPerformed(ActionEvent e) {
         buttonExit(e);
+        try {
+            buttonEditStockMin(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(ManagementStock.class.getName()).log(Level.SEVERE, null, ex);
+        }
         try {
             buttonDeleteItem(e);
         } catch (SQLException ex) {

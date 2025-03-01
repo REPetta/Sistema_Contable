@@ -17,15 +17,16 @@ public class ItemConnection {
     //Metodo para agregar un item//
     public boolean addItem(Item item) throws SQLException{
         
-            String sql= "INSERT INTO Articulo(nombreArticulo,descripcion,precioUnitario,stock,estado , codigoArticulo) VALUES (?,?,?,?,?,?);";
+            String sql= "INSERT INTO Articulo(nombreArticulo,descripcion,precioUnitario,stock,stockMinimo,estado , codigoArticulo) VALUES (?,?,?,?,?,?,?);";
             Connections con= new Connections();
             try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
                 ps.setString(1, item.getItemName());
                 ps.setString(2, item.getItemDescription());
                 ps.setDouble(3, item.getUnitPrice());
-                ps.setInt(4, 0);
-                ps.setString(5, "alta");
-                ps.setInt(6, item.getItemCode());
+                ps.setInt(4, item.getStock());
+                ps.setInt(5, item.getStockMin());
+                ps.setString(6, "alta");
+                ps.setInt(7, item.getItemCode());
                 
                  int rowsAffected=ps.executeUpdate();
                 return rowsAffected>0;
@@ -94,14 +95,36 @@ public boolean desactivateItem(int itemCode) throws SQLException {
     }
 }
   // Método para dar de baja a un cliente (cambiar estado a "baja")
-public boolean increaseStock(int itemCode,int newStock) throws SQLException {
-    String sql = "UPDATE Articulo SET stock =stock + ? WHERE codigoArticulo=?;";
+public boolean increaseStock(int itemCode,int newStock, double newCost) throws SQLException {
+    String sql = "UPDATE Articulo SET stock =stock + ? , precioUnitario= CASE WHEN ?=0 THEN precioUnitario ELSE ((stock*precioUnitario)+(?*?))/(stock+?) END WHERE codigoArticulo=?;";
     Connections con = new Connections();
 
     try (PreparedStatement ps = con.connect().prepareStatement(sql)) {
         ps.setInt(1, newStock); // Solo actualiza el estado a "baja"
-        ps.setInt(2, itemCode); // Filtra por el DNI del cliente
+        ps.setDouble(2, newCost);
+        ps.setInt(3, newStock);
+        ps.setDouble(4, newCost);
+        ps.setInt(5,newStock);
+        ps.setInt(6, itemCode); // Filtra por el DNI del cliente
+        
+        int rowsAffected = ps.executeUpdate();
+        return rowsAffected > 0;
 
+    } catch (SQLException e) {
+        System.err.println("Error al dar de baja al cliente: " + e.getMessage());
+        throw e; 
+    }
+}
+ // Método para dar de baja a un cliente (cambiar estado a "baja")
+public boolean editStockMin(int newStockMin,int itemCode) throws SQLException {
+    String sql = "UPDATE Articulo SET stockMinimo =? WHERE codigoArticulo=?;";
+    Connections con = new Connections();
+
+    try (PreparedStatement ps = con.connect().prepareStatement(sql)) {
+        ps.setInt(1, newStockMin); // Solo actualiza el estado a "baja"
+        ps.setInt(2, itemCode);
+
+        
         int rowsAffected = ps.executeUpdate();
         return rowsAffected > 0;
 
