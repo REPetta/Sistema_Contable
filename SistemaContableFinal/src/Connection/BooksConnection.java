@@ -7,6 +7,7 @@ package Connection;
 import Model.Account;
 import Model.AccountSeat;
 import Model.AccountSeatBook;
+import Model.SalesBook;
 import Model.Seat;
 import java.io.IOException;
 import java.sql.PreparedStatement;
@@ -14,6 +15,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -199,4 +201,85 @@ public class BooksConnection {
                 if (con != null) con.close();
     }     
 }
+    
+    public List<SalesBook> obtenerListaVentas(int mes , int anio){
+        List<SalesBook> listaVentas= new ArrayList<>();
+         String sql="WITH ventas_mes AS (\n" +
+"    SELECT \n" +
+"        a.nombreArticulo AS Producto, \n" +
+"        SUM(dv.cantidad) AS Cantidad_Vendida, \n" +
+"        SUM(dv.cantidad * dv.precioVenta) AS Total_Recaudado\n" +
+"    FROM DetalleVenta dv\n" +
+"    JOIN Venta v ON dv.idVenta = v.idVenta\n" +
+"    JOIN Articulo a ON dv.idArticulo = a.idArticulo\n" +
+"    WHERE \n" +
+"        EXTRACT(MONTH FROM v.FechaVenta) = ? \n" +
+"        AND EXTRACT(YEAR FROM v.FechaVenta) = ?\n" +
+"    GROUP BY a.nombreArticulo\n" +
+"),\n" +
+"ventas_mes_anterior AS (\n" +
+"    SELECT \n" +
+"        a.nombreArticulo AS Producto, \n" +
+"        SUM(dv.cantidad) AS Cantidad_Vendida_Anterior, \n" +
+"        SUM(dv.cantidad * dv.precioVenta) AS Total_Recaudado_Anterior\n" +
+"    FROM DetalleVenta dv\n" +
+"    JOIN Venta v ON dv.idVenta = v.idVenta\n" +
+"    JOIN Articulo a ON dv.idArticulo = a.idArticulo\n" +
+"    WHERE \n" +
+"        EXTRACT(MONTH FROM v.FechaVenta) = CASE \n" +
+"            WHEN ?  = 1 THEN 12 ELSE ?  - 1 \n" +
+"        END\n" +
+"        AND EXTRACT(YEAR FROM v.FechaVenta) = CASE \n" +
+"            WHEN ?  = 1 THEN ?  - 1 ELSE ? \n" +
+"        END\n" +
+"    GROUP BY a.nombreArticulo\n" +
+")\n" +
+"SELECT \n" +
+"    COALESCE(vm.Producto, vma.Producto) AS Producto,\n" +
+"    COALESCE(vm.Cantidad_Vendida, 0) AS Cantidad_Vendida,\n" +
+"    COALESCE(vma.Cantidad_Vendida_Anterior, 0) AS Cantidad_Vendida_Anterior,\n" +
+"    COALESCE(vm.Total_Recaudado, 0) AS Total_Recaudado,\n" +
+"    COALESCE(vma.Total_Recaudado_Anterior, 0) AS Total_Recaudado_Anterior,\n" +
+"    -- Variación de cantidad vendida\n" +
+"    CASE \n" +
+"        WHEN vma.Cantidad_Vendida_Anterior = 0 THEN NULL\n" +
+"        ELSE ROUND(((vm.Cantidad_Vendida - vma.Cantidad_Vendida_Anterior) * 100.0) / vma.Cantidad_Vendida_Anterior, 2) \n" +
+"    END AS Variacion_Cantidad,\n" +
+"    -- Variación de total recaudado\n" +
+"    CASE \n" +
+"        WHEN vma.Total_Recaudado_Anterior = 0 THEN NULL\n" +
+"        ELSE ROUND(((vm.Total_Recaudado - vma.Total_Recaudado_Anterior) * 100.0) / vma.Total_Recaudado_Anterior, 2) \n" +
+"    END AS Variacion_Recaudado\n" +
+"FROM ventas_mes vm\n" +
+"FULL JOIN ventas_mes_anterior vma ON vm.Producto = vma.Producto\n" +
+"ORDER BY Variacion_Cantidad DESC;";
+             Connections con= new Connections();
+            try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
+                ps.setInt(1, mes);
+                ps.setInt(2, anio);
+                ps.setInt(3, mes);
+                ps.setInt(4, mes);
+                ps.setInt(5, mes);
+                ps.setInt(6, anio);
+                ps.setInt(7, anio);
+                try(ResultSet rs=ps.executeQuery()){
+                    while(rs.next()){                      
+                        SalesBook libro=new SalesBook();
+                        libro.setProducto(rs.getString("Producto"));
+                        libro.setCantidad_vendida(rs.getInt("Cantidad_Vendida"));
+                        libro.setTotal_reacudado(rs.getInt("Total_Recaudado"));
+                        libro.setVariacion_cantidad(rs.getInt("Variacion_Cantidad"));
+                        libro.setVariacion_recaudado(rs.getInt("Variacion_Recaudado"));
+                        libro.setCantidad_vendida_anterior(rs.getInt("Cantidad_Vendida_Anterior"));
+                        libro.setCantidad_recaudado_anterior(rs.getInt("Total_Recaudado_Anterior"));
+                        listaVentas.add(libro);
+                        }
+                    }
+            }catch(SQLException e){
+                        e.printStackTrace();
+      }
+    
+            return listaVentas;
+    }
 }
+

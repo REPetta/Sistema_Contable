@@ -20,6 +20,13 @@ public class Bill {
     public Bill() {
     }
 
+    public Bill(int idBill, int billNumber, double billTotal, char billType) {
+        this.idBill = idBill;
+        this.billNumber = billNumber;
+        this.billTotal = billTotal;
+        this.billType = billType;
+    }
+    
     public Bill(int idBill, int idSale, int billNumber, Date billDate, double billTotal, char billState, char billType) {
         this.idBill = idBill;
         this.idSale = idSale;

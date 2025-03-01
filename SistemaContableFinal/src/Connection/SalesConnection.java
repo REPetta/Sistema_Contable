@@ -2,17 +2,22 @@
 package Connection;
 
 import Model.Bill;
+import Model.BillNode;
 import Model.Item;
 import Model.Remito;
 import Model.Sale;
 import Model.SaleDetails;
 import Model.SaleType;
+import java.io.IOException;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.lang.model.util.Types;
 
 /**
  *
@@ -127,32 +132,49 @@ public class SalesConnection {
                      throw e; 
                 }
         }
-    //Metodo para obtener una lista de factura //
-     public List<Bill> getBills() throws SQLException{
-        String sql= "SELECT * FROM Factura";
-        Bill factura;
-        List<Bill> facturas=new ArrayList<>();
+    //Metodo para obtener una lista de factura  en una fecha dada//
+     public List<BillNode> getBills(Date fecha,int codigo,int dni) throws SQLException{
+        String sql= "SELECT f.numeroFactura , f.totalFactura, f.tipoFactura, c.nombreCliente AS nombre_cliente,  a.nombreArticulo AS nombre_producto\n" +
+                        "FROM Factura AS f INNER JOIN Venta AS v  ON f.idVenta=v.idVenta INNER JOIN Cliente AS c ON v.idCliente=c.idCliente INNER JOIN DetalleVenta AS dv ON v.idVenta=dv.idVenta INNER JOIN Articulo AS a ON dv.idArticulo=a.idArticulo\n" +
+                        "WHERE f.fechaFactura = ? AND (c.dni=? OR ? = -1) AND (a.codigoArticulo=? OR ? = -1 ) ;";
+        BillNode factura;
+        List<BillNode> facturas=new ArrayList<>();
         Connections con= new Connections();
             try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
-                 try(ResultSet rs=ps.executeQuery()){
-                     while(rs.next()){
-                         factura=new Bill();
-                         factura.setIdBill(rs.getInt("idFactura"));
-                         factura.setIdSale(rs.getInt("idVenta"));
-                         factura.setBillNumber(rs.getInt("numeroFactura"));
-                         factura.setBillDate(rs.getDate("fechaFactura"));
-                         factura.setBillTotal(rs.getDouble("totalFactura"));
-                         factura.setBillState(rs.getString("estadoFactura").charAt(0));
-                         factura.setBillType(rs.getString("tipoFactura").charAt(0));
-                         facturas.add(factura);
-                     }
+                    ps.setDate(1, fecha);
+                    ps.setInt(2, dni);
+                    ps.setInt(3, dni);
+                    ps.setInt(4, codigo);
+                    ps.setInt(5, codigo);
+                    try (ResultSet rs = ps.executeQuery()) {
+            Map<Integer, BillNode> facturaMap = new HashMap<>();
+
+            while (rs.next()) {
+                int idFactura = rs.getInt("id_factura");
+
+                if (facturaMap.containsKey(idFactura)) {
+                    facturaMap.get(idFactura).setItem(rs.getString("nombre_producto"));
+                } else {
+                    Bill bill = new Bill(idFactura, rs.getInt("numeroFactura"), rs.getDouble("total"), rs.getString("tipoFactura").charAt(0));
+                    List<String> items = new ArrayList<>();
+                    items.add(rs.getString("nombre_producto"));
+
+                    BillNode billNode = new BillNode(bill, rs.getString("nombre_cliente"), items);
+                    facturaMap.put(idFactura, billNode);
+                }
+            }
+
+            facturas.addAll(facturaMap.values());
+        }
+    
                  }catch(SQLException e){
                     System.err.println("Error en obtener las facturas: " + e.getMessage());
                      throw e; 
                 }
-            }
+            
         return facturas;
     }
+
           //Metodo para cargar un remito//
      public void addRemito(Remito remito, int idVenta) throws SQLException{
         
@@ -268,5 +290,36 @@ public class SalesConnection {
                 }
         return false;
     }
-     }
+     //Metodo para obtener las ventas entre dos fechas dadas
+      public List<Sale> getSalesBetweenDates(Date startDate, Date endDate) throws SQLException {
+    String sql = "SELECT * FROM Venta WHERE fechaVenta BETWEEN ? AND ?";
+    List<Sale> sales = new ArrayList<>();
+    Connections con = new Connections();
+
+    try (PreparedStatement ps = con.connect().prepareStatement(sql)) {
+        ps.setDate(1, startDate);
+        ps.setDate(2, endDate);
+
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Sale sale = new Sale();
+                sale.setIdUser(rs.getInt("idUsuario"));
+                sale.setIdClient(rs.getInt("idCliente"));
+                sale.setSaleDate(rs.getDate("fechaVenta"));
+                sale.setReceiptNumber(rs.getInt("numeroComprobante"));
+                sale.setSalesTotal(rs.getDouble("totalVenta"));
+                sale.setSaleState(rs.getString("estado").charAt(0));
+                sale.setIdSaleType(rs.getInt("idTipoVenta"));
+                sales.add(sale);
+            }
+        }
+    } catch (SQLException e) {
+        System.err.println("Error al obtener las ventas entre fechas: " + e.getMessage());
+        throw e;
+    }
+    return sales;
+}  
+      
+} 
+     
 

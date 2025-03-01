@@ -14,6 +14,8 @@ public class SalesSystem implements ActionListener {
     private ItemsManagement itemsManagement;
     private final SalesSystemView view;
     private PaymentManagement paymentManagement;
+    private SalesReport salesReport;
+    private BillManagement billManagement;
     //Constructor//
     public SalesSystem(){
         view=new SalesSystemView();
@@ -80,6 +82,23 @@ public class SalesSystem implements ActionListener {
             paymentManagement.openView();
         }
     }
+    //Metodo para el boton ventas//
+    public void buttonSalesReport(ActionEvent e){
+        if(e.getSource()==view.btnSales){
+            closeSalesSystemView();
+            salesReport= new SalesReport();
+            salesReport.openBook();
+        }
+    }
+    //Metodo para el boton facturacion/
+    public void buttonBills(ActionEvent e){
+        if(e.getSource()==view.btnFac){
+            closeSalesSystemView();
+            billManagement= new BillManagement();
+            billManagement.openView();
+        }
+    }
+    
     //Metodo para darle funcionalidad al boton Salir//
     public void buttonExit(ActionEvent e){
         if(e.getSource()==view.btnSalir){
@@ -96,6 +115,8 @@ public class SalesSystem implements ActionListener {
         buttonItem(e);
         buttonExit(e);
         buttonPayment(e);
+        buttonSalesReport(e);
+        buttonBills(e);
     }
 
     
