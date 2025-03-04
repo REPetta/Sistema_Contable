@@ -1,6 +1,7 @@
 //Clase encargada de la conexion con la base de datos con los datos relacionados a las cuentas//
 package Connection;
 
+import Connection.Connections;
 import Model.Account;
 import java.io.IOException;
 import java.sql.PreparedStatement;
@@ -55,6 +56,30 @@ public class AccountConnection {
                   return accounts;
             }
     }
+     //Metodo para obtener a cuenta caja"
+    public Account getAccountBox(int code) throws SQLException{
+        String sql ="SELECT * FROM  Cuenta WHERE estado='alta' AND codigo=? ";
+         Account account =new Account();
+        Connections con= new Connections();
+            try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
+                ps.setInt(1, code);
+                  try(ResultSet rs=ps.executeQuery()){
+                      if(rs.next()){
+                          account.setAccountName(rs.getString("nombreCuenta"));
+                          account.setCode(rs.getInt("codigo"));
+                          account.setBalance(rs.getDouble("saldoCuenta"));
+                          account.setReceiveBalance(rs.getInt("recibeSaldo"));
+                          account.setState(rs.getString("estado"));
+                          account.setType(rs.getString("tipo"));
+                          account.setIdAccount(rs.getInt("idCuenta"));
+                      }
+                  }
+                  }catch(SQLException e){
+                      e.printStackTrace();
+                  }
+                  return account;
+            }
+    
     //Metodo para cargar una cuenta//
     public void loadAccount(Account account) throws SQLException{
       String sql="INSERT INTO Cuenta(nombrecuenta,codigo,tipo,estado,saldocuenta,recibesaldo) VALUES(?,?,?,?,?,?) ON CONFLICT(codigo) DO NOTHING;";

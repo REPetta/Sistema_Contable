@@ -28,7 +28,7 @@ public class EditPaymentMethod implements ActionListener{
     private ManagementPayment payMen;
     private final EditPaymentMethodView view;
     private SalesConnection salesCon=new SalesConnection();
-    private int codeMethod;
+    private final int codeMethod;
     
     public EditPaymentMethod(int code) throws SQLException {
         view= new EditPaymentMethodView();

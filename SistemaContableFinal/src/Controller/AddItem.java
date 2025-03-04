@@ -1,17 +1,27 @@
 
 package Controller;
 
+import Connection.AccountConnection;
+import Connection.AccountSeatConnection;
 import Connection.ItemConnection;
+import Connection.UserConnection;
+import Model.Account;
+import Model.AccountSeat;
 import Model.Item;
+import Model.Seat;
 import Model.SingletonUser;
 import View.AddItemView;
 import static View.LoginView.blinkingFields;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.math.BigDecimal;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,9 +31,16 @@ public class AddItem implements ActionListener {
     private final AddItemView view;
     private ItemsManagement itemsManagement;
     private ItemConnection itemCon;
+    private final UserConnection conUsuario;
+    private final AccountSeatConnection seatCon;
+    private final AccountConnection conAccount;
     
     public AddItem() {
         view=new AddItemView();
+        conAccount=new AccountConnection();
+        seatCon=new AccountSeatConnection();
+        conUsuario=new UserConnection();
+        itemCon=new ItemConnection();
          this.view.setTitle("Agregar Articulo"+"-"+currentUser.getUserName().toUpperCase()+"("+currentUser.getRol()+")");
          initializeListeners();
     }
@@ -40,6 +57,18 @@ public class AddItem implements ActionListener {
    public void closeAddItemView(){
        this.view.dispose();
    }
+    //Metodo para validar el ingreso antes de cargar en la base de datos las asientos contables//
+    
+    public boolean validBalance(int newStock, double newCost) throws SQLException{
+            
+            AccountConnection accountCon= new AccountConnection();
+            Account account= accountCon.getAccountBox(111);
+            if(account.getBalance()-(newCost*newStock)<0){
+                        JOptionPane.showMessageDialog(null, "La cuenta "+ account.getAccountName()+" no tiene suficiente saldo para realizar esta operacion", "Error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+            }
+            return true;
+    }
    //Metodo para limpiar los campos//
    public void fieldsClear(){
        view.txtName.setText("");
@@ -156,7 +185,7 @@ public class AddItem implements ActionListener {
         return false;
     }
    //Metodo para Agregar el articulo//
-     public void buttonAddItem (ActionEvent e) throws SQLException{
+     public void buttonAddItem (ActionEvent e) throws SQLException, ClassNotFoundException, IOException{
          if(e.getSource()==view.btnAddItem){
                String[] fields = {
                     view.txtName.getText().trim(),
@@ -202,6 +231,11 @@ public class AddItem implements ActionListener {
                     item.setStockMin(stockMin);
                     item.setItemDescription(descripcion);
                     
+                    if(!validBalance(stock,itemPrice)){
+                        fieldsClear();
+                        return;
+                    }
+                    
                     if(!itemCon.isItemExist(itemCode)){    //Si el usuario no existe en la base lo carga , en caso contrario retorna un mensaje de error//
                         boolean load=itemCon.addItem(item);
                             if(load){
@@ -211,6 +245,7 @@ public class AddItem implements ActionListener {
                                  "Confirmacion",
                                  JOptionPane.INFORMATION_MESSAGE
                                 );
+                                loadAccountSeat(itemPrice*stock);
                                 fieldsClear();
                             }else{
                                 JOptionPane.showMessageDialog(
@@ -244,12 +279,67 @@ public class AddItem implements ActionListener {
            itemsManagement.openItemsManagementView();
        }
    }
+
+   //Metodo para actualizar la los asientosContables//
+   public void  loadAccountSeat(double monto) throws SQLException, ClassNotFoundException, IOException{
+       java.util.Date fechaActual = new Date();
+        java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
+        List<Account> cuentasActualizar=new ArrayList<>();
+        
+        Account cuentaMercaderia=conAccount.getAccountBox(131);
+        double nuevoMontoMercaderia=cuentaMercaderia.getBalance()+monto;
+        cuentaMercaderia.setBalance(nuevoMontoMercaderia);
+        
+        Account cuentaCaja=conAccount.getAccountBox(111);
+        double nuevoMontoCaja=cuentaCaja.getBalance()-monto;
+        cuentaCaja.setBalance(nuevoMontoCaja);
+        
+       cuentasActualizar.add(cuentaMercaderia);
+       cuentasActualizar.add(cuentaCaja);
+       
+       Seat seat =new Seat(
+                   
+                   conUsuario.getUserId(currentUser.getUserName()),
+                   fechaSQL,
+                   "Compra de Mercaderia"
+                   );
+           
+           int idSeat=seatCon.addSeat(seat);
+
+               AccountSeat mercaderia= new AccountSeat(
+                   idSeat,
+                   "DEBER",
+                   conAccount.getAccountBox(131).getIdAccount(),
+                   monto,    
+                   nuevoMontoMercaderia
+               );
+               seatCon.addAccountSeat(mercaderia);
+               
+               AccountSeat caja= new AccountSeat(
+
+                   idSeat,
+                   "HABER",
+                   conAccount.getAccountBox(111).getIdAccount(),
+                   monto,    
+                   nuevoMontoCaja
+               );
+
+               seatCon.addAccountSeat(caja);
+  
+              conAccount.actualizarSaldo(cuentasActualizar);
+            }
+            
+   
     @Override
     public void actionPerformed(ActionEvent e) {
         buttonExit(e);
         try {
             buttonAddItem(e);
         } catch (SQLException ex) {
+            Logger.getLogger(AddItem.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(AddItem.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
             Logger.getLogger(AddItem.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

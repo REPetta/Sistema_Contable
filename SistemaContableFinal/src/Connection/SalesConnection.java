@@ -80,6 +80,7 @@ public class SalesConnection {
                 ps.setInt(1, code);
                  try(ResultSet rs=ps.executeQuery()){
                      if(rs.next()){
+                         method.setIdSaleType(rs.getInt("idTipoVenta"));
                          method.setSaleDescription(rs.getString("descripcion"));
                          method.setSaleState(rs.getString("estado"));
                          method.setPaymentTerm(rs.getInt("plazoPago"));

@@ -35,6 +35,30 @@ public class ItemConnection {
                      throw e; 
                 }
         }
+    //Metodo para obtener el item//
+    public Item getItem(int itemCode) throws SQLException{
+       String sql= "SELECT * FROM Articulo WHERE codigoArticulo=?;";
+       Item item=new Item();
+       Connections con= new Connections();
+            try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
+            ps.setInt(1, itemCode);
+             try(ResultSet rs=ps.executeQuery()){
+                    if(rs.next()){
+                        item.setIdItem(rs.getInt("idArticulo"));
+                        item.setItemName(rs.getString("nombreArticulo"));
+                        item.setItemDescription(rs.getString("descripcion"));
+                        item.setUnitPrice(rs.getDouble("precioUnitario"));
+                        item.setStock(rs.getInt("stock"));
+                        item.setStockMin(rs.getInt("stockMinimo"));
+                        item.setItemCode(itemCode);
+                                }
+            }catch(SQLException e){
+                    System.err.println("Error al cargar el usuario: " + e.getMessage());
+                     throw e; 
+                }    
+    }
+            return item;
+    }
     //Metodo para validar que el item exista//
     public boolean isItemExist(int itemCode) throws SQLException{
         String sql="SELECT * FROM Articulo WHERE codigoArticulo=?;";
