@@ -1,15 +1,14 @@
 
 package Connection;
 
-import Connection.Connections;
+
+
 import Model.Bill;
 import Model.BillNode;
-import Model.Item;
 import Model.Remito;
 import Model.Sale;
 import Model.SaleDetails;
 import Model.SaleType;
-import java.io.IOException;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.lang.model.util.Types;
 
 /**
  *
@@ -130,6 +128,8 @@ public class SalesConnection {
                 ps.setDouble(4, factura.getBillTotal());
                 ps.setString(5,Character.toString(factura.getBillState()));
                 ps.setString(6,Character.toString(factura.getBillType()));
+                
+                ps.executeQuery();
             }catch(SQLException e){
                     System.err.println("Error al cargar la factura: " + e.getMessage());
                      throw e; 
@@ -189,6 +189,8 @@ public class SalesConnection {
                 ps.setDate(3, (Date) remito.getRemitoDate());
                 ps.setString(4,Character.toString(remito.getRemitoState()));
                 ps.setString(6,remito.getDestiny());
+                
+                ps.executeQuery();
             }catch(SQLException e){
                     System.err.println("Error al cargar el remito: " + e.getMessage());
                      throw e; 
@@ -237,7 +239,7 @@ public class SalesConnection {
       }
     //Metodo el id una venta//
      public int getIdLastSale() throws SQLException{
-        String sql="SELECT COALESCE(MAX(idVenta), -1) AS ultimoIdVenta FROM Venta WHERE estado = 'V' ";
+        String sql="SELECT COALESCE(MAX(idVenta), 0) AS ultimoIdVenta FROM Venta WHERE estado = 'V' ";
         Connections con= new Connections();
             try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
                 try(ResultSet rs=ps.executeQuery()){
@@ -248,7 +250,7 @@ public class SalesConnection {
                         e.printStackTrace();
                     }
         }
-        return -1;
+        return 0;
     
       }     
      
@@ -262,9 +264,10 @@ public class SalesConnection {
                 ps.setDate(3, (Date) sale.getSaleDate());
                 ps.setInt(4,sale.getReceiptNumber());
                 ps.setDouble(5,sale.getSalesTotal());
-                ps.setString(6,Character.toString(sale.getIdSaleType()));
+                ps.setString(6,Character.toString(sale.getSaleState()));
+                ps.setInt(7, sale.getIdSaleType());
                 
-                ps.executeQuery();
+                ps.executeUpdate();
                 
             }catch(SQLException e){
                     System.err.println("Error al cargar la venta: " + e.getMessage());
@@ -308,7 +311,7 @@ public class SalesConnection {
                 ps.setDouble(4, detalleVenta.getSalePrice());
                 ps.setDouble(5,detalleVenta.getSubTotal());
                
-                ps.executeQuery();
+                ps.executeUpdate();
 
             }catch(SQLException e){
                     System.err.println("Error al cargar la venta: " + e.getMessage());

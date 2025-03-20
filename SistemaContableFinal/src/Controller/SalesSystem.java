@@ -48,17 +48,21 @@ public class SalesSystem implements ActionListener {
     private ItemConnection itemsCon;
     private CustomerConnection customerCon;
     private SalesConnection salesCon;
-    private AccountConnection conAccount;
+    private final AccountConnection conAccount;
     private SaleNode saleNode;
     private List<Item> listaArticulos;
-    private UserConnection conUsuario;
-    private AccountSeatConnection seatCon;
-    
+    private final UserConnection conUsuario;
+    private final AccountSeatConnection seatCon;
+    private double subTotal;
     //Constructor//
     public SalesSystem(){
         view=new SalesSystemView();
         saleNode=new SaleNode();
         listaArticulos=new ArrayList<>();
+        conUsuario=new UserConnection();
+        conAccount=new AccountConnection();
+        seatCon=new AccountSeatConnection();
+        subTotal=0.0;
         initializeListeners();
         this.view.setTitle("Modulo de Ventas"+"-"+currentUser.getUserName().toUpperCase()+"("+currentUser.getRol()+")");
         setClientesBox();
@@ -315,7 +319,7 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
         datos[0]=fechaFormateada;
         datos[1]=item.getItemName();
         datos[2]= String.valueOf(cantidad);
-        datos[3]= "+"+String.valueOf(valorTotal);
+        datos[3]= "$"+String.valueOf(valorTotal);
         datos[4]=saleNode.getCustomer().getClientName();
         datos[5]=saleNode.getSaleType().getSaleDescription();
         modelo.addRow(datos);   
@@ -366,12 +370,16 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
             
             customer=customerCon.getCustomer(getDniCustomerSelected());
             saleType=salesCon.getMethod(getCodeSelected());
-            sale.setSaleDate(view.jDateChooser.getDate());
+            
+            java.util.Date fecha = view.jDateChooser.getDate();
+            java.sql.Date sqlDate = new java.sql.Date(fecha.getTime());
+            
+            sale.setSaleDate(sqlDate);
             
             saleNode.setCustomer(customer);
             saleNode.setSaleType(saleType);
             saleNode.setSale(sale);
-            
+            saleNode.setSalesDetails(new ArrayList<>());
         }
     }
     //Metodo para limpiar la vista//
@@ -385,6 +393,8 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
         view.jDateChooser.setEnabled(true);
         view.jCustomerBox.setEnabled(true);
         view.jMethodBox.setEnabled(true);
+        subTotal=0.0;
+        saleNode=new SaleNode();
      }
      public void limpiarVistaParcial(){
             setArticulosBox();
@@ -415,15 +425,16 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
         if(e.getSource()==view.btnAdd){
           
             Item item;
- 
+           
             if(isNull()){
                 getSaleCustomerAndMethod();
                if(!isNull()){
                     if( validFields() ){
                         item=itemsCon.getItem(getItemCodeSelected());
                         int cantidad=(int) view.jCantidad.getValue();
-                        double valorTotal=cantidad*item.getUnitPrice();
-                        valorTotal = formatDouble(valorTotal);
+                        subTotal=subTotal+(cantidad*item.getUnitPrice());
+                         System.out.println(subTotal);
+                        subTotal = formatDouble(subTotal);
                        
                         
                         if(validStock( item, cantidad)){
@@ -434,20 +445,21 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
                                         limpiarVistaParcial();
                                         return;
                                     }
-                                    if(!validBalanceVenta(valorTotal)){
+                                    if(!validBalanceVenta(subTotal)){
                                         limpiarVistaParcial();
+                                        subTotal=subTotal-(cantidad*item.getUnitPrice());
                                         return;
                                     }
                              SaleDetails saleDetail=new SaleDetails();
                              saleDetail.setIdItem(item.getIdItem());
-                             saleDetail.setIdSale(salesCon.getIdLastSale()+1);
+       
                              saleDetail.setQuantity(cantidad);
-                             saleDetail.setSalePrice(valorTotal);
-                             saleDetail.setSubTotal(valorTotal);
+                             saleDetail.setSalePrice(subTotal);
+                             saleDetail.setSubTotal(subTotal);
                              
                             saleNode.addSalesDetails(saleDetail);
                                     
-                            cargarTabla(saleNode, item, valorTotal, cantidad);
+                            cargarTabla(saleNode, item, subTotal, cantidad);
                             item.setStock(item.getStock()-cantidad);
                             listaArticulos.add(item);
                             limpiarVistaParcial();
@@ -474,9 +486,9 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
                     
                     item=itemsCon.getItem(getItemCodeSelected());
                     int cantidad=(int) view.jCantidad.getValue();
-                    double valorTotal=cantidad*item.getUnitPrice();
-                    valorTotal = formatDouble(valorTotal);
-                   
+                    subTotal=subTotal+(cantidad*item.getUnitPrice());
+                    subTotal = formatDouble(subTotal);
+                    System.out.println(subTotal);
                     //En caso de que ya se halla agregado a la venta el articulo anteriormente//
                     for (Item articulo : listaArticulos){
                        if(listaArticulos.contains(item)){
@@ -489,22 +501,23 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
                                         limpiarVistaParcial();
                                         return;
                                     }
-                                    if(!validBalanceVenta(valorTotal)){
+                                    if(!validBalanceVenta(subTotal)){
                                         limpiarVistaParcial();
+                                        subTotal=subTotal-(cantidad*item.getUnitPrice());
                                         return;
                                     }
                                         SaleDetails saleDetail=new SaleDetails();
                                         
                                         saleDetail.setIdItem(item.getIdItem());
-                                        saleDetail.setIdSale(salesCon.getIdLastSale()+1);
+                                     
                                         saleDetail.setQuantity(cantidad);
-                                        saleDetail.setSalePrice(valorTotal);
-                                        saleDetail.setSubTotal(valorTotal);
+                                        saleDetail.setSalePrice(subTotal);
+                                        saleDetail.setSubTotal(subTotal);
                              
                                         saleNode.addSalesDetails(saleDetail);
                                     
                                         articulo.setStock(articulo.getStock()-cantidad);
-                                        cargarTabla(saleNode, item, valorTotal, cantidad);
+                                        cargarTabla(saleNode, item, subTotal, cantidad);
                                         limpiarVistaParcial();
                                         return;
                             }
@@ -521,22 +534,23 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
                                         return;
                                     }
                              
-                             if(!validBalanceVenta(valorTotal)){
+                             if(!validBalanceVenta(subTotal)){
                                         limpiarVistaParcial();
+                                        subTotal=subTotal-(cantidad*item.getUnitPrice());
                                         return;
                              }
                              
                            SaleDetails saleDetail=new SaleDetails();
                                         
                            saleDetail.setIdItem(item.getIdItem());
-                           saleDetail.setIdSale(salesCon.getIdLastSale()+1);
+                          
                            saleDetail.setQuantity(cantidad);
-                           saleDetail.setSalePrice(valorTotal);
-                           saleDetail.setSubTotal(valorTotal);
+                           saleDetail.setSalePrice(subTotal);
+                           saleDetail.setSubTotal(subTotal);
                              
                            saleNode.addSalesDetails(saleDetail);
                                         
-                            cargarTabla(saleNode, item, valorTotal, cantidad);
+                            cargarTabla(saleNode, item, subTotal, cantidad);
                             limpiarVistaParcial();
                             item.setStock(item.getStock()-cantidad);
                             listaArticulos.add(item);
@@ -583,6 +597,7 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
           salesCon.addSale(sale);
           
            for(SaleDetails detalle : saleNode.getSalesDetails()){
+                detalle.setIdSale(salesCon.getIdLastSale());
                 salesCon.addSaleDetails(detalle);
                 itemsCon.decreaseStock(detalle.getIdItem(), detalle.getQuantity());
            }
@@ -592,6 +607,7 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
            limpiarVistaTotal();
            saleNode=new SaleNode();
            listaArticulos=new ArrayList<>();
+           iniciarTabla();
         }
     }
      //Metodo para cancelar una venta//
@@ -665,6 +681,7 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
         java.util.Date fechaActual = new Date();
         java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
         List<Account> cuentasActualizar=new ArrayList<>();
+        int idSeat=0;
         
         if(saleNode.getSaleType().getType().equalsIgnoreCase("EFECTIVO")){
                 
@@ -686,7 +703,7 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
                             "Venta de Articulos"
                         );
            
-                int idSeat=seatCon.addSeat(seat);
+                 idSeat=seatCon.addSeat(seat);
 
                 AccountSeat debe= new AccountSeat(
                     idSeat,
@@ -732,7 +749,7 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
                             "Venta de Articulos"
                         );
            
-                int idSeat=seatCon.addSeat(seat);
+                 idSeat=seatCon.addSeat(seat);
 
                 AccountSeat debe= new AccountSeat(
                     idSeat,
@@ -778,7 +795,7 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
                             "Venta de Articulos"
                         );
            
-                int idSeat=seatCon.addSeat(seat);
+                 idSeat=seatCon.addSeat(seat);
 
                 AccountSeat debe= new AccountSeat(
                     idSeat,
@@ -813,16 +830,7 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
         
          cuentasActualizar.add(cuentaDebe);
          cuentasActualizar.add(cuentaHaber);
-       
-                Seat seat =new Seat(
-                   
-                            conUsuario.getUserId(currentUser.getUserName()),
-                            fechaSQL,
-                            "Venta de Articulos"
-                        );
-           
-                int idSeat=seatCon.addSeat(seat);
-
+         
                 AccountSeat debe= new AccountSeat(
                     idSeat,
                     "DEBER",
