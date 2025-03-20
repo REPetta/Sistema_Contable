@@ -139,6 +139,25 @@ public boolean increaseStock(int itemCode,int newStock, double newCost) throws S
         throw e; 
     }
 }
+// Método para dar de baja a un cliente (cambiar estado a "baja")
+public boolean decreaseStock(int itemCode,int newStock) throws SQLException {
+    String sql = "UPDATE Articulo SET stock =stock - ?  WHERE codigoArticulo=?;";
+    Connections con = new Connections();
+
+    try (PreparedStatement ps = con.connect().prepareStatement(sql)) {
+        
+        ps.setInt(1, newStock);
+        ps.setInt(2, itemCode);
+        
+        int rowsAffected = ps.executeUpdate();
+        return rowsAffected > 0;
+
+    } catch (SQLException e) {
+        System.err.println("Error al dar de baja al cliente: " + e.getMessage());
+        throw e; 
+    }
+}
+
  // Método para dar de baja a un cliente (cambiar estado a "baja")
 public boolean editStockMin(int newStockMin,int itemCode) throws SQLException {
     String sql = "UPDATE Articulo SET stockMinimo =? WHERE codigoArticulo=?;";

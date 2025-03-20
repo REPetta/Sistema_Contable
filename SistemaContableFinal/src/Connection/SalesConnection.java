@@ -1,6 +1,7 @@
 
 package Connection;
 
+import Connection.Connections;
 import Model.Bill;
 import Model.BillNode;
 import Model.Item;
@@ -28,7 +29,7 @@ public class SalesConnection {
     //Metodo para agregar un tipoVenta//
     public boolean addTypeSale(SaleType tipoVenta) throws SQLException{
         
-            String sql= "INSERT INTO TipoVenta(descripcion,estado,plazoPago,codigo,cuotas,descuento) VALUES (?,?,?,?,?,?);";
+            String sql= "INSERT INTO TipoVenta(descripcion,estado,plazoPago,codigo,cuotas,descuento,tipo) VALUES (?,?,?,?,?,?,?);";
             Connections con= new Connections();
             try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
                 ps.setString(1, tipoVenta.getSaleDescription());
@@ -37,6 +38,7 @@ public class SalesConnection {
                 ps.setInt(4, tipoVenta.getCode());
                 ps.setInt(5, tipoVenta.getQuotas());
                 ps.setDouble(6, tipoVenta.getDiscount());
+                ps.setString(7, tipoVenta.getType());
                 
                  int rowsAffected=ps.executeUpdate();
                 return rowsAffected>0;
@@ -62,6 +64,7 @@ public class SalesConnection {
                          saleType.setQuotas(rs.getInt("cuotas"));
                          saleType.setDiscount(rs.getDouble("descuento"));
                          saleType.setCode(rs.getInt("codigo"));
+                         saleType.setType(rs.getString("tipo"));
                          saleTypes.add(saleType);
                      }
                  }catch(SQLException e){
@@ -86,6 +89,7 @@ public class SalesConnection {
                          method.setPaymentTerm(rs.getInt("plazoPago"));
                          method.setQuotas(rs.getInt("cuotas"));
                          method.setDiscount(rs.getDouble("descuento"));
+                         method.setType(rs.getString("tipo"));
                      }
                  }catch(SQLException e){
                     System.err.println("Error al cargar el usuario: " + e.getMessage());
@@ -95,9 +99,8 @@ public class SalesConnection {
             return method;
     }
     public boolean updateMethod(SaleType method) throws SQLException{
-        String sql = "UPDATE TipoVenta SET descripcion=?, estado=?, plazoPago=?, cuotas=?, descuento=? WHERE codigo=?;";
+        String sql = "UPDATE TipoVenta SET descripcion=?, estado=?, plazoPago=?, cuotas=?, descuento=?, tipo=? WHERE codigo=?;";
     Connections con = new Connections();
-    System.out.print("Entro aca");
     try (PreparedStatement ps = con.connect().prepareStatement(sql)) {
         ps.setString(1, method.getSaleDescription());
         ps.setString(2, method.getSaleState());
@@ -105,10 +108,9 @@ public class SalesConnection {
         ps.setInt(4, method.getQuotas());
         ps.setDouble(5, method.getDiscount());
         ps.setInt(6, method.getCode());
-        System.out.print(method.getCode());
-        System.out.print("Entro aca");
+        ps.setString(7, method.getType());
+        
         int rowsAffected = ps.executeUpdate();
-        System.out.print(rowsAffected);
         return rowsAffected > 0;
         
     } catch (SQLException e) {
@@ -217,6 +219,39 @@ public class SalesConnection {
             }
         return remitos;
     }
+      //Metodo para obtener el numero de comprobante una venta//
+     public int getReceiptNumber() throws SQLException{
+        String sql="SELECT COALESCE(MAX(numeroComprobante), -1) AS ultimoNumeroComprobante FROM Venta WHERE estado = 'V' ";
+        Connections con= new Connections();
+            try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
+                try(ResultSet rs=ps.executeQuery()){
+                    if(rs.next()){
+                        return rs.getInt("ultimoNumeroComprobante");
+                    }
+                }catch(SQLException e){
+                        e.printStackTrace();
+                    }
+        }
+        return -1;
+    
+      }
+    //Metodo el id una venta//
+     public int getIdLastSale() throws SQLException{
+        String sql="SELECT COALESCE(MAX(idVenta), -1) AS ultimoIdVenta FROM Venta WHERE estado = 'V' ";
+        Connections con= new Connections();
+            try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
+                try(ResultSet rs=ps.executeQuery()){
+                    if(rs.next()){
+                        return rs.getInt("ultimoIdVenta");
+                    }
+                }catch(SQLException e){
+                        e.printStackTrace();
+                    }
+        }
+        return -1;
+    
+      }     
+     
     //Metodo para cargar una venta//
      public void  addSale(Sale sale ) throws SQLException{
            String sql= "INSERT INTO Venta(idUsuario, idCliente, fechaVenta , numeroComprobante , totalVenta, estado, idTipoVenta) VALUES (?,?,?,?,?,?,?);";
@@ -228,6 +263,9 @@ public class SalesConnection {
                 ps.setInt(4,sale.getReceiptNumber());
                 ps.setDouble(5,sale.getSalesTotal());
                 ps.setString(6,Character.toString(sale.getIdSaleType()));
+                
+                ps.executeQuery();
+                
             }catch(SQLException e){
                     System.err.println("Error al cargar la venta: " + e.getMessage());
                      throw e; 
@@ -269,6 +307,9 @@ public class SalesConnection {
                 ps.setInt(3, detalleVenta.getQuantity());
                 ps.setDouble(4, detalleVenta.getSalePrice());
                 ps.setDouble(5,detalleVenta.getSubTotal());
+               
+                ps.executeQuery();
+
             }catch(SQLException e){
                     System.err.println("Error al cargar la venta: " + e.getMessage());
                      throw e; 

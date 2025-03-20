@@ -29,12 +29,13 @@ public class EditPaymentMethod implements ActionListener{
     private final EditPaymentMethodView view;
     private SalesConnection salesCon=new SalesConnection();
     private final int codeMethod;
-    
+
     public EditPaymentMethod(int code) throws SQLException {
         view= new EditPaymentMethodView();
         this.view.setTitle("Modificar Metodo"+"-"+currentUser.getUserName().toUpperCase()+"("+currentUser.getRol()+")");
         initializeListeners();
         setStates();
+        setTypes();
         loadMethod(code);
         codeMethod=code;
     }
@@ -64,6 +65,7 @@ public class EditPaymentMethod implements ActionListener{
         this.view.txtQuots.setText(String.valueOf(method.getQuotas()));
         this.view.txtDiscount.setText(String.valueOf(convertToPercentage(method.getDiscount())));
         this.view.jStateBox.setSelectedItem(method.getSaleState().toUpperCase());
+        this.view.jTypeBox.setSelectedItem(method.getType().toUpperCase());
         
     }
    //Metodo para setear la razon social//
@@ -78,6 +80,25 @@ public class EditPaymentMethod implements ActionListener{
 
             for (String estado : estados) {
                 model.addElement(estado); // Agregar el nombre de la cuenta
+            }
+
+            // Setear el modelo en el JComboBox
+            view.jStateBox.setModel(model); 
+    // Asegúrate de que addSeatView tenga cbbCuentas
+
+    }
+    //Metodo para setear la razon social//
+    public final void setTypes() {
+        
+            List<String> tipos = new ArrayList<>(Arrays.asList("","EFECTIVO","DEBITO","CREDITO"));
+            
+            // Crear un modelo para el JComboBox
+            DefaultComboBoxModel<String> model = 
+
+                new DefaultComboBoxModel<>();
+
+            for (String tipo : tipos) {
+                model.addElement(tipo); // Agregar el nombre de la cuenta
             }
 
             // Setear el modelo en el JComboBox
@@ -239,7 +260,8 @@ public boolean validateFields(Object[] fields, String[] fieldNames) {
             view.txtPaymentTime,
             view.txtQuots,
             view.txtDiscount,
-            view.jStateBox
+            view.jStateBox,
+            view.jTypeBox
         };
         String[] fieldNames = {
             "Descripcion",
@@ -247,7 +269,7 @@ public boolean validateFields(Object[] fields, String[] fieldNames) {
             "Cuotas",
             "Descuento",
             "Estado",
-
+            "Tipo"
         };
           // Validar los campos
         if (validateFields(fields, fieldNames)) {
@@ -259,6 +281,7 @@ public boolean validateFields(Object[] fields, String[] fieldNames) {
                         JOptionPane.QUESTION_MESSAGE
             );
              if(confirm == JOptionPane.YES_OPTION) { // Si el usuario confirma, intenta agregarlo//
+                 
                   salesCon=new SalesConnection();  
                   SaleType method= new SaleType();
                     
@@ -270,16 +293,18 @@ public boolean validateFields(Object[] fields, String[] fieldNames) {
                      // Convertir a double para su uso
                     double descuento = (discountBigDecimal != null) ? discountBigDecimal.doubleValue() : 0.0;
                     String estado  = ((JComboBox<?>) fields[4]).getSelectedItem().toString().trim();
+                    String tipo=  ((JComboBox<?>) fields[5]).getSelectedItem().toString().trim();
                     
                     method.setSaleDescription(descripcion);
                     method.setPaymentTerm(plazo);
                     method.setQuotas(cuotas);
                     method.setDiscount(descuento);
                     method.setSaleState(estado.toLowerCase());
+                    method.setType(tipo);
                     method.setCode(codeMethod);
                    
                     boolean load=salesCon.updateMethod(method);
-                        System.out.print(load);
+    
                             if(load){
                                 JOptionPane.showMessageDialog(
                                 null,

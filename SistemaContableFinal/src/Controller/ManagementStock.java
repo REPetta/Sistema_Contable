@@ -328,7 +328,8 @@ public int newNumberStockMin(){
     }
     //Metodo para actualizar la los asientosContables//
    public void  loadAccountSeat(double monto) throws SQLException, ClassNotFoundException, IOException{
-       java.util.Date fechaActual = new Date();
+        
+        java.util.Date fechaActual = new Date();
         java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
         List<Account> cuentasActualizar=new ArrayList<>();
 

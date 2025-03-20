@@ -49,6 +49,7 @@ public class AddPaymentMethod implements ActionListener {
        view.txtDiscount.setText("");
        view.txtPaymentTime.setText("");
        view.txtQuots.setText("");
+       view.jTypeBox.setSelectedIndex(0);
    }
    //Metodo para validar el Dni//
     public boolean isValidCode(String code){
@@ -136,7 +137,7 @@ public class AddPaymentMethod implements ActionListener {
              view.txtCode,
              view.txtPaymentTime,
              view.txtQuots,
-             view.txtDiscount
+             view.txtDiscount,
         };
           boolean hasBugs= false;
          StringBuilder bugs=new StringBuilder(); //Esta parte construye un string con el mensaje de error//
@@ -147,6 +148,10 @@ public class AddPaymentMethod implements ActionListener {
                  hasBugs=true;
              }
             
+         }
+         if(fields[5].equalsIgnoreCase("")){
+             bugs.append("- El campo tipo  no puede estar vacio. \n ");
+             hasBugs=true;
          }
          
          if(hasBugs){ //Si hay un campo vacio  ejecuta el mensaje de error//
@@ -205,7 +210,8 @@ public class AddPaymentMethod implements ActionListener {
                     view.txtCode.getText().trim(),
                     view.txtPaymentTime.getText().trim(),
                     view.txtQuots.getText().trim(),
-                    view.txtDiscount.getText().trim()
+                    view.txtDiscount.getText().trim(),
+                    view.jTypeBox.getSelectedItem().toString().trim()
         };
         
         String[] fieldNames = {
@@ -213,7 +219,8 @@ public class AddPaymentMethod implements ActionListener {
             "Codigo ",
             "Plazo de Pago",
             "Cuotas",
-            "Descuento"
+            "Descuento",
+            "Tipo"
         };
           // Validar los campos
          // Validar los campos
@@ -234,12 +241,14 @@ public class AddPaymentMethod implements ActionListener {
                     int payment = Integer.parseInt(fields[2]);
                     int quotas = Integer.parseInt(fields[3]);
                     double discount= convertPercentageToDecimal(fields[4]).doubleValue();
+                    String type= fields[5];
                     
                     method.setSaleDescription(descrip);
                     method.setCode(code);
                     method.setPaymentTerm(payment);
                     method.setQuotas(quotas);
                     method.setDiscount(discount);
+                    method.setType(type);
             
                     
                     

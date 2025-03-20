@@ -13,21 +13,23 @@ public class SaleType {
     private int paymentTerm;
     private int quotas;
     private double  discount;
+    private String type;
     private int code;
 
     public SaleType() {
     }
 
-    public SaleType(int idSaleType, String saleDescription, String saleState, int paymentTerm, int quotas, double discount,int code) {
+    public SaleType(int idSaleType, String saleDescription, String saleState, int paymentTerm, int quotas, double discount,String type, int code) {
         this.idSaleType = idSaleType;
         this.saleDescription = saleDescription;
         this.saleState = saleState;
         this.paymentTerm = paymentTerm;
         this.quotas = quotas;
         this.discount = discount;
+        this.type=type;
         this.code=code;
     }
-
+    
     public int getCode() {
         return code;
     }
@@ -83,7 +85,13 @@ public class SaleType {
     public void setDiscount(double discount) {
         this.discount = discount;
     }
-    
-    
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
     
 }

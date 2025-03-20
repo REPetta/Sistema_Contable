@@ -2,15 +2,20 @@
 package Controller;
 
 import Connection.AccountConnection;
+import Connection.AccountSeatConnection;
 import Connection.CustomerConnection;
 import Connection.ItemConnection;
 import Connection.SalesConnection;
+import Connection.UserConnection;
 import Model.Account;
+import Model.AccountSeat;
 import Model.Customer;
 import Model.Item;
 import Model.Sale;
+import Model.SaleDetails;
 import Model.SaleNode;
 import Model.SaleType;
+import Model.Seat;
 import Model.SingletonUser;
 import View.SalesSystemView;
 import java.awt.event.ActionEvent;
@@ -20,6 +25,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -42,18 +48,24 @@ public class SalesSystem implements ActionListener {
     private ItemConnection itemsCon;
     private CustomerConnection customerCon;
     private SalesConnection salesCon;
-    private  SaleNode saleNode;
+    private AccountConnection conAccount;
+    private SaleNode saleNode;
+    private List<Item> listaArticulos;
+    private UserConnection conUsuario;
+    private AccountSeatConnection seatCon;
+    
     //Constructor//
     public SalesSystem(){
         view=new SalesSystemView();
         saleNode=new SaleNode();
+        listaArticulos=new ArrayList<>();
         initializeListeners();
         this.view.setTitle("Modulo de Ventas"+"-"+currentUser.getUserName().toUpperCase()+"("+currentUser.getRol()+")");
         setClientesBox();
         setArticulosBox();
         setMethodBox();
         iniciarTabla();
-//        displayBasedRol(currentUser);
+        displayBasedRol(currentUser);
         }
     //Metodo para inicializar//
     public final void initializeListeners(){
@@ -67,23 +79,15 @@ public class SalesSystem implements ActionListener {
         this.view.btnCancel.addActionListener(this);
         this.view.btnSave.addActionListener(this);
     }
-//    //Metodo para ocultar ciertos botones en funcion del rol del usuario//
-//    public final void displayBasedRol(SingletonUser current){
-//        if(currentUser.getRol().equalsIgnoreCase("Contador")){
-//            this.view.btnAddUser.setVisible(false);
-//            this.view.btnSearchUser.setVisible(false);
-//            this.view.btnSeats.setVisible(false);
-//        }
-//        if(currentUser.getRol().equalsIgnoreCase("Vendedor")){
-//            this.view.btnAddUser.setVisible(false);
-//            this.view.btnSearchUser.setVisible(false);
-//            this.view.btnAddSeat.setVisible(false);
-//            this.view.btnDiaryBook.setVisible(false);
-//            this.view.btnLedger.setVisible(false);
-//            this.view.btnShowAccounts.setVisible(false);
-//            this.view.btnSeats.setVisible(false);
-//        }
-//    }
+    //Metodo para ocultar ciertos botones en funcion del rol del usuario//
+    public final void displayBasedRol(SingletonUser current){
+      
+        if(currentUser.getRol().equalsIgnoreCase("Vendedor")){
+            this.view.btnItems.setVisible(false);
+            this.view.btnPayment.setVisible(false);
+          
+        }
+    }
     //Metodo para abrir la ventana //
     public void openSalesSystemView(){
         this.view.setVisible(true);
@@ -413,21 +417,49 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
             Item item;
  
             if(isNull()){
-                System.out.println("Entro Aca 1");
                 getSaleCustomerAndMethod();
-                System.out.println("Entro Aca 2");
                if(!isNull()){
-                   System.out.println("Entro Aca 3");
                     if( validFields() ){
-                        System.out.println("Entro Aca 4");
                         item=itemsCon.getItem(getItemCodeSelected());
                         int cantidad=(int) view.jCantidad.getValue();
                         double valorTotal=cantidad*item.getUnitPrice();
                         valorTotal = formatDouble(valorTotal);
+                       
+                        
+                        if(validStock( item, cantidad)){
+                            if(!stockMin(item,cantidad)){
+                                JOptionPane.showMessageDialog(null, "El stock esta por debajo del minimo", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                            }
+                             if(!validBalanceMercaderia(cantidad, item)){
+                                        limpiarVistaParcial();
+                                        return;
+                                    }
+                                    if(!validBalanceVenta(valorTotal)){
+                                        limpiarVistaParcial();
+                                        return;
+                                    }
+                             SaleDetails saleDetail=new SaleDetails();
+                             saleDetail.setIdItem(item.getIdItem());
+                             saleDetail.setIdSale(salesCon.getIdLastSale()+1);
+                             saleDetail.setQuantity(cantidad);
+                             saleDetail.setSalePrice(valorTotal);
+                             saleDetail.setSubTotal(valorTotal);
+                             
+                            saleNode.addSalesDetails(saleDetail);
+                                    
+                            cargarTabla(saleNode, item, valorTotal, cantidad);
+                            item.setStock(item.getStock()-cantidad);
+                            listaArticulos.add(item);
+                            limpiarVistaParcial();
+                            return;
                     
-                        cargarTabla(saleNode, item, valorTotal, cantidad);
-                        limpiarVistaParcial();
-                        return;
+                        }else{
+                            
+                            JOptionPane.showMessageDialog(null, "No hay suficiente stock", "Error", JOptionPane.ERROR_MESSAGE);
+                            limpiarVistaTotal();
+                            return;
+                    }
+                       
                     }else{
                         JOptionPane.showMessageDialog(null, "No puede dejar ningun campo en blanco", "Error", JOptionPane.ERROR_MESSAGE);
                         limpiarVistaTotal();
@@ -444,22 +476,122 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
                     int cantidad=(int) view.jCantidad.getValue();
                     double valorTotal=cantidad*item.getUnitPrice();
                     valorTotal = formatDouble(valorTotal);
+                   
+                    //En caso de que ya se halla agregado a la venta el articulo anteriormente//
+                    for (Item articulo : listaArticulos){
+                       if(listaArticulos.contains(item)){
+                            if(validStock( articulo, cantidad)){
+                                if(!stockMin(articulo,cantidad)){
+                                JOptionPane.showMessageDialog(null, "El stock esta por debajo del minimo", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                            }             
+                                }
+                                    if(!validBalanceMercaderia(cantidad, articulo)){
+                                        limpiarVistaParcial();
+                                        return;
+                                    }
+                                    if(!validBalanceVenta(valorTotal)){
+                                        limpiarVistaParcial();
+                                        return;
+                                    }
+                                        SaleDetails saleDetail=new SaleDetails();
+                                        
+                                        saleDetail.setIdItem(item.getIdItem());
+                                        saleDetail.setIdSale(salesCon.getIdLastSale()+1);
+                                        saleDetail.setQuantity(cantidad);
+                                        saleDetail.setSalePrice(valorTotal);
+                                        saleDetail.setSubTotal(valorTotal);
+                             
+                                        saleNode.addSalesDetails(saleDetail);
+                                    
+                                        articulo.setStock(articulo.getStock()-cantidad);
+                                        cargarTabla(saleNode, item, valorTotal, cantidad);
+                                        limpiarVistaParcial();
+                                        return;
+                            }
+                       
+                        }
                     
-                    cargarTabla(saleNode, item, valorTotal, cantidad);
-                    limpiarVistaParcial();
-                    return;
+                    //En caso de que sea un nuevo articulo
+                      if(validStock( item, cantidad)){
+                            if(!stockMin(item,cantidad)){
+                                JOptionPane.showMessageDialog(null, "El stock esta por debajo del minimo", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                            }
+                             if(!validBalanceMercaderia(cantidad, item)){
+                                        limpiarVistaParcial();
+                                        return;
+                                    }
+                             
+                             if(!validBalanceVenta(valorTotal)){
+                                        limpiarVistaParcial();
+                                        return;
+                             }
+                             
+                           SaleDetails saleDetail=new SaleDetails();
+                                        
+                           saleDetail.setIdItem(item.getIdItem());
+                           saleDetail.setIdSale(salesCon.getIdLastSale()+1);
+                           saleDetail.setQuantity(cantidad);
+                           saleDetail.setSalePrice(valorTotal);
+                           saleDetail.setSubTotal(valorTotal);
+                             
+                           saleNode.addSalesDetails(saleDetail);
+                                        
+                            cargarTabla(saleNode, item, valorTotal, cantidad);
+                            limpiarVistaParcial();
+                            item.setStock(item.getStock()-cantidad);
+                            listaArticulos.add(item);
+                            return;
+                    
+                        }else{
+                            
+                            JOptionPane.showMessageDialog(null, "No hay suficiente stock", "Error", JOptionPane.ERROR_MESSAGE);
+                            limpiarVistaTotal();
+                            return;
+                    }
                 }
             
               JOptionPane.showMessageDialog(null, "No puede dejar ningun campo en blanco", "Error", JOptionPane.ERROR_MESSAGE);
               limpiarVistaParcial();
             }
         }
-    
+    //Metodo para obtener Total//
+    private double obtenerTotal(){
+        double total=0.0;
+        for(SaleDetails detalle : saleNode.getSalesDetails()){
+                total=total+detalle.getSalePrice();
+        }
+        
+        return total;
+    }
     //Metodo para guardar una venta//
-    public void buttonSaveSale(ActionEvent e){
+    public void buttonSaveSale(ActionEvent e) throws SQLException, ClassNotFoundException, IOException{
         if(e.getSource()==view.btnSave){
-
-
+           
+            if(saleNode==null){
+                JOptionPane.showMessageDialog(null, "No hay ninguna venta para agregar", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+      
+          Sale sale= saleNode.getSale();
+          sale.setIdUser(conUsuario.getUserId(currentUser.getUserName()));
+          sale.setIdClient(saleNode.getCustomer().getIdClient());
+          sale.setReceiptNumber(salesCon.getReceiptNumber()+1);
+          sale.setSalesTotal(obtenerTotal());
+          sale.setSaleState('V');
+          sale.setIdSaleType(saleNode.getSaleType().getIdSaleType());
+          
+          salesCon.addSale(sale);
+          
+           for(SaleDetails detalle : saleNode.getSalesDetails()){
+                salesCon.addSaleDetails(detalle);
+                itemsCon.decreaseStock(detalle.getIdItem(), detalle.getQuantity());
+           }
+           
+           loadAccountSeat(sale.getSalesTotal());
+           JOptionPane.showMessageDialog(null, "La venta ha sido agregada correctamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
+           limpiarVistaTotal();
+           saleNode=new SaleNode();
+           listaArticulos=new ArrayList<>();
         }
     }
      //Metodo para cancelar una venta//
@@ -471,18 +603,251 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
         }
     }
     //Metodo para validar el stock//
-  //Metodo para validar el ingreso antes de cargar en la base de datos las asientos contables////Corregir///
+    public boolean validStock(Item item,int cantidad){
+        
+        return item.getStock()-cantidad >= 0;
     
-    public boolean validBalance(int newStock, double newCost) throws SQLException{
+    }
+    
+    //Metodo para el mensaje de stock minimo//
+    public boolean stockMin(Item item, int cantidad){
+        
+        return item.getStock()-cantidad>item.getStockMin();
+    }
+    
+  //Metodo para validar el ingreso antes de cargar en la base de datos las asientos contables//
+    
+    public boolean validBalanceMercaderia(int cantidad, Item item) throws SQLException{
             
             AccountConnection accountCon= new AccountConnection();
-            Account account= accountCon.getAccountBox(111);
-            if(account.getBalance()-(newCost*newStock)<0){
+            Account account= accountCon.getAccountBox(131);
+            if(account.getBalance()-(cantidad*item.getUnitPrice())<0){
                         JOptionPane.showMessageDialog(null, "La cuenta "+ account.getAccountName()+" no tiene suficiente saldo para realizar esta operacion", "Error", JOptionPane.ERROR_MESSAGE);
                         return false;
             }
             return true;
     }
+      //Metodo para validar el ingreso antes de cargar en la base de datos las asientos contables//
+     public boolean validBalanceVenta(double valorTotal) throws SQLException{
+         
+         if(saleNode.getSaleType().getType().equalsIgnoreCase("EFECTIVO")){
+                AccountConnection accountCon= new AccountConnection();
+                Account account= accountCon.getAccountBox(111);
+                if(account.getBalance()-valorTotal<0){
+                        JOptionPane.showMessageDialog(null, "La cuenta "+ account.getAccountName()+" no tiene suficiente saldo para realizar esta operacion", "Error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+            }
+         }
+         
+         if(saleNode.getSaleType().getType().equalsIgnoreCase("DEBITO")){
+                AccountConnection accountCon= new AccountConnection();
+                Account account= accountCon.getAccountBox(112);
+                if(account.getBalance()-valorTotal<0){
+                        JOptionPane.showMessageDialog(null, "La cuenta "+ account.getAccountName()+" no tiene suficiente saldo para realizar esta operacion", "Error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+            }
+         }
+         
+         if(saleNode.getSaleType().getType().equalsIgnoreCase("CREDITO")){
+                AccountConnection accountCon= new AccountConnection();
+                Account account= accountCon.getAccountBox(121);
+                if(account.getBalance()-valorTotal<0){
+                        JOptionPane.showMessageDialog(null, "La cuenta "+ account.getAccountName()+" no tiene suficiente saldo para realizar esta operacion", "Error", JOptionPane.ERROR_MESSAGE);
+                        return false;
+            }
+         }
+         
+        return true;
+     }
+     //Metodo para actualizar la los asientosContables//
+   public void  loadAccountSeat(double montoTotal ) throws SQLException, ClassNotFoundException, IOException{
+       
+        java.util.Date fechaActual = new Date();
+        java.sql.Date fechaSQL = new java.sql.Date(fechaActual.getTime());
+        List<Account> cuentasActualizar=new ArrayList<>();
+        
+        if(saleNode.getSaleType().getType().equalsIgnoreCase("EFECTIVO")){
+                
+                Account cuentaDebe=conAccount.getAccountBox(111);
+                double nuevoMontoDebe=cuentaDebe.getBalance()-montoTotal;
+                cuentaDebe.setBalance(nuevoMontoDebe);
+        
+                Account cuentaVenta=conAccount.getAccountBox(411);
+                double nuevoMontoVenta=cuentaVenta.getBalance()+montoTotal;
+                cuentaVenta.setBalance(nuevoMontoVenta);
+        
+                cuentasActualizar.add(cuentaDebe);
+                cuentasActualizar.add(cuentaVenta);
+       
+                Seat seat =new Seat(
+                   
+                            conUsuario.getUserId(currentUser.getUserName()),
+                            fechaSQL,
+                            "Venta de Articulos"
+                        );
+           
+                int idSeat=seatCon.addSeat(seat);
+
+                AccountSeat debe= new AccountSeat(
+                    idSeat,
+                    "DEBER",
+                    conAccount.getAccountBox(111).getIdAccount(),
+                    montoTotal,    
+                    nuevoMontoDebe
+                );
+                seatCon.addAccountSeat(debe);
+               
+                AccountSeat venta= new AccountSeat(
+
+                    idSeat,
+                    "HABER",
+                    conAccount.getAccountBox(411).getIdAccount(),
+                    montoTotal,    
+                    nuevoMontoVenta
+                );
+
+                seatCon.addAccountSeat(venta);
+  
+              conAccount.actualizarSaldo(cuentasActualizar);
+          }
+        
+        
+        if(saleNode.getSaleType().getType().equalsIgnoreCase("DEBITO")){
+                
+                Account cuentaDebe=conAccount.getAccountBox(113);
+                double nuevoMontoDebe=cuentaDebe.getBalance()-montoTotal;
+                cuentaDebe.setBalance(nuevoMontoDebe);
+        
+                Account cuentaVenta=conAccount.getAccountBox(411);
+                double nuevoMontoVenta=cuentaVenta.getBalance()+montoTotal;
+                cuentaVenta.setBalance(nuevoMontoVenta);
+        
+                cuentasActualizar.add(cuentaDebe);
+                cuentasActualizar.add(cuentaVenta);
+       
+                Seat seat =new Seat(
+                   
+                            conUsuario.getUserId(currentUser.getUserName()),
+                            fechaSQL,
+                            "Venta de Articulos"
+                        );
+           
+                int idSeat=seatCon.addSeat(seat);
+
+                AccountSeat debe= new AccountSeat(
+                    idSeat,
+                    "DEBER",
+                    conAccount.getAccountBox(113).getIdAccount(),
+                    montoTotal,    
+                    nuevoMontoDebe
+                );
+                seatCon.addAccountSeat(debe);
+               
+                AccountSeat venta= new AccountSeat(
+
+                    idSeat,
+                    "HABER",
+                    conAccount.getAccountBox(411).getIdAccount(),
+                    montoTotal,    
+                    nuevoMontoVenta
+                );
+
+                seatCon.addAccountSeat(venta);
+  
+              conAccount.actualizarSaldo(cuentasActualizar);
+              
+            }
+        
+         if(saleNode.getSaleType().getType().equalsIgnoreCase("CREDITO")){
+         
+                Account cuentaDebe=conAccount.getAccountBox(121);
+                double nuevoMontoDebe=cuentaDebe.getBalance()-montoTotal;
+                cuentaDebe.setBalance(nuevoMontoDebe);
+        
+                Account cuentaVenta=conAccount.getAccountBox(411);
+                double nuevoMontoVenta=cuentaVenta.getBalance()+montoTotal;
+                cuentaVenta.setBalance(nuevoMontoVenta);
+        
+                cuentasActualizar.add(cuentaDebe);
+                cuentasActualizar.add(cuentaVenta);
+       
+                Seat seat =new Seat(
+                   
+                            conUsuario.getUserId(currentUser.getUserName()),
+                            fechaSQL,
+                            "Venta de Articulos"
+                        );
+           
+                int idSeat=seatCon.addSeat(seat);
+
+                AccountSeat debe= new AccountSeat(
+                    idSeat,
+                    "DEBER",
+                    conAccount.getAccountBox(113).getIdAccount(),
+                    montoTotal,    
+                    nuevoMontoDebe
+                );
+                seatCon.addAccountSeat(debe);
+               
+                AccountSeat venta= new AccountSeat(
+
+                    idSeat,
+                    "HABER",
+                    conAccount.getAccountBox(411).getIdAccount(),
+                    montoTotal,    
+                    nuevoMontoVenta
+                );
+
+                seatCon.addAccountSeat(venta);
+  
+              conAccount.actualizarSaldo(cuentasActualizar);
+         }
+         
+         Account cuentaDebe=conAccount.getAccountBox(511);
+         double nuevoMontoDebe=cuentaDebe.getBalance()+montoTotal;
+         cuentaDebe.setBalance(nuevoMontoDebe);
+        
+         Account cuentaHaber=conAccount.getAccountBox(131);
+         double nuevoMontoHaber=cuentaHaber.getBalance()-montoTotal;
+         cuentaHaber.setBalance(nuevoMontoHaber);
+        
+         cuentasActualizar.add(cuentaDebe);
+         cuentasActualizar.add(cuentaHaber);
+       
+                Seat seat =new Seat(
+                   
+                            conUsuario.getUserId(currentUser.getUserName()),
+                            fechaSQL,
+                            "Venta de Articulos"
+                        );
+           
+                int idSeat=seatCon.addSeat(seat);
+
+                AccountSeat debe= new AccountSeat(
+                    idSeat,
+                    "DEBER",
+                    conAccount.getAccountBox(511).getIdAccount(),
+                    montoTotal,    
+                    nuevoMontoDebe
+                );
+                seatCon.addAccountSeat(debe);
+               
+                AccountSeat venta= new AccountSeat(
+
+                    idSeat,
+                    "HABER",
+                    conAccount.getAccountBox(131).getIdAccount(),
+                    montoTotal,    
+                    nuevoMontoHaber
+                );
+
+                seatCon.addAccountSeat(venta);
+  
+              conAccount.actualizarSaldo(cuentasActualizar);
+         
+        
+       }
+    
     
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -498,7 +863,15 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
             Logger.getLogger(SalesSystem.class.getName()).log(Level.SEVERE, null, ex);
         }
         buttonCancelSale(e);
-        buttonSaveSale(e);
+        try {
+            buttonSaveSale(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(SalesSystem.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(SalesSystem.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(SalesSystem.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     
