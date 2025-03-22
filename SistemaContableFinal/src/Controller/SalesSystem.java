@@ -9,6 +9,7 @@ import Connection.SalesConnection;
 import Connection.UserConnection;
 import Model.Account;
 import Model.AccountSeat;
+import Model.Bill;
 import Model.Customer;
 import Model.Item;
 import Model.Sale;
@@ -604,11 +605,44 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
            
            loadAccountSeat(sale.getSalesTotal());
            JOptionPane.showMessageDialog(null, "La venta ha sido agregada correctamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
+           
+    int confirm = JOptionPane.showConfirmDialog(
+                        null,
+                        "¿Deseas imprimir la Factura?",
+                        "Confirmación",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+            );
+             if(confirm == JOptionPane.YES_OPTION) { // Si el usua
+                 Bill factura= new Bill();
+                 factura.setIdSale(salesCon.getIdLastSale());
+                 factura.setBillNumber(salesCon.getReceiptNumberBill());
+                 factura.setBillDate(saleNode.getSale().getSaleDate());
+                 factura.setBillState('V');
+                 factura.setBillTotal(subTotal);
+                 factura.setBillType(tipoFactura(saleNode.getCustomer()));
+                 
+                 salesCon.addBill(factura, factura.getIdSale());
+            }
+             
            limpiarVistaTotal();
            saleNode=new SaleNode();
            listaArticulos=new ArrayList<>();
            iniciarTabla();
         }
+    }
+    public char tipoFactura(Customer customer){
+        
+        if(customer.getClientType().equalsIgnoreCase("Responsable Inscripto") && customer.getIvaCondition().equalsIgnoreCase("Responsable Inscripto")){
+            return 'A';
+        }
+        if(customer.getClientType().equalsIgnoreCase("Monotributista") && (customer.getIvaCondition().equalsIgnoreCase("Consumidor Final") ||  customer.getIvaCondition().equalsIgnoreCase("Monotributista"))){
+            return 'B';
+        }
+        if(customer.getClientType().equalsIgnoreCase("Consumidor Final") && (customer.getIvaCondition().equalsIgnoreCase("Consumidor Final") ||  customer.getIvaCondition().equalsIgnoreCase("Monotributista"))){
+            return 'C';
+        }
+        return 'C';
     }
      //Metodo para cancelar una venta//
     public void buttonCancelSale(ActionEvent e){

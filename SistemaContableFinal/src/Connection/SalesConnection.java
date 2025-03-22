@@ -221,6 +221,22 @@ public class SalesConnection {
             }
         return remitos;
     }
+       //Metodo para obtener el numero de comprobante una factura//
+     public int getReceiptNumberBill() throws SQLException{
+        String sql="SELECT COALESCE(MAX(numeroComprobante), -1) AS ultimoNumeroComprobante FROM Factura WHERE estado = 'V' ";
+        Connections con= new Connections();
+            try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
+                try(ResultSet rs=ps.executeQuery()){
+                    if(rs.next()){
+                        return rs.getInt("ultimoNumeroComprobante");
+                    }
+                }catch(SQLException e){
+                        e.printStackTrace();
+                    }
+        }
+        return -1;
+    
+      }
       //Metodo para obtener el numero de comprobante una venta//
      public int getReceiptNumber() throws SQLException{
         String sql="SELECT COALESCE(MAX(numeroComprobante), -1) AS ultimoNumeroComprobante FROM Venta WHERE estado = 'V' ";
