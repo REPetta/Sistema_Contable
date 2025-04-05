@@ -263,7 +263,9 @@ public class BooksConnection {
                 ps.setInt(6, anio);
                 ps.setInt(7, anio);
                 try(ResultSet rs=ps.executeQuery()){
-                    while(rs.next()){                      
+              
+                    while(rs.next()){  
+
                         SalesBook libro=new SalesBook();
                         libro.setProducto(rs.getString("Producto"));
                         libro.setCantidad_vendida(rs.getInt("Cantidad_Vendida"));
@@ -272,7 +274,7 @@ public class BooksConnection {
                         libro.setVariacion_recaudado(rs.getInt("Variacion_Recaudado"));
                         libro.setCantidad_vendida_anterior(rs.getInt("Cantidad_Vendida_Anterior"));
                         libro.setCantidad_recaudado_anterior(rs.getInt("Total_Recaudado_Anterior"));
-                        listaVentas.add(libro);
+                        listaVentas.add(libro);           
                         }
                     }
             }catch(SQLException e){

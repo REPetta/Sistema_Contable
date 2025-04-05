@@ -21,6 +21,7 @@ public class AccountConnection {
          try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
                   ps.setInt(1, code);
                   try(ResultSet rs=ps.executeQuery()){
+                        account.setIdAccount(rs.getInt("idCuenta"));
                         account.setAccountName(rs.getString("nombreCuenta"));
                         account.setCode(rs.getInt("codigo"));
                         account.setType(rs.getString("tipo"));

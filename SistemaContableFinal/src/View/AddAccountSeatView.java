@@ -92,7 +92,7 @@ public class AddAccountSeatView extends javax.swing.JFrame {
             }
         });
 
-        cBoxDestiny.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "", "DEBE", "HABER" }));
+        cBoxDestiny.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { " ", "DEBER", "HABER" }));
         cBoxDestiny.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cBoxDestinyActionPerformed(evt);

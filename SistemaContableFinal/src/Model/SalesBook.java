@@ -5,13 +5,13 @@ public class SalesBook {
     
    private String producto;
    private int cantidad_vendida;
-   private int total_reacudado;
+   private double total_reacudado;
    private double variacion_cantidad;
    private double variacion_recaudado;
    private int cantidad_vendida_anterior;
    private int cantidad_recaudado_anterior;
 
-    public SalesBook(String producto, int cantidad_vendida, int total_reacudado, double variacion_cantidad, double variacion_recaudado) {
+    public SalesBook(String producto, int cantidad_vendida, double total_reacudado, double variacion_cantidad, double variacion_recaudado) {
         this.producto = producto;
         this.cantidad_vendida = cantidad_vendida;
         this.total_reacudado = total_reacudado;
@@ -19,7 +19,7 @@ public class SalesBook {
         this.variacion_recaudado = variacion_recaudado;
     }
 
-    public SalesBook(String producto, int cantidad_vendida, int total_reacudado, double variacion_cantidad, double variacion_recaudado, int cantidad_vendida_anterior, int cantidad_recaudado_anterior) {
+    public SalesBook(String producto, int cantidad_vendida, double total_reacudado, double variacion_cantidad, double variacion_recaudado, int cantidad_vendida_anterior, int cantidad_recaudado_anterior) {
         this.producto = producto;
         this.cantidad_vendida = cantidad_vendida;
         this.total_reacudado = total_reacudado;
@@ -64,11 +64,11 @@ public class SalesBook {
         this.cantidad_vendida = cantidad_vendida;
     }
 
-    public int getTotal_reacudado() {
+    public double getTotal_reacudado() {
         return total_reacudado;
     }
 
-    public void setTotal_reacudado(int total_reacudado) {
+    public void setTotal_reacudado(double total_reacudado) {
         this.total_reacudado = total_reacudado;
     }
 

@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.19.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ReporteVentas" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="872351ae-d8f4-41fc-975e-ca7b85f04394">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sistema_Contable.jrdax"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="producto" class="java.lang.String"/>
+	<field name="cantidadVendida" class="java.lang.Integer"/>
+	<field name="totalRecaudado" class="java.lang.Double"/>
+	<field name="variacionCantidad" class="java.lang.Double"/>
+	<field name="variacionRecaudado" class="java.lang.Double"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="52" splitType="Stretch">
+			<staticText>
+				<reportElement x="142" y="5" width="270" height="47" uuid="561de6bb-e1af-417b-afbf-230d998c0003"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Algerian" size="25"/>
+				</textElement>
+				<text><![CDATA[Reporte dE VENTAS]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="20" splitType="Stretch">
+			<rectangle>
+				<reportElement x="-20" y="0" width="595" height="20" backcolor="#2C2A9C" uuid="87fa1a50-6461-4df7-b108-3a6deaed2791"/>
+			</rectangle>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="40" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="80" height="40" uuid="e3eefa8f-afc0-47ee-a07d-c8550fc05931">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="63f8daf5-876f-4b0d-96e9-f3f3ad443552"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[PRODUCTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="0" width="100" height="40" uuid="bf674845-4f54-4ecc-a721-f34bcf9f709a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d7b1dc44-59a7-497c-b294-a57810bd7438"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[CANTIDAD VENDIDA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="220" y="0" width="100" height="40" uuid="fad5fe55-7cd3-4376-bec2-a5e2c9a76691">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="bf6857e7-c0cc-4d70-923f-56f19100cae3"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[TOTAL RECAUDADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="0" width="100" height="40" uuid="b1883029-1d97-4629-a44f-a698543cef93">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6c0624b5-dcf0-4d13-a924-a8dbf4308647"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[VARIACION MENSUAL 
+PRODUCTOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="460" y="0" width="100" height="40" uuid="2938018d-1fac-4ebe-94c2-24f386f412f6">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="393c9df0-556c-4ebc-81d8-4819510534e2"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[VARIACION
+MENSUAL
+RECAUDACION]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="-20" y="39" width="595" height="1" backcolor="#050000" uuid="5410260f-bf1e-4b2d-9ea0-ea567a433700"/>
+				<graphicElement>
+					<pen lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="31" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="80" height="30" uuid="98cfab24-73cc-46ec-b0bd-1d4870901a97">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="63f8daf5-876f-4b0d-96e9-f3f3ad443552"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{producto}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="100" height="30" uuid="d10e50d3-ec07-43db-af72-3b345cee3d82">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="d7b1dc44-59a7-497c-b294-a57810bd7438"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{cantidadVendida}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="0" width="100" height="30" uuid="d6918640-c43a-46af-88d8-a5a07f2042c3">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="bf6857e7-c0cc-4d70-923f-56f19100cae3"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["$"+$F{totalRecaudado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="340" y="0" width="100" height="30" uuid="64e0ba6f-05af-4059-bd45-e91b23505864">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="6c0624b5-dcf0-4d13-a924-a8dbf4308647"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{variacionCantidad}+"%"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="460" y="0" width="100" height="30" uuid="476daa20-3cc7-4af2-8629-055c3228905d">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="393c9df0-556c-4ebc-81d8-4819510534e2"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{variacionRecaudado}+"%"]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="-5" y="30" width="550" height="1" uuid="0358ccaa-e4cb-4c04-bb4a-24e39e441cb7"/>
+			</line>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<rectangle>
+				<reportElement x="-20" y="0" width="595" height="20" backcolor="#2C2A9C" uuid="80769656-d39e-45c4-bc6b-26d7aae437f3"/>
+			</rectangle>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

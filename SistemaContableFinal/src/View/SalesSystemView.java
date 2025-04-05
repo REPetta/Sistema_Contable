@@ -4,6 +4,7 @@
  */
 package View;
 
+import java.util.Date;
 import javax.swing.JComponent;
 import javax.swing.JSpinner;
 
@@ -27,7 +28,9 @@ public class SalesSystemView extends javax.swing.JFrame {
             defaultEditor.getTextField().setColumns(4);  // Ajusta la cantidad de caracteres visibles
         }
         jTableSales.getTableHeader().setReorderingAllowed(false);
+        jDateChooser.setDate(new Date()); // pone la fecha actual
         jDateChooser.getDateEditor().setEnabled(false);
+        jDateChooser.setEnabled(false); // desactiva todo el componente (opcional)
     }
 
     /**
@@ -46,6 +49,7 @@ public class SalesSystemView extends javax.swing.JFrame {
         btnSales = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
         btnPayment = new javax.swing.JButton();
+        jLabel7 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableSales = new javax.swing.JTable();
@@ -92,6 +96,8 @@ public class SalesSystemView extends javax.swing.JFrame {
             }
         });
 
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/logo2.jpeg"))); // NOI18N
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -104,13 +110,18 @@ public class SalesSystemView extends javax.swing.JFrame {
                     .addComponent(btnFac, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnCustomer, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnItems, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnSales, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(btnSales, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(26, 26, 26)))
                 .addContainerGap(26, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(141, 141, 141)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(btnPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnFac, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -241,6 +252,7 @@ public class SalesSystemView extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     public javax.swing.JComboBox<String> jMethodBox;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane2;

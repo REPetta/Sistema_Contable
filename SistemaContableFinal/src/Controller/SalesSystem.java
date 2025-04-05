@@ -27,6 +27,7 @@ import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -34,6 +35,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import net.sf.jasperreports.engine.JRException;
 
 public class SalesSystem implements ActionListener {
     //Atributos//
@@ -55,6 +57,8 @@ public class SalesSystem implements ActionListener {
     private final UserConnection conUsuario;
     private final AccountSeatConnection seatCon;
     private double subTotal;
+    private Reports report= new Reports();
+    private int idFactura;
     //Constructor//
     public SalesSystem(){
         view=new SalesSystemView();
@@ -289,9 +293,11 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
         modelo.addColumn("Fecha");
         modelo.addColumn("Nombre Articulo");
         modelo.addColumn("Cantidad");
+        modelo.addColumn("Sub Total");
         modelo.addColumn("Valor Total");
         modelo.addColumn("Nombre de Cliente");
         modelo.addColumn("Metodo de Pago");
+        
 
         view.jTableSales.setRowHeight(15);
         view.jTableSales.setModel(modelo);
@@ -313,16 +319,17 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
      
      }
       //Metodo para cargar Jtabla
-    public void cargarTabla(SaleNode saleNode , Item item ,double valorTotal,int cantidad){
-    String[] datos =new String[6];
+    public void cargarTabla(SaleNode saleNode , Item item ,double valorTotal,int cantidad,double subT){
+    String[] datos =new String[7];
     SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
     String fechaFormateada = formato.format(saleNode.getSale().getSaleDate());
         datos[0]=fechaFormateada;
         datos[1]=item.getItemName();
         datos[2]= String.valueOf(cantidad);
-        datos[3]= "$"+String.valueOf(valorTotal);
-        datos[4]=saleNode.getCustomer().getClientName();
-        datos[5]=saleNode.getSaleType().getSaleDescription();
+        datos[3]= "$"+String.valueOf(subT);
+        datos[4]="$"+String.valueOf(valorTotal);
+        datos[5]=saleNode.getCustomer().getClientName();
+        datos[6]=saleNode.getSaleType().getSaleDescription();
         modelo.addRow(datos);   
     }
     //Metodo para obtener el dni del cliente//
@@ -346,14 +353,40 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
     public boolean validFieldsPermanent(){
         
         if(getCodeSelected()==0){
+
             return false;
         }
         if(getDniCustomerSelected()==0){
+
             return false;
         }
         
-        return view.jDateChooser.getDate()!=null;
+        if( view.jDateChooser.getDate()==null ){
+         
+            return false;
+        }
+
+   Date fechaElegida = view.jDateChooser.getDate();
+
+    return sonFechasIguales(fechaElegida,new Date());
     }
+    public boolean sonFechasIguales(Date d1, Date d2) {
+    Calendar cal1 = Calendar.getInstance();
+    cal1.setTime(d1);
+    cal1.set(Calendar.HOUR_OF_DAY, 0);
+    cal1.set(Calendar.MINUTE, 0);
+    cal1.set(Calendar.SECOND, 0);
+    cal1.set(Calendar.MILLISECOND, 0);
+
+    Calendar cal2 = Calendar.getInstance();
+    cal2.setTime(d2);
+    cal2.set(Calendar.HOUR_OF_DAY, 0);
+    cal2.set(Calendar.MINUTE, 0);
+    cal2.set(Calendar.SECOND, 0);
+    cal2.set(Calendar.MILLISECOND, 0);
+
+    return cal1.getTime().equals(cal2.getTime());
+}
 //Metodo para validar los campos //
     public boolean validFields(){
     
@@ -366,9 +399,10 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
         Customer customer;
         SaleType saleType;
         Sale sale= new Sale();
-        
+
+         
         if(validFieldsPermanent()){
-            
+        
             customer=customerCon.getCustomer(getDniCustomerSelected());
             saleType=salesCon.getMethod(getCodeSelected());
             
@@ -418,7 +452,6 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
         if(saleNode.getSaleType()==null){
             return true;
         }
-        
         return saleNode.getSale().getSaleDate()==null;
     }
    //Metodo para agregar una venta//
@@ -429,12 +462,12 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
            
             if(isNull()){
                 getSaleCustomerAndMethod();
+                
                if(!isNull()){
                     if( validFields() ){
                         item=itemsCon.getItem(getItemCodeSelected());
                         int cantidad=(int) view.jCantidad.getValue();
                         subTotal=subTotal+(cantidad*item.getUnitPrice());
-                         System.out.println(subTotal);
                         subTotal = formatDouble(subTotal);
                        
                         
@@ -455,12 +488,13 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
                              saleDetail.setIdItem(item.getIdItem());
        
                              saleDetail.setQuantity(cantidad);
-                             saleDetail.setSalePrice(subTotal);
-                             saleDetail.setSubTotal(subTotal);
+                             saleDetail.setSalePrice(item.getUnitPrice());
+                             saleDetail.setSubTotal(item.getUnitPrice()*cantidad);
                              
                             saleNode.addSalesDetails(saleDetail);
-                                    
-                            cargarTabla(saleNode, item, subTotal, cantidad);
+                            
+                            double subT= item.getUnitPrice()*cantidad;
+                            cargarTabla(saleNode, item, subTotal, cantidad,subT);
                             item.setStock(item.getStock()-cantidad);
                             listaArticulos.add(item);
                             limpiarVistaParcial();
@@ -474,12 +508,12 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
                     }
                        
                     }else{
-                        JOptionPane.showMessageDialog(null, "No puede dejar ningun campo en blanco", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "No puede dejar ningun campo en blanco 1", "Error", JOptionPane.ERROR_MESSAGE);
                         limpiarVistaTotal();
                         return;
                     }
                 }
-                        JOptionPane.showMessageDialog(null, "No puede dejar ningun campo en blanco", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "No puede dejar ningun campo en blanco 2", "Error", JOptionPane.ERROR_MESSAGE);
                         limpiarVistaTotal();
                         return;
             }    
@@ -489,7 +523,6 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
                     int cantidad=(int) view.jCantidad.getValue();
                     subTotal=subTotal+(cantidad*item.getUnitPrice());
                     subTotal = formatDouble(subTotal);
-                    System.out.println(subTotal);
                     //En caso de que ya se halla agregado a la venta el articulo anteriormente//
                     for (Item articulo : listaArticulos){
                        if(listaArticulos.contains(item)){
@@ -512,13 +545,14 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
                                         saleDetail.setIdItem(item.getIdItem());
                                      
                                         saleDetail.setQuantity(cantidad);
-                                        saleDetail.setSalePrice(subTotal);
-                                        saleDetail.setSubTotal(subTotal);
+                                        saleDetail.setSalePrice(item.getUnitPrice());
+                                        saleDetail.setSubTotal(item.getUnitPrice()*cantidad);
                              
                                         saleNode.addSalesDetails(saleDetail);
                                     
                                         articulo.setStock(articulo.getStock()-cantidad);
-                                        cargarTabla(saleNode, item, subTotal, cantidad);
+                                        double subT= item.getUnitPrice()*cantidad;
+                                         cargarTabla(saleNode, item, subTotal, cantidad,subT);
                                         limpiarVistaParcial();
                                         return;
                             }
@@ -546,12 +580,13 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
                            saleDetail.setIdItem(item.getIdItem());
                           
                            saleDetail.setQuantity(cantidad);
-                           saleDetail.setSalePrice(subTotal);
-                           saleDetail.setSubTotal(subTotal);
+                           saleDetail.setSalePrice(item.getUnitPrice());
+                           saleDetail.setSubTotal(item.getUnitPrice()*cantidad);
                              
                            saleNode.addSalesDetails(saleDetail);
                                         
-                            cargarTabla(saleNode, item, subTotal, cantidad);
+                            double subT= item.getUnitPrice()*cantidad;
+                            cargarTabla(saleNode, item, subTotal, cantidad,subT);
                             limpiarVistaParcial();
                             item.setStock(item.getStock()-cantidad);
                             listaArticulos.add(item);
@@ -565,7 +600,7 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
                     }
                 }
             
-              JOptionPane.showMessageDialog(null, "No puede dejar ningun campo en blanco", "Error", JOptionPane.ERROR_MESSAGE);
+              JOptionPane.showMessageDialog(null, "No puede dejar ningun campo en blanco3", "Error", JOptionPane.ERROR_MESSAGE);
               limpiarVistaParcial();
             }
         }
@@ -573,16 +608,17 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
     private double obtenerTotal(){
         double total=0.0;
         for(SaleDetails detalle : saleNode.getSalesDetails()){
-                total=total+detalle.getSalePrice();
+                total=total+detalle.getSubTotal();
         }
         
         return total;
     }
+
     //Metodo para guardar una venta//
-    public void buttonSaveSale(ActionEvent e) throws SQLException, ClassNotFoundException, IOException{
+    public void buttonSaveSale(ActionEvent e) throws SQLException, ClassNotFoundException, IOException, JRException{
         if(e.getSource()==view.btnSave){
            
-            if(saleNode==null){
+            if(saleNode.getSale()==null){
                 JOptionPane.showMessageDialog(null, "No hay ninguna venta para agregar", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
@@ -605,6 +641,15 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
            
            loadAccountSeat(sale.getSalesTotal());
            JOptionPane.showMessageDialog(null, "La venta ha sido agregada correctamente", "Exito", JOptionPane.INFORMATION_MESSAGE);
+           Bill factura= new Bill();
+           factura.setIdSale(salesCon.getIdLastSale());
+           factura.setBillNumber(salesCon.getReceiptNumberBill()+1);
+           factura.setBillDate(saleNode.getSale().getSaleDate());
+           factura.setBillState('V');
+           factura.setBillTotal(subTotal);
+           factura.setBillType(tipoFactura(saleNode.getCustomer()));
+                 
+           salesCon.addBill(factura, factura.getIdSale());
            
     int confirm = JOptionPane.showConfirmDialog(
                         null,
@@ -614,15 +659,8 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
                         JOptionPane.QUESTION_MESSAGE
             );
              if(confirm == JOptionPane.YES_OPTION) { // Si el usua
-                 Bill factura= new Bill();
-                 factura.setIdSale(salesCon.getIdLastSale());
-                 factura.setBillNumber(salesCon.getReceiptNumberBill());
-                 factura.setBillDate(saleNode.getSale().getSaleDate());
-                 factura.setBillState('V');
-                 factura.setBillTotal(subTotal);
-                 factura.setBillType(tipoFactura(saleNode.getCustomer()));
-                 
-                 salesCon.addBill(factura, factura.getIdSale());
+                    idFactura=salesCon.getIDBill();
+                    report.generarFacturaPDF(idFactura);
             }
              
            limpiarVistaTotal();
@@ -691,7 +729,7 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
          
          if(saleNode.getSaleType().getType().equalsIgnoreCase("DEBITO")){
                 AccountConnection accountCon= new AccountConnection();
-                Account account= accountCon.getAccountBox(112);
+                Account account= accountCon.getAccountBox(113);
                 if(account.getBalance()-valorTotal<0){
                         JOptionPane.showMessageDialog(null, "La cuenta "+ account.getAccountName()+" no tiene suficiente saldo para realizar esta operacion", "Error", JOptionPane.ERROR_MESSAGE);
                         return false;
@@ -912,6 +950,8 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(SalesSystem.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
+            Logger.getLogger(SalesSystem.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
             Logger.getLogger(SalesSystem.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

@@ -129,36 +129,71 @@ public class SalesConnection {
                 ps.setString(5,Character.toString(factura.getBillState()));
                 ps.setString(6,Character.toString(factura.getBillType()));
                 
-                ps.executeQuery();
+                ps.executeUpdate();
             }catch(SQLException e){
                     System.err.println("Error al cargar la factura: " + e.getMessage());
                      throw e; 
                 }
         }
+    //Metodo para cargar una factura//
+    public int getIDBill() throws SQLException{
+        
+            String sql= "SELECT idFactura FROM Factura ORDER BY idFactura DESC LIMIT 1;";
+            int idFactura=-1;
+            Connections con= new Connections();
+            try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
+                try(ResultSet rs=ps.executeQuery()){
+                    if (rs.next()) { // Esto mueve el cursor a la primera fila
+                    idFactura = rs.getInt("idFactura");
+                }
+                }
+            }catch(SQLException e){
+                    System.err.println("Error al cargar la factura: " + e.getMessage());
+                     throw e; 
+                }
+        return idFactura;
+        }
     //Metodo para obtener una lista de factura  en una fecha dada//
      public List<BillNode> getBills(Date fecha,int codigo,int dni) throws SQLException{
-        String sql= "SELECT f.numeroFactura , f.totalFactura, f.tipoFactura, c.nombreCliente AS nombre_cliente,  a.nombreArticulo AS nombre_producto\n" +
-                        "FROM Factura AS f INNER JOIN Venta AS v  ON f.idVenta=v.idVenta INNER JOIN Cliente AS c ON v.idCliente=c.idCliente INNER JOIN DetalleVenta AS dv ON v.idVenta=dv.idVenta INNER JOIN Articulo AS a ON dv.idArticulo=a.idArticulo\n" +
-                        "WHERE f.fechaFactura = ? AND (c.dni=? OR ? = -1) AND (a.codigoArticulo=? OR ? = -1 ) ;";
-        BillNode factura;
+        String sql= "SELECT f.idFactura, f.numeroFactura, f.totalFactura, f.tipoFactura, \n" +
+"       c.nombreCliente AS nombre_cliente, \n" +
+"       a.nombreArticulo AS nombre_producto \n" +
+"FROM Factura AS f \n" +
+"INNER JOIN Venta AS v ON f.idVenta = v.idVenta \n" +
+"INNER JOIN Cliente AS c ON v.idCliente = c.idCliente \n" +
+"INNER JOIN DetalleVenta AS dv ON v.idVenta = dv.idVenta \n" +
+"INNER JOIN Articulo AS a ON dv.idArticulo = a.idArticulo \n" +
+"WHERE f.fechaFactura = ?  \n" +
+"AND f.idFactura IN (\n" +
+"    SELECT DISTINCT f.idFactura \n" +
+"    FROM Factura f\n" +
+"    INNER JOIN Venta v ON f.idVenta = v.idVenta\n" +
+"    INNER JOIN DetalleVenta dv ON v.idVenta = dv.idVenta\n" +
+"    INNER JOIN Articulo a ON dv.idArticulo = a.idArticulo\n" +
+"    WHERE f.fechaFactura = ? -- Mismo filtro de fecha \n" +
+"    AND (a.codigoArticulo = ? OR ? = -1) -- Filtro por código de artículo\n" +
+")\n" +
+"AND (c.dni = ? OR ? = -1) -- Filtro opcional por DNI\n" +
+"ORDER BY f.idFactura;";
         List<BillNode> facturas=new ArrayList<>();
         Connections con= new Connections();
             try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
                     ps.setDate(1, fecha);
-                    ps.setInt(2, dni);
-                    ps.setInt(3, dni);
+                    ps.setDate(2, fecha);
+                    ps.setInt(5, dni);
+                    ps.setInt(6, dni);
+                    ps.setInt(3, codigo);
                     ps.setInt(4, codigo);
-                    ps.setInt(5, codigo);
                     try (ResultSet rs = ps.executeQuery()) {
             Map<Integer, BillNode> facturaMap = new HashMap<>();
 
             while (rs.next()) {
-                int idFactura = rs.getInt("id_factura");
+                int idFactura = rs.getInt("idFactura");
 
                 if (facturaMap.containsKey(idFactura)) {
                     facturaMap.get(idFactura).setItem(rs.getString("nombre_producto"));
                 } else {
-                    Bill bill = new Bill(idFactura, rs.getInt("numeroFactura"), rs.getDouble("total"), rs.getString("tipoFactura").charAt(0));
+                    Bill bill = new Bill(idFactura, rs.getInt("numeroFactura"), rs.getDouble("totalFactura"), rs.getString("tipoFactura").charAt(0));
                     List<String> items = new ArrayList<>();
                     items.add(rs.getString("nombre_producto"));
 
@@ -223,12 +258,12 @@ public class SalesConnection {
     }
        //Metodo para obtener el numero de comprobante una factura//
      public int getReceiptNumberBill() throws SQLException{
-        String sql="SELECT COALESCE(MAX(numeroComprobante), -1) AS ultimoNumeroComprobante FROM Factura WHERE estado = 'V' ";
+        String sql="SELECT COALESCE(MAX(numeroFactura), -1) AS ultimoNumeroFactura FROM Factura WHERE estadoFactura = 'V' ";
         Connections con= new Connections();
             try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
                 try(ResultSet rs=ps.executeQuery()){
                     if(rs.next()){
-                        return rs.getInt("ultimoNumeroComprobante");
+                        return rs.getInt("ultimoNumeroFactura");
                     }
                 }catch(SQLException e){
                         e.printStackTrace();

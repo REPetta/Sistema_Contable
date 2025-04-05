@@ -58,7 +58,7 @@ public class SalesReport implements ActionListener{
         if(e.getSource()==view.btnBuscar){
         try{
             // Obtener las fechas seleccionadas de los DateChooser
-            int mes= view.jMonthChooser.getMonth();
+            int mes= view.jMonthChooser.getMonth()+1;
             int anio=view.jYearChooser.getYear();
             
 
@@ -77,7 +77,7 @@ public class SalesReport implements ActionListener{
     public void actualizarTabla(List<SalesBook> listaVentas) throws IOException, SQLException, ClassNotFoundException{
          iniciarTabla();
          int cantidadTotalVendida=0;
-         int cantidadTotalRecaudado=0;
+         double cantidadTotalRecaudado=0;
          int cantidadTotalVendidaAnterior=0;
          int cantidadTotalRecaudadoAnterior=0;
          if (listaVentas.isEmpty()) {
@@ -178,7 +178,94 @@ public class SalesReport implements ActionListener{
            }
        }
        
-     
+ //Metodo para el boton exportar como pdf//
+   public void buttonExportPDF(ActionEvent e){
+       if(e.getSource()==view.btnPdfExport){
+        try{
+        // Obtener las fechas seleccionadas de los DateChooser
+        int mes= view.jMonthChooser.getMonth()+1;
+        int anio=view.jYearChooser.getYear();
+
+
+       // Obtener la lista de asientos contables entre las fechas seleccionadas
+        List<SalesBook> listaVentas= librosCon.obtenerListaVentas(mes, anio);
+        // Actualizar la tabla con los resultados
+        SalesBook saleBook= new SalesBook();
+        saleBook.setProducto("Total");
+
+           int cantidadTotalVendida=0;
+           double cantidadTotalRecaudado=0;
+           int cantidadTotalVendidaAnterior=0;
+           int cantidadTotalRecaudadoAnterior=0;
+
+           for(SalesBook venta: listaVentas){
+                    cantidadTotalVendida=cantidadTotalVendida+venta.getCantidad_vendida();
+                    cantidadTotalRecaudado=cantidadTotalRecaudado+venta.getTotal_reacudado();
+                    cantidadTotalVendidaAnterior=cantidadTotalVendidaAnterior+venta.getCantidad_vendida_anterior();
+                    cantidadTotalRecaudadoAnterior=cantidadTotalRecaudadoAnterior+venta.getCantidad_recaudado_anterior();
+        }
+
+    double variacionCantidad = (cantidadTotalVendidaAnterior == 0) ? 0 
+        : ((cantidadTotalVendida - cantidadTotalVendidaAnterior) * 100.0) / cantidadTotalVendidaAnterior;
+    double variacionRecaudado = (cantidadTotalRecaudadoAnterior == 0) ? 0 
+        : ((cantidadTotalRecaudado - cantidadTotalRecaudadoAnterior) * 100.0) / cantidadTotalRecaudadoAnterior;
+
+    saleBook.setCantidad_vendida(cantidadTotalVendida);
+    saleBook.setTotal_reacudado(cantidadTotalRecaudado);
+    saleBook.setVariacion_cantidad(variacionCantidad);
+    saleBook.setVariacion_recaudado(variacionRecaudado);
+    listaVentas.add(saleBook);
+    Reports report =new Reports();
+    report.generarReporteVentasPDF(listaVentas);
+
+    }catch (Exception ex) {
+   }
+       }
+   }
+   //Metodo para el boton exportar como pdf//
+   public void buttonExportExcel(ActionEvent e){
+       if(e.getSource()==view.btnExcelExport){
+        try{
+        // Obtener las fechas seleccionadas de los DateChooser
+        int mes= view.jMonthChooser.getMonth()+1;
+        int anio=view.jYearChooser.getYear();
+
+
+       // Obtener la lista de asientos contables entre las fechas seleccionadas
+        List<SalesBook> listaVentas= librosCon.obtenerListaVentas(mes, anio);
+        // Actualizar la tabla con los resultados
+        SalesBook saleBook= new SalesBook();
+        saleBook.setProducto("Total");
+
+           int cantidadTotalVendida=0;
+           double cantidadTotalRecaudado=0;
+           int cantidadTotalVendidaAnterior=0;
+           int cantidadTotalRecaudadoAnterior=0;
+
+           for(SalesBook venta: listaVentas){
+                    cantidadTotalVendida=cantidadTotalVendida+venta.getCantidad_vendida();
+                    cantidadTotalRecaudado=cantidadTotalRecaudado+venta.getTotal_reacudado();
+                    cantidadTotalVendidaAnterior=cantidadTotalVendidaAnterior+venta.getCantidad_vendida_anterior();
+                    cantidadTotalRecaudadoAnterior=cantidadTotalRecaudadoAnterior+venta.getCantidad_recaudado_anterior();
+        }
+
+    double variacionCantidad = (cantidadTotalVendidaAnterior == 0) ? 0 
+        : ((cantidadTotalVendida - cantidadTotalVendidaAnterior) * 100.0) / cantidadTotalVendidaAnterior;
+    double variacionRecaudado = (cantidadTotalRecaudadoAnterior == 0) ? 0 
+        : ((cantidadTotalRecaudado - cantidadTotalRecaudadoAnterior) * 100.0) / cantidadTotalRecaudadoAnterior;
+
+    saleBook.setCantidad_vendida(cantidadTotalVendida);
+    saleBook.setTotal_reacudado(cantidadTotalRecaudado);
+    saleBook.setVariacion_cantidad(variacionCantidad);
+    saleBook.setVariacion_recaudado(variacionRecaudado);
+    listaVentas.add(saleBook);
+    Reports report =new Reports();
+    report.generarReporteVentasExcel(listaVentas);
+
+    }catch (Exception ex) {
+   }
+       }
+   }
     @Override
     public void actionPerformed(ActionEvent e) {
          try{   
@@ -195,6 +282,7 @@ public class SalesReport implements ActionListener{
         } catch (IOException ex) {
             java.util.logging.Logger.getLogger(SalesReport.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-   
+        buttonExportPDF(e);
+        buttonExportExcel(e);
 }
 }

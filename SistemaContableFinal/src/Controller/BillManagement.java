@@ -26,6 +26,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.JRException;
 
 public class BillManagement implements ActionListener {
     
@@ -36,6 +37,10 @@ public class BillManagement implements ActionListener {
     private SalesSystem salesSystem;
     private ItemConnection itemsCon;
     private CustomerConnection clientesCon;
+    private Date fechaF=null;
+    private int codigoA=-1;
+    private int dniC=-1;
+    private Reports report= new Reports();
     
     public BillManagement() {
         this.view=new BillManagementView();
@@ -44,10 +49,14 @@ public class BillManagement implements ActionListener {
         setItemBox();
         initializeListeners();
         iniciarTabla();
+        this.view.setTitle("Facturacion"+" - "+currentUser.getUserName()+" ( "+currentUser.getRol().substring(0, 1).toUpperCase()+currentUser.getRol().substring(1).toLowerCase()+ " ) " );
+
     }
  public void initializeListeners(){
         this.view.btnBuscar.addActionListener(this);
         this.view.btnSalir.addActionListener(this);
+        this.view.btnExportExcel.addActionListener(this);
+        this.view.btnExportPDF.addActionListener(this);
     }
     public void openView(){
         this.view.setVisible(true);
@@ -95,6 +104,7 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
         String dni = parts[1].trim();  // Obtener el DNI
         dniCliente = Integer.parseInt(dni);
     }
+    dniC=dniCliente;
     return dniCliente;
 }
        return dniCliente;
@@ -139,6 +149,7 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
         String dni = parts[1].trim();  // Obtener el DNI
         itemCode = Integer.parseInt(dni); 
     }
+    codigoA=itemCode;
     return itemCode;
 }
         return itemCode;
@@ -149,6 +160,7 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
         try{
             // Obtener las fechas seleccionadas de los DateChooser
             java.util.Date fecha = view.jDateChooserDate.getDate();
+            fechaF=view.jDateChooserDate.getDate();
             if (fecha != null) {
                             // Convierte java.util.Date a java.sql.Date
                              java.sql.Date sqlDate = new java.sql.Date(fecha.getTime());
@@ -190,10 +202,10 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
             datos[2]=String.valueOf(factura.getBill().getBillType());
             datos[3]=String.valueOf(factura.getCustomerName());
             for(String item : factura.getItems()){
-                        if(datos[4].isEmpty()){
+                        if(datos[4]==null){
                                 datos[4]=item;
                          }else{
-                            datos[4]=","+item;
+                            datos[4]=datos[4]+","+item;
                         }
                         }
             modelo.addRow(datos);
@@ -257,6 +269,35 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
            salesSystem.openSalesSystemView();
        }
    }
+    public void buttonExportPDF(ActionEvent e) throws SQLException, JRException{
+        if(e.getSource()==view.btnExportPDF){
+            if(fechaF==null ){
+                 JOptionPane.showMessageDialog(
+                    null,
+                    "Error: No puede haber campos vacios: ",
+                    "Error",
+                     JOptionPane.ERROR_MESSAGE
+                  );
+                 return;
+             }
+            
+            report.facturacionReportPDF(fechaF, codigoA, dniC);
+        }
+    }
+    public void buttonExportExcel(ActionEvent e) throws SQLException, JRException{
+        if(e.getSource()==view.btnExportExcel){
+             if(fechaF==null ){
+                 JOptionPane.showMessageDialog(
+                    null,
+                    "Error: No puede haber campos vacios: ",
+                    "Error",
+                     JOptionPane.ERROR_MESSAGE
+                  );
+                 return;
+             }
+            report.facturacionReportExcel(fechaF, codigoA, dniC);
+        }
+    }
     @Override
     public void actionPerformed(ActionEvent e) {
         buttonBack(e);
@@ -267,6 +308,20 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
         } catch (SQLException ex) {
             Logger.getLogger(BillManagement.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
+            Logger.getLogger(BillManagement.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            buttonExportPDF(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(BillManagement.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(BillManagement.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            buttonExportExcel(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(BillManagement.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
             Logger.getLogger(BillManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

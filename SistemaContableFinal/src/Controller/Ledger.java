@@ -27,6 +27,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import net.sf.jasperreports.engine.JRException;
 
 public class Ledger implements ActionListener {
     private LedgerView libroMayorView;
@@ -35,6 +36,10 @@ public class Ledger implements ActionListener {
     DefaultTableModel modelo = new DefaultTableModel();
     private MainMenu mainMenuController;
     private SingletonUser currentUser=SingletonUser.getInstance();
+    private Reports report= new Reports();
+    private Date fechaD=null;
+    private Date  fechaH=null;
+    private int idC;
     
     public Ledger(){
         this.libroMayorView=new LedgerView();
@@ -49,6 +54,8 @@ public class Ledger implements ActionListener {
     public void initializeListeners(){
         this.libroMayorView.btnBuscar.addActionListener(this);
         this.libroMayorView.btnSalir.addActionListener(this);
+        this.libroMayorView.btnPDFexport.addActionListener(this);
+        this.libroMayorView.btnExcelExport.addActionListener(this);
     }
     public void openLedger(){
         this.libroMayorView.setVisible(true);
@@ -64,7 +71,8 @@ public class Ledger implements ActionListener {
             Date fechaDesde = libroMayorView.jDateChooserDesde.getDate();
             Date fechaHasta = libroMayorView.jDateChooserHasta.getDate();
             Object selectedItem = libroMayorView.comboCuenta.getSelectedItem();
-            
+            fechaD = libroMayorView.jDateChooserDesde.getDate();
+            fechaH = libroMayorView.jDateChooserHasta.getDate();
             
              // Validar que ambas fechas estén seleccionadas
             if (fechaDesde == null || fechaHasta == null) {
@@ -86,7 +94,7 @@ public class Ledger implements ActionListener {
         }
             // Validar que se haya seleccionado un elemento en el comboBox
             
-            if (selectedItem == null) {
+            if (selectedItem.toString().trim().equals("")) {
                 JOptionPane.showMessageDialog(null, "Por favor, selecciona una cuenta del comboBox.");
                 libroMayorView.jDateChooserDesde.setDate(null);
                 libroMayorView.jDateChooserHasta.setDate(null);
@@ -98,6 +106,7 @@ public class Ledger implements ActionListener {
             ArrayList<AccountSeatBook> listaAsientos= librosCon.obtenerListaFinal(fechaHasta);
             String nombreCuenta=this.libroMayorView.comboCuenta.getSelectedItem().toString();
             Account cuenta= obtenerCuentaPorNombre(nombreCuenta);
+            idC=cuenta.getIdAccount();
             // Actualizar la tabla con los resultados
              actulizarTabla(listaAsientos,cuenta);
              libroMayorView.jDateChooserDesde.setDate(null);
@@ -324,7 +333,36 @@ public class Ledger implements ActionListener {
            mainMenuController.openMainMenuView();
        }
    }
-
+     
+     public void buttonExportPDF(ActionEvent e) throws SQLException, JRException{
+         if(e.getSource()==libroMayorView.btnPDFexport){
+             if(fechaD==null || fechaH==null ){
+                 JOptionPane.showMessageDialog(
+                    null,
+                    "Error: No puede haber campos vacios: ",
+                    "Error",
+                     JOptionPane.ERROR_MESSAGE
+                  );
+                 return;
+             }
+          
+             report.libroMayorReportPDF(fechaD, fechaH, idC);
+         }
+     }
+     public void buttonExportExcel(ActionEvent e) throws SQLException, JRException{
+         if(e.getSource()==libroMayorView.btnExcelExport){
+             if(fechaD==null || fechaH==null ){
+                 JOptionPane.showMessageDialog(
+                    null,
+                    "Error: No puede haber campos vacios: ",
+                    "Error",
+                     JOptionPane.ERROR_MESSAGE
+                  );
+                 return;
+             }
+             report.libroMayorReportExcel(fechaD, fechaH, idC);
+         }
+     }
     @Override
     public void actionPerformed(ActionEvent e) {
         buttonBack(e);
@@ -337,7 +375,20 @@ public class Ledger implements ActionListener {
         } catch (IOException ex) {
             Logger.getLogger(Ledger.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        try {
+            buttonExportPDF(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(Ledger.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(Ledger.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            buttonExportExcel(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(Ledger.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(Ledger.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
      
     

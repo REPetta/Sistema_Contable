@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.19.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Asientos" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="31893bf6-da98-443b-a4a8-c02f5d4f3bfc">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sistema_Contable.jrdax"/>
+	<parameter name="fechaInicio" class="java.util.Date"/>
+	<parameter name="fechaFin" class="java.util.Date"/>
+	<parameter name="idUsuario" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT  u.username , a.idAsiento, a.fecha , ac.idAsientoCuenta , ac.idCuenta, ac.tipo, ac.monto, a.descripcionAsiento , c.nombreCuenta , ac.saldoPostOperacion FROM Asiento a INNER JOIN Asiento_Cuenta ac ON a.idAsiento=ac.idAsiento INNER JOIN Cuenta as c ON ac.idCuenta=c.idCuenta  INNER JOIN Usuario as u ON u.idUsuario=a.idUsuario WHERE a.fecha BETWEEN $P{fechaInicio} AND  $P{fechaFin} AND ($P{idUsuario} IS NULL OR u.idUsuario = $P{idUsuario})  ORDER BY a.fecha ASC,ac.idAsientoCuenta ASC]]>
+	</queryString>
+	<field name="username" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="username"/>
+		<property name="com.jaspersoft.studio.field.label" value="username"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="usuario"/>
+	</field>
+	<field name="idasiento" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="idasiento"/>
+		<property name="com.jaspersoft.studio.field.label" value="idasiento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="asiento"/>
+	</field>
+	<field name="fecha" class="java.sql.Date">
+		<property name="com.jaspersoft.studio.field.name" value="fecha"/>
+		<property name="com.jaspersoft.studio.field.label" value="fecha"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="asiento"/>
+	</field>
+	<field name="idasientocuenta" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="idasientocuenta"/>
+		<property name="com.jaspersoft.studio.field.label" value="idasientocuenta"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="asiento_cuenta"/>
+	</field>
+	<field name="idcuenta" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="idcuenta"/>
+		<property name="com.jaspersoft.studio.field.label" value="idcuenta"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="asiento_cuenta"/>
+	</field>
+	<field name="tipo" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="tipo"/>
+		<property name="com.jaspersoft.studio.field.label" value="tipo"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="asiento_cuenta"/>
+	</field>
+	<field name="monto" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="monto"/>
+		<property name="com.jaspersoft.studio.field.label" value="monto"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="asiento_cuenta"/>
+	</field>
+	<field name="descripcionasiento" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="descripcionasiento"/>
+		<property name="com.jaspersoft.studio.field.label" value="descripcionasiento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="asiento"/>
+	</field>
+	<field name="nombrecuenta" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombrecuenta"/>
+		<property name="com.jaspersoft.studio.field.label" value="nombrecuenta"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cuenta"/>
+	</field>
+	<field name="saldopostoperacion" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="saldopostoperacion"/>
+		<property name="com.jaspersoft.studio.field.label" value="saldopostoperacion"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="asiento_cuenta"/>
+	</field>
+	<group name="GroupAsiento">
+		<groupExpression><![CDATA[$F{idasiento}]]></groupExpression>
+		<groupHeader>
+			<band height="3">
+				<rectangle>
+					<reportElement mode="Transparent" x="-20" y="2" width="595" height="1" backcolor="#050000" uuid="45a2024f-d3d1-4dc9-a3ec-ef0bf978fc40"/>
+					<graphicElement>
+						<pen lineStyle="Solid"/>
+					</graphicElement>
+				</rectangle>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20"/>
+		</groupFooter>
+	</group>
+	<group name="GroupFecha">
+		<groupExpression><![CDATA[$F{fecha}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<textField pattern="MMM d, yyyy">
+					<reportElement x="20" y="-1" width="79" height="21" uuid="95f546f2-f647-4f92-82e1-909ec159d931">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1a7b7d9e-190a-4de2-a935-6f29815f97d2"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{fecha}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="120" y="-1" width="90" height="20" uuid="7d529a1e-171a-4d03-a857-069a5a9d1702">
+						<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1014b26b-6b0f-48f3-a2c1-5b890c045c60"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{username}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="57" splitType="Stretch">
+			<staticText>
+				<reportElement x="160" y="10" width="240" height="47" uuid="abedab75-7f80-4d09-b3c1-475691244488"/>
+				<textElement textAlignment="Center">
+					<font fontName="Algerian" size="25"/>
+				</textElement>
+				<text><![CDATA[LISTA DE ASIENTOS]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="20" splitType="Stretch">
+			<rectangle>
+				<reportElement x="-20" y="0" width="595" height="20" backcolor="#2C2A9C" uuid="dbd01643-3eba-4ed1-85d6-360c1451005d"/>
+			</rectangle>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<printWhenExpression><![CDATA[new Boolean($V{PAGE_NUMBER}.intValue() == 1)]]></printWhenExpression>
+			<staticText>
+				<reportElement x="19" y="0" width="80" height="20" uuid="6e14a224-b369-4c7f-bb96-304788b5005d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="230" y="0" width="90" height="20" uuid="db3ca362-f64d-4a87-85e8-5dd027602006"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[CUENTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="0" width="90" height="20" uuid="467022df-1143-4c4f-8347-dc109461684e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[DEBE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="450" y="0" width="90" height="20" uuid="7e308244-65ef-4b34-bdbf-371ece669fe0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[HABER]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="0" width="90" height="20" uuid="a56ecc38-ae9a-495e-b78f-1be124474489"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[CREADOR]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="242" y="0" width="70" height="19" uuid="bdc4add9-86fa-4f41-8ccf-619995cce6b0">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="8aedfef7-0e8f-4e72-ba41-19aa173b1dd3"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nombrecuenta}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="345" y="0" width="80" height="18" uuid="8ee4fcd2-dfdd-4541-bcd2-4fafeaf88c36"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{tipo}.equals("DEBER") ? "$"+$F{monto} :""]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="450" y="0" width="90" height="18" uuid="639e3fc8-9295-461e-a8d5-192ad8a6ef60"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{tipo}.equals("HABER") ? "$"+$F{monto} :""]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="231" y="19" width="308" height="1" uuid="180207f7-753b-4d0e-9f27-8ae6e47d956f"/>
+			</line>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<rectangle>
+				<reportElement x="-20" y="0" width="595" height="20" backcolor="#2C2A9C" uuid="5caf8e4b-4a31-430c-924e-bfb9e97f8083"/>
+			</rectangle>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

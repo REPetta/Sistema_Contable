@@ -2,6 +2,7 @@
 package Controller;
 
 import Model.SingletonUser;
+
 import View.MainMenuView;
 import View.SalesSystemView;
 import java.awt.event.ActionEvent;
@@ -26,7 +27,6 @@ public class MainMenu implements ActionListener {
     private DiaryBook diaryBook;
     private ShowSeats showSeats;
     private SalesSystem salesView;
-    
     //Contructor//
     public MainMenu(){
         mainMenuView=new MainMenuView();

@@ -33,6 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import net.sf.jasperreports.engine.JRException;
 
 /**
  *
@@ -46,8 +47,10 @@ public class ShowSeats implements ActionListener{
     DefaultTableModel modelo = new DefaultTableModel();
     private MainMenu mainMenuController;
     private SingletonUser currentUser=SingletonUser.getInstance();
-    
-    
+    private Reports report = new Reports();
+    private Date fechaI=null;
+    private Date fechaF=null;
+    private int idUsuario;
     public ShowSeats(){
         
         this.seatViews=new SeatsView();
@@ -62,6 +65,8 @@ public class ShowSeats implements ActionListener{
     public void initializeListeners(){
          this.seatViews.btnBuscar.addActionListener(this);
          this.seatViews.btnSalir.addActionListener(this);
+         this.seatViews.btnExcelExport.addActionListener(this);
+         this.seatViews.btnPDFexport.addActionListener(this);
          
     }
     
@@ -79,6 +84,8 @@ public class ShowSeats implements ActionListener{
             // Obtener las fechas seleccionadas de los DateChooser
             Date fechaDesde = seatViews.jDateChooserDesde.getDate();
             Date fechaHasta = seatViews.jDateChooserHasta.getDate();
+            fechaI=seatViews.jDateChooserDesde.getDate();
+            fechaF=seatViews.jDateChooserHasta.getDate();
             
              // Validar que ambas fechas estén seleccionadas
             if (fechaDesde == null || fechaHasta == null) {
@@ -118,6 +125,7 @@ public class ShowSeats implements ActionListener{
         String[] filaSeparadora = {"", "", "", "",""};
         modelo.addRow(filaSeparadora);
         if(this.seatViews.jComboBoxUser.getSelectedItem().equals("")){
+            idUsuario=-1;
             for(AccountSeatBook asiento : listaAsientos){
                 // Obtener los detalles de cada Asiento_Cuenta
                 for(AccountSeat asientoCuenta : asiento.getAccountSeats()){
@@ -156,6 +164,7 @@ public class ShowSeats implements ActionListener{
              for(AccountSeatBook asiento : listaAsientos){
                   // Obtener los detalles de cada Asiento_Cuenta
                   if(this.seatViews.jComboBoxUser.getSelectedItem().equals(asiento.getSeat().getUserName())){
+                      idUsuario=userCon.getUserId(asiento.getSeat().getUserName());
                     for(AccountSeat asientoCuenta : asiento.getAccountSeats()){
                          // Obtener los datos necesarios
                         String[] datos= new String[5];
@@ -272,7 +281,34 @@ public class ShowSeats implements ActionListener{
                mainMenuController.openMainMenuView();
            }
        }
-
+       public void buttonExportPDF(ActionEvent e) throws SQLException, JRException{
+           if(e.getSource()==seatViews.btnPDFexport){
+               if(fechaI==null || fechaF==null ){
+                 JOptionPane.showMessageDialog(
+                    null,
+                    "Error: No puede haber campos vacios: ",
+                    "Error",
+                     JOptionPane.ERROR_MESSAGE
+                  );
+                 return;
+             }
+            report.asientosReportPDF(fechaI, fechaF, idUsuario);
+           }
+       }
+        public void buttonExportExcel(ActionEvent e) throws SQLException, JRException{
+           if(e.getSource()==seatViews.btnExcelExport){
+               if(fechaI==null || fechaF==null ){
+                 JOptionPane.showMessageDialog(
+                    null,
+                    "Error: No puede haber campos vacios: ",
+                    "Error",
+                     JOptionPane.ERROR_MESSAGE
+                  );
+                 return;
+             }
+            report.asientosReportExcel(fechaI, fechaF, idUsuario);
+           }
+       }
       //inicializacion para combobox de cuentas//
     public List<User> usuarios () throws IOException,  ClassNotFoundException,   SQLException{
         userCon =new UserConnection();
@@ -318,7 +354,20 @@ public class ShowSeats implements ActionListener{
         } catch (IOException ex) {
             Logger.getLogger(DiaryBook.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+        try {
+            buttonExportPDF(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(ShowSeats.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(ShowSeats.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            buttonExportExcel(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(ShowSeats.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(ShowSeats.class.getName()).log(Level.SEVERE, null, ex);
+        }
            
     }
     

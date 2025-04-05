@@ -24,6 +24,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import net.sf.jasperreports.engine.JRException;
 
 public class DiaryBook implements ActionListener{
     private DiaryBookView libroDiarioView;
@@ -32,7 +33,9 @@ public class DiaryBook implements ActionListener{
     DefaultTableModel modelo = new DefaultTableModel();
     private MainMenu mainMenu;
     private SingletonUser currentUser=SingletonUser.getInstance();
-    
+    private Reports report= new Reports();
+    private Date fechaD=null;
+    private Date  fechaH=null;
     public DiaryBook(){
         this.libroDiarioView=new DiaryBookView();
         this.librosCon=new BooksConnection();
@@ -46,6 +49,7 @@ public class DiaryBook implements ActionListener{
          this.libroDiarioView.btnBuscar.addActionListener(this);
          this.libroDiarioView.btnSalir.addActionListener(this);
          this.libroDiarioView.btnPdfExport.addActionListener(this);
+         this.libroDiarioView.btnExcelExport.addActionListener(this);
 
     }
     
@@ -63,7 +67,9 @@ public class DiaryBook implements ActionListener{
             // Obtener las fechas seleccionadas de los DateChooser
             Date fechaDesde = libroDiarioView.jDateChooserDesde.getDate();
             Date fechaHasta = libroDiarioView.jDateChooserHasta.getDate();
-            
+            fechaD = libroDiarioView.jDateChooserDesde.getDate();
+            fechaH = libroDiarioView.jDateChooserHasta.getDate();
+
              // Validar que ambas fechas estén seleccionadas
             if (fechaDesde == null || fechaHasta == null) {
                 JOptionPane.showMessageDialog(null, "Por favor, selecciona ambas fechas.");
@@ -206,9 +212,48 @@ public class DiaryBook implements ActionListener{
            }
        }
        
+     public void exportPDF(ActionEvent e) throws SQLException, JRException, JRException, JRException{
+         if(e.getSource()==libroDiarioView.btnPdfExport){
+             
+             if(fechaD==null || fechaH==null){
+                 JOptionPane.showMessageDialog(
+                    null,
+                    "Error: No puede haber campos vacios: ",
+                    "Error",
+                     JOptionPane.ERROR_MESSAGE
+                  );
+                 return;
+             }
+             report.libroDiarioReportPDF(fechaD, fechaH);
+         }
      
+     }
+     
+     public void exportExcel(ActionEvent e) throws SQLException, JRException, JRException, JRException{
+         if(e.getSource()==libroDiarioView.btnExcelExport){
+             
+              if(fechaD==null || fechaH==null){
+                 JOptionPane.showMessageDialog(
+                    null,
+                    "Error: No puede haber campos vacios: ",
+                    "Error",
+                     JOptionPane.ERROR_MESSAGE
+                  );
+                 return;
+             }
+             report.libroDiarioReportExcel(fechaD, fechaH);
+         }
+     
+     }
     @Override
     public void actionPerformed(ActionEvent e) {
+        try {
+            exportExcel(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(DiaryBook.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(DiaryBook.class.getName()).log(Level.SEVERE, null, ex);
+        }
          try{   
             buttonBack(e);
             }catch(Exception ex){
@@ -223,8 +268,14 @@ public class DiaryBook implements ActionListener{
         } catch (IOException ex) {
             Logger.getLogger(DiaryBook.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-           
+        try {
+            exportPDF(e);
+        } catch (SQLException ex) {
+            Logger.getLogger(DiaryBook.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (JRException ex) {
+            Logger.getLogger(DiaryBook.class.getName()).log(Level.SEVERE, null, ex);
+        }
+       
     }
     
 }

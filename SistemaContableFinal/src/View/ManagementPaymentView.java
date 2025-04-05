@@ -56,6 +56,7 @@ public class ManagementPaymentView extends javax.swing.JFrame {
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 255));
 
+        btnBack.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Images/eliminar.png"))); // NOI18N
         btnBack.setText("Volver");
 
         btnEdit.setText("Modicar Metodo");

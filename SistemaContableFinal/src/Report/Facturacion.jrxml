@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.19.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Facturacion" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8e6afdce-b477-4878-bf84-5c8c91ea4010">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sistema_Contable.jrdax"/>
+	<parameter name="fechaFactura" class="java.util.Date"/>
+	<parameter name="codigoArticulo" class="java.lang.Integer"/>
+	<parameter name="dni" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT f.idFactura, f.numeroFactura, f.totalFactura, f.tipoFactura, 
+       c.nombreCliente AS nombre_cliente, 
+       STRING_AGG(a.nombreArticulo, ', ') AS productos
+FROM Factura AS f
+INNER JOIN Venta AS v ON f.idVenta = v.idVenta
+INNER JOIN Cliente AS c ON v.idCliente = c.idCliente
+INNER JOIN DetalleVenta AS dv ON v.idVenta = dv.idVenta
+INNER JOIN Articulo AS a ON dv.idArticulo = a.idArticulo
+WHERE f.idFactura IN (
+    -- Subconsulta para obtener las facturas que contienen al menos un producto con el código filtrado
+    SELECT DISTINCT f.idFactura
+    FROM Factura f
+    INNER JOIN Venta v ON f.idVenta = v.idVenta
+    INNER JOIN DetalleVenta dv ON v.idVenta = dv.idVenta
+    INNER JOIN Articulo a ON dv.idArticulo = a.idArticulo
+    WHERE f.fechaFactura = $P{fechaFactura}  
+    AND (a.codigoArticulo = $P{codigoArticulo} OR $P{codigoArticulo} IS NULL)  
+)
+AND f.fechaFactura = $P{fechaFactura}  
+AND (c.dni = $P{dni} OR $P{dni} IS NULL) 
+GROUP BY f.idFactura, f.numeroFactura, f.totalFactura, f.tipoFactura, c.nombreCliente
+ORDER BY f.idFactura]]>
+	</queryString>
+	<field name="idfactura" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="idfactura"/>
+		<property name="com.jaspersoft.studio.field.label" value="idfactura"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="factura"/>
+	</field>
+	<field name="numerofactura" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="numerofactura"/>
+		<property name="com.jaspersoft.studio.field.label" value="numerofactura"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="factura"/>
+	</field>
+	<field name="totalfactura" class="java.math.BigDecimal">
+		<property name="com.jaspersoft.studio.field.name" value="totalfactura"/>
+		<property name="com.jaspersoft.studio.field.label" value="totalfactura"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="factura"/>
+	</field>
+	<field name="tipofactura" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="tipofactura"/>
+		<property name="com.jaspersoft.studio.field.label" value="tipofactura"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="factura"/>
+	</field>
+	<field name="nombre_cliente" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nombre_cliente"/>
+		<property name="com.jaspersoft.studio.field.label" value="nombre_cliente"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="cliente"/>
+	</field>
+	<field name="productos" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="productos"/>
+		<property name="com.jaspersoft.studio.field.label" value="productos"/>
+	</field>
+	<group name="GRUPO_NF">
+		<groupExpression><![CDATA[$F{numerofactura}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="57" splitType="Stretch">
+			<staticText>
+				<reportElement x="160" y="10" width="240" height="47" uuid="5e05d9c7-6f25-4721-9d49-5b26f8a70bb6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Algerian" size="25"/>
+				</textElement>
+				<text><![CDATA[LISTA DE FACTURAS]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="20" splitType="Stretch">
+			<rectangle>
+				<reportElement x="-20" y="0" width="595" height="20" backcolor="#2C2A9C" uuid="c7a3f27e-80ef-477a-8265-5c2f78a1c903"/>
+			</rectangle>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="40" splitType="Stretch">
+			<printWhenExpression><![CDATA[new Boolean($V{PAGE_NUMBER}.intValue() == 1)]]></printWhenExpression>
+			<staticText>
+				<reportElement x="0" y="0" width="60" height="39" uuid="2cbafcbd-a34e-4363-9546-52256b0875fb">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="66dd06e9-5d23-4427-863e-8edc3f3d2148"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[NUMERO DE FACTURA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="460" y="0" width="90" height="39" uuid="26693afa-8fdd-49cd-b8a7-72dc5610b483">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="19f45e84-852f-4016-82dd-aaca09b48ee3"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[TOTAL FACTURA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="0" width="70" height="39" uuid="8aee57e6-892d-424f-b8ac-e34dcbede4c4">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9b0e2d0a-ade5-49df-94cc-006ecdf2f552"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[TIPO 
+DE 
+FACTURA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="170" y="0" width="100" height="39" uuid="1630333a-a545-4216-bdc5-f2bf745bed8f">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ab1803cf-974d-4160-badb-6ba061ea2ceb"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[NOMBRE 
+DE 
+CLIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="290" y="0" width="150" height="39" uuid="a7ef5e6a-8898-4093-a0fe-ea69a395433c">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="47089257-6156-46f6-b3ad-abe24cc5fb78"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[PRODUCTOS]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="-20" y="39" width="595" height="1" backcolor="#050000" uuid="2a7e91a2-0f88-47aa-9997-ee1489999f73"/>
+				<graphicElement>
+					<pen lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="31" splitType="Stretch">
+			<textField>
+				<reportElement x="460" y="1" width="90" height="30" uuid="b5818404-a94e-45c5-a872-4ad2b699e837">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="19f45e84-852f-4016-82dd-aaca09b48ee3"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{totalfactura}]]></textFieldExpression>
+				<patternExpression><![CDATA["$"]]></patternExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="1" width="70" height="30" uuid="537ddecf-75a9-4ee9-8329-d6a0a25ae9b9">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9b0e2d0a-ade5-49df-94cc-006ecdf2f552"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{tipofactura}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="170" y="1" width="100" height="30" uuid="c060c094-94df-47dc-a72a-35d8aef6df97">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ab1803cf-974d-4160-badb-6ba061ea2ceb"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nombre_cliente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="290" y="1" width="150" height="30" uuid="d84262a0-57f8-4895-b81b-3c67551e2907">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="21335a57-23a6-4938-9f36-a0047a40a6d4"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{productos}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="1" width="60" height="30" uuid="0e403371-6498-45be-b220-da95a5dfd3c4">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="66dd06e9-5d23-4427-863e-8edc3f3d2148"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{numerofactura}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="-5" y="30" width="550" height="1" uuid="e710b289-660b-401a-bb99-c47b1cb52a8b"/>
+			</line>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<rectangle>
+				<reportElement x="-20" y="0" width="595" height="20" backcolor="#2C2A9C" uuid="a28e0903-313f-42ca-99a5-f37574c13ec6"/>
+			</rectangle>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
