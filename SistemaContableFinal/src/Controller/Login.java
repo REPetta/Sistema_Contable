@@ -23,7 +23,7 @@ public class Login implements ActionListener{
     private final LoginView loginView;
     private SingletonUser instance;
     private MainMenu mainMenu;
-    
+    private SalesSystem salesSystem;
    //Constructor//
     
     public Login(){
@@ -49,13 +49,25 @@ public class Login implements ActionListener{
                 User user= con.getUserValid(fields[0]);
                 if(validateUser(user,fields[1])){
                     JOptionPane.showMessageDialog(null, "Bienvenido al Sistema "+ user.getUserName(), "Confirmacion" , JOptionPane.INFORMATION_MESSAGE);
-                    instance=SingletonUser.getInstance();
-                    instance.setUserName(user.getUserName());
-                    instance.setTasks(user.getTasks());
-                    mainMenu= new MainMenu();
-                    closeLoginView();
-                    mainMenu.openMainMenuView();
-                }
+                    if(user.getTasks().contains("gestion_ventas") && !user.getTasks().contains("agregar_usuario")){
+                        instance=SingletonUser.getInstance();
+                        instance.setUserName(user.getUserName());
+                        instance.setTasks(user.getTasks()); 
+                        closeLoginView();
+                        salesSystem = new SalesSystem();
+                        salesSystem.openSalesSystemView();
+                        
+                    }else{
+                        
+                        instance=SingletonUser.getInstance();
+                        instance.setUserName(user.getUserName());
+                        instance.setTasks(user.getTasks());
+                        mainMenu= new MainMenu();
+                        closeLoginView();
+                        mainMenu.openMainMenuView();
+
+                    }
+                                    }
                fieldsClear();
             }
            

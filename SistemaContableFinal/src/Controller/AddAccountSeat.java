@@ -316,8 +316,7 @@ public class AddAccountSeat implements ActionListener{
                             if(montoAux-asientoTabla.getAmount()<0){
                                 JOptionPane.showMessageDialog(null,"Error: El total de debitos debe ser igual al total de creditos");
                                 limpiarVista();
-                                view.txtDescripcion.setText("");
-                                view.dateFecha.setDate(null);
+
                                 return;
                           }
                         }
@@ -328,8 +327,7 @@ public class AddAccountSeat implements ActionListener{
                                         if(cuenta.getBalance()-asientoTabla.getAmount()<0){
                                             JOptionPane.showMessageDialog(null,"Error: El saldo de la cuenta es insuficiente para esta operacion");
                                             limpiarVista();
-                                            view.txtDescripcion.setText("");
-                                            view.dateFecha.setDate(null);
+                
                                             return;
                                         }
                                         cuenta.setBalance(cuenta.getBalance()-asientoTabla.getAmount());
@@ -349,8 +347,7 @@ public class AddAccountSeat implements ActionListener{
                                         if(cuenta.getBalance()-asientoTabla.getAmount()<0){
                                             JOptionPane.showMessageDialog(null,"Error: El saldo de la cuenta es insuficiente para esta operacion");
                                             limpiarVista();
-                                            view.txtDescripcion.setText("");
-                                            view.dateFecha.setDate(null);
+
                                             return;
                                         }
                                         cuenta.setBalance(cuenta.getBalance()-asientoTabla.getAmount());

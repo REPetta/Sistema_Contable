@@ -123,7 +123,7 @@
 			<staticText>
 				<reportElement x="270" y="0" width="80" height="20" uuid="4573c7bb-8d9d-4976-9692-1eedfe366f47"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<text><![CDATA[DEBER]]></text>
+				<text><![CDATA[DEBE]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="360" y="0" width="90" height="20" uuid="43232cb4-ee22-4588-9f4b-dfcde9658336"/>
@@ -164,7 +164,7 @@
 			<textField>
 				<reportElement x="270" y="0" width="80" height="30" uuid="d1a81c19-0019-4ada-9383-11ee40a442ed"/>
 				<textElement textAlignment="Center"/>
-				<textFieldExpression><![CDATA[$F{tipo}.equals("DEBER") ? "$"+$F{monto} :""]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{tipo}.equals("DEBE") ? "$"+$F{monto} :""]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="360" y="0" width="90" height="30" uuid="1990c6b9-7b6d-4ce3-b719-3dae42ea8b72"/>

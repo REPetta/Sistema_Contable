@@ -2,12 +2,7 @@
 <!-- Created with Jaspersoft Studio version 6.20.0.final using JasperReports Library version 6.19.0  -->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="LibroDiarioPDF" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b4328913-c0c6-48ac-a5d0-5997f3d59e1e">
 	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Sistema_Contable.jrdax"/>
-	<property name="com.jaspersoft.studio.data.sql.tables">
-		<![CDATA[YXNpZW50byAsMTQ5LDY3LDY1MTc5MWEwLTdmY2UtNGViYy1hYmI0LTVlZTZkYzY0MDJkMjtjdWVu
-dGEgQVMgLDQ4NCwyOCwzZTAxMGJlZi03NmFlLTQyMTUtOWIwYy1lMThjNTE2MjE0NTM7dXN1YXJp
-byBBUyAsMTUsMTUsMmU2ODcwOTYtYTQ5OS00OTgxLWI5MzgtMjI2NmVkZDE4MTkyO2FzaWVudG9f
-Y3VlbnRhICwzMTQsNDAsYTIwZmI3OWYtNjI5ZS00MDBiLWIwOWItMmMyOTI2ODBjNWJlOw==]]>
-	</property>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="0"/>
 	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="1000"/>
 	<property name="com.jaspersoft.studio.unit." value="pixel"/>

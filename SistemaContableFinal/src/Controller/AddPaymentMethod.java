@@ -12,8 +12,12 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import javax.swing.JOptionPane;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JTextField;
 
 
@@ -27,6 +31,7 @@ public class AddPaymentMethod implements ActionListener {
     public AddPaymentMethod() {
         view=new AddPaymentMethodView();
         this.view.setTitle("Agregar Metodo de Pago"+"-"+currentUser.getUserName().toUpperCase()+"("+currentUser.getRol()+")");
+        setTipol();
         initializeListeners();
     }
     //Metodo  para inicializar los listener con los botones//
@@ -94,6 +99,25 @@ public class AddPaymentMethod implements ActionListener {
         return true;
     }
     
+      //Metodo para setear la razon social//
+    public final void setTipol() {
+        
+            List<String> razones = new ArrayList<>(Arrays.asList("","EFECTIVO","DEBITO","CREDITO"));
+            
+            // Crear un modelo para el JComboBox
+            DefaultComboBoxModel<String> model = 
+
+                new DefaultComboBoxModel<>();
+
+            for (String razon : razones) {
+                model.addElement(razon); // Agregar el nombre de la cuenta
+            }
+
+            // Setear el modelo en el JComboBox
+            view.jTypeBox.setModel(model); 
+    // Asegúrate de que addSeatView tenga cbbCuentas
+
+    }
   public BigDecimal convertPercentageToDecimal(String percentageStr) {
     try {
         // Convertir el String a entero
@@ -190,6 +214,15 @@ public class AddPaymentMethod implements ActionListener {
                     }
                 }
          }
+             if(view.jTypeBox.getSelectedItem().toString().trim().equalsIgnoreCase("")){
+                 JOptionPane.showMessageDialog(
+                    null,
+                    "No puede haber campo en blanco",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+                 );
+                 return false;
+             }
              if(!invalidFields.isEmpty()){//Si hay campos con formatos invalidos se ejecuta//
                 JOptionPane.showMessageDialog(
                     null,
@@ -241,7 +274,7 @@ public class AddPaymentMethod implements ActionListener {
                     int payment = Integer.parseInt(fields[2]);
                     int quotas = Integer.parseInt(fields[3]);
                     double discount= convertPercentageToDecimal(fields[4]).doubleValue();
-                    String type= fields[5];
+                    String type= view.jTypeBox.getSelectedItem().toString().trim();
                     
                     method.setSaleDescription(descrip);
                     method.setCode(code);

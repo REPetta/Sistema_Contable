@@ -355,7 +355,7 @@ public int newNumberStockMin(){
 
                AccountSeat mercaderia= new AccountSeat(
                    idSeat,
-                   "DEBER",
+                   "DEBE",
                    conAccount.getAccountBox(131).getIdAccount(),
                    monto,    
                    nuevoMontoMercaderia

@@ -59,6 +59,7 @@ public class SalesSystem implements ActionListener {
     private double subTotal;
     private Reports report= new Reports();
     private int idFactura;
+    private Login login;
     //Constructor//
     public SalesSystem(){
         view=new SalesSystemView();
@@ -271,9 +272,18 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
     //Metodo para darle funcionalidad al boton Salir//
     public void buttonExit(ActionEvent e){
         if(e.getSource()==view.btnSalir){
-            closeSalesSystemView();
-            mainMenu=new MainMenu();
-            mainMenu.openMainMenuView();
+            if(currentUser.getRol().equalsIgnoreCase("Vendedor")){
+                closeSalesSystemView();
+                login=new Login();
+                login.openLoginView();
+                
+            }else{
+                
+                 closeSalesSystemView();
+                 mainMenu=new MainMenu();
+                 mainMenu.openMainMenuView();
+            }
+           
         
         }
     }
@@ -779,7 +789,7 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
 
                 AccountSeat debe= new AccountSeat(
                     idSeat,
-                    "DEBER",
+                    "DEBE",
                     conAccount.getAccountBox(111).getIdAccount(),
                     montoTotal,    
                     nuevoMontoDebe
@@ -825,7 +835,7 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
 
                 AccountSeat debe= new AccountSeat(
                     idSeat,
-                    "DEBER",
+                    "DEBE",
                     conAccount.getAccountBox(113).getIdAccount(),
                     montoTotal,    
                     nuevoMontoDebe
@@ -871,7 +881,7 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
 
                 AccountSeat debe= new AccountSeat(
                     idSeat,
-                    "DEBER",
+                    "DEBE",
                     conAccount.getAccountBox(113).getIdAccount(),
                     montoTotal,    
                     nuevoMontoDebe
@@ -905,7 +915,7 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
          
                 AccountSeat debe= new AccountSeat(
                     idSeat,
-                    "DEBER",
+                    "DEBE",
                     conAccount.getAccountBox(511).getIdAccount(),
                     montoTotal,    
                     nuevoMontoDebe
