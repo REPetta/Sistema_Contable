@@ -105,8 +105,8 @@ public class SalesConnection {
         ps.setInt(3, method.getPaymentTerm());
         ps.setInt(4, method.getQuotas());
         ps.setDouble(5, method.getDiscount());
-        ps.setInt(6, method.getCode());
-        ps.setString(7, method.getType());
+        ps.setString(6, method.getType());
+        ps.setInt(7, method.getCode());
         
         int rowsAffected = ps.executeUpdate();
         return rowsAffected > 0;

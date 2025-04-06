@@ -64,14 +64,17 @@ public class EditPaymentMethod implements ActionListener{
         this.view.txtPaymentTime.setText(String.valueOf(method.getPaymentTerm()));
         this.view.txtQuots.setText(String.valueOf(method.getQuotas()));
         this.view.txtDiscount.setText(String.valueOf(convertToPercentage(method.getDiscount())));
-        this.view.jStateBox.setSelectedItem(method.getSaleState().toUpperCase());
         this.view.jTypeBox.setSelectedItem(method.getType().toUpperCase());
-        
+        if(method.getSaleState().toUpperCase().equalsIgnoreCase("alta")){
+              this.view.jStateBox.setSelectedItem("DISPONIBLE");
+        }else{
+             this.view.jStateBox.setSelectedItem("NO DISPONIBLE");
+        }
     }
    //Metodo para setear la razon social//
     public final void setStates() {
         
-            List<String> estados = new ArrayList<>(Arrays.asList("","DISPONIBLE","NO DISPONIBLE"));
+            List<String> estados = new ArrayList<>(Arrays.asList("DISPONIBLE","NO DISPONIBLE"));
             
             // Crear un modelo para el JComboBox
             DefaultComboBoxModel<String> model = 
@@ -90,7 +93,7 @@ public class EditPaymentMethod implements ActionListener{
     //Metodo para setear la razon social//
     public final void setTypes() {
         
-            List<String> tipos = new ArrayList<>(Arrays.asList("","EFECTIVO","DEBITO","CREDITO"));
+            List<String> tipos = new ArrayList<>(Arrays.asList("EFECTIVO","DEBITO","CREDITO"));
             
             // Crear un modelo para el JComboBox
             DefaultComboBoxModel<String> model = 
@@ -102,7 +105,7 @@ public class EditPaymentMethod implements ActionListener{
             }
 
             // Setear el modelo en el JComboBox
-            view.jStateBox.setModel(model); 
+            view.jTypeBox.setModel(model); 
     // Asegúrate de que addSeatView tenga cbbCuentas
 
     }
@@ -299,7 +302,12 @@ public boolean validateFields(Object[] fields, String[] fieldNames) {
                     method.setPaymentTerm(plazo);
                     method.setQuotas(cuotas);
                     method.setDiscount(descuento);
-                    method.setSaleState(estado.toLowerCase());
+                    if(estado.equalsIgnoreCase("disponilbe")){
+                        method.setSaleState("alta");
+                    }else{
+                        method.setSaleState("baja");
+                    }
+                    
                     method.setType(tipo);
                     method.setCode(codeMethod);
                    

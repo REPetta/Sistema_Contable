@@ -171,7 +171,7 @@ public int newNumberStock(){
     // Pedir al usuario que ingrese un número
         String input = JOptionPane.showInputDialog("Ingrese la cantidad de productos que quiera agregar al Stock:");
         if (input == null || input.trim().isEmpty()) {
-            return 0; // Puedes devolver un valor especial (-1) para indicar que se canceló
+            return -1; // Puedes devolver un valor especial (-1) para indicar que se canceló
         }
         // Convertir el String a un número entero
         int numero;
@@ -190,9 +190,9 @@ public int newNumberStock(){
     }
 public double newNumberCost(){
     // Pedir al usuario que ingrese un número
-        String input = JOptionPane.showInputDialog("Ingrese un el nuevo valor del producto:");
+        String input = JOptionPane.showInputDialog("Ingrese el nuevo valor del producto:");
         if (input == null || input.trim().isEmpty()) {
-            return 0; // Puedes devolver un valor especial (-1) para indicar que se canceló
+            return -1; // Retorna cero para mantener el precio
         }
         // Convertir el String a un número entero
         double numero;
@@ -214,7 +214,7 @@ public int newNumberStockMin(){
     // Pedir al usuario que ingrese un número
         String input = JOptionPane.showInputDialog("Ingrese un número:");
         if (input == null || input.trim().isEmpty()) {
-            return 0; // Puedes devolver un valor especial (-1) para indicar que se canceló
+            return -1; // Puedes devolver un valor especial (-1) para indicar que se canceló
         }
         // Convertir el String a un número entero
         int numero;
@@ -271,13 +271,26 @@ public int newNumberStockMin(){
                 return;
             }
             int newStock=newNumberStock();
-            if(newStock==0){
+            if(newStock==-1){
+                JOptionPane.showMessageDialog(
+                                null,
+                                "No puedes dejar el campo vacio\n",
+                                 "Error",
+                                 JOptionPane.ERROR_MESSAGE
+                                );
                 return;
             }
             double newCost=newNumberCost();
             if(newCost==-1){
+                JOptionPane.showMessageDialog(
+                                null,
+                                "No puedes dejar el campo vacio y si deseas mantener el precio anterior ingrese 0\n",
+                                 "Error",
+                                 JOptionPane.ERROR_MESSAGE
+                                );
                 return;
             }
+            
            if(newCost==0){
                Item item=itemsCon.getItem(itemCode);
                operadorCost=item.getUnitPrice();

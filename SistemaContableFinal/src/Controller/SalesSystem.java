@@ -303,6 +303,7 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
         modelo.addColumn("Fecha");
         modelo.addColumn("Nombre Articulo");
         modelo.addColumn("Cantidad");
+        modelo.addColumn("Precio Unitario");
         modelo.addColumn("Sub Total");
         modelo.addColumn("Valor Total");
         modelo.addColumn("Nombre de Cliente");
@@ -330,16 +331,17 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
      }
       //Metodo para cargar Jtabla
     public void cargarTabla(SaleNode saleNode , Item item ,double valorTotal,int cantidad,double subT){
-    String[] datos =new String[7];
+    String[] datos =new String[8];
     SimpleDateFormat formato = new SimpleDateFormat("dd-MM-yyyy");
     String fechaFormateada = formato.format(saleNode.getSale().getSaleDate());
         datos[0]=fechaFormateada;
         datos[1]=item.getItemName();
         datos[2]= String.valueOf(cantidad);
-        datos[3]= "$"+String.valueOf(subT);
-        datos[4]="$"+String.valueOf(valorTotal);
-        datos[5]=saleNode.getCustomer().getClientName();
-        datos[6]=saleNode.getSaleType().getSaleDescription();
+        datos[3]=String.valueOf("$"+item.getUnitPrice());
+        datos[4]= "$"+String.valueOf(subT);
+        datos[5]="$"+String.valueOf(valorTotal);
+        datos[6]=saleNode.getCustomer().getClientName();
+        datos[7]=saleNode.getSaleType().getSaleDescription();
         modelo.addRow(datos);   
     }
     //Metodo para obtener el dni del cliente//
@@ -433,9 +435,7 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
         setClientesBox();
         setArticulosBox();
         setMethodBox();
-        view.jDateChooser.setDate(null);
         view.jCantidad.setValue(1);
-        view.jDateChooser.setEnabled(true);
         view.jCustomerBox.setEnabled(true);
         view.jMethodBox.setEnabled(true);
         subTotal=0.0;
@@ -444,7 +444,6 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
      public void limpiarVistaParcial(){
             setArticulosBox();
             view.jCantidad.setValue(1);
-            view.jDateChooser.setEnabled(false);
             view.jCustomerBox.setEnabled(false);
             view.jMethodBox.setEnabled(false);
      }
