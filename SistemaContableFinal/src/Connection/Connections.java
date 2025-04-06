@@ -11,7 +11,7 @@ public class Connections {
     Connection con=null;
     String url="jdbc:postgresql://localhost/Sistema_Contable";
     String user="postgres";
-    String key="usuario";
+    String key="admin";
    
     // Método para conectar a la base de datos//
     public Connection connect() throws SQLException {

@@ -318,7 +318,13 @@ public int newNumberStockMin(){
                 return;
             }
             int newStockMin=newNumberStockMin();
-            if(newStockMin==0){
+            if(newStockMin==-1){
+                 JOptionPane.showMessageDialog(
+                                null,
+                                "No puedes dejar el campo vacio \n",
+                                 "Error",
+                                 JOptionPane.ERROR_MESSAGE
+                                );
                 return;
             }
             

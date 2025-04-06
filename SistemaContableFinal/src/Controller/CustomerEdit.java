@@ -44,7 +44,7 @@ public class CustomerEdit implements ActionListener{
         this.view.txtEmail.setText(customer.getEmail());
         this.view.jComboRS.setSelectedItem(customer.getSocialReason());
         this.view.jComboIVA.setSelectedItem(customer.getIvaCondition());
-        this.view.jComboTCustomer.setSelectedItem(customer.getClientType());
+        this.view.jComboState.setSelectedItem(customer.getClientType());
     }
     //Metodo  para inicializar los listener con los botones//
     public final void initializeListeners(){
@@ -137,6 +137,25 @@ public boolean validateFields(Object[] fields, String[] fieldNames) {
 
     }
      //Metodo para setear la condicion de IVA//
+     public final void setEstado() {
+        
+            List<String> condiciones = new ArrayList<>(Arrays.asList("","Responsable Inscripto", "Monotributista","Excento de IVA ", "Consumidor Final","No Responsable de IVA","Sujeto No Categorizado"));
+            
+            // Crear un modelo para el JComboBox
+            DefaultComboBoxModel<String> model = 
+
+                new DefaultComboBoxModel<>();
+
+            for (String condicion : condiciones) {
+                model.addElement(condicion); // Agregar el nombre de la cuenta
+            }
+
+            // Setear el modelo en el JComboBox
+            view.jComboIVA.setModel(model); 
+    // Asegúrate de que addSeatView tenga cbbCuentas
+
+    }
+     //Metodo para setear la condicion de IVA//
      public final void setTipoCliente() {
         
             List<String> tipos = new ArrayList<>(Arrays.asList("","Consumidor Final", "Responsable Inscripto", "Monotributista","Exento de IVA","Sujeto No Categorizado"));
@@ -151,7 +170,7 @@ public boolean validateFields(Object[] fields, String[] fieldNames) {
             }
 
             // Setear el modelo en el JComboBox
-            view.jComboTCustomer.setModel(model); 
+            view.jComboState.setModel(model); 
     // Asegúrate de que addSeatView tenga cbbCuentas
 
     }
@@ -164,7 +183,7 @@ public boolean validateFields(Object[] fields, String[] fieldNames) {
             view.txtEmail,
             view.jComboRS,
             view.jComboIVA,
-            view.jComboTCustomer
+            view.jComboState
         };
         String[] fieldNames = {
             "Nombre",

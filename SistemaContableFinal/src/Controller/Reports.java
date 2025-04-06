@@ -65,7 +65,7 @@ public class Reports {
             // Exportar a Excel
             JRXlsxExporter exporter = new JRXlsxExporter();
             exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput("C:/Users/Rodrigo/Desktop/REPORTS/LibroDiario.xlsx"));
+            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput("C:/Users/Usuario/Desktop/Reportes/LibroDiario.xlsx"));
 
             // Configuración para Excel "limpio"
             SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();
@@ -141,7 +141,7 @@ public class Reports {
              // Exportar a Excel
             JRXlsxExporter exporter = new JRXlsxExporter();
             exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput("C:/Users/Rodrigo/Desktop/REPORTS/LibroMayor.xlsx"));
+            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput("C:/Users/Usuario/Desktop/Reportes/LibroMayor.xlsx"));
 
             // Configuración para Excel "limpio"
             SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();
@@ -233,7 +233,7 @@ public class Reports {
              // Exportar a Excel
             JRXlsxExporter exporter = new JRXlsxExporter();
             exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput("C:/Users/Rodrigo/Desktop/REPORTS/Facturacion.xlsx"));
+            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput("C:/Users/Usuario/Desktop/Reportes/Facturacion.xlsx"));
 
             // Configuración para Excel "limpio"
             SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();
@@ -318,7 +318,7 @@ public class Reports {
              // Exportar a Excel
             JRXlsxExporter exporter = new JRXlsxExporter();
             exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput("C:/Users/Rodrigo/Desktop/REPORTS/Asientos.xlsx"));
+            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput("C:/Users/Usuario/Desktop/Reportes/Asientos.xlsx"));
 
             // Configuración para Excel "limpio"
             SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();
@@ -389,7 +389,7 @@ public class Reports {
              // Exportar a Excel
             JRXlsxExporter exporter = new JRXlsxExporter();
             exporter.setExporterInput(new SimpleExporterInput(jasperPrint));
-            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput("C:/Users/Rodrigo/Desktop/REPORTS/ReporteVentas.xlsx"));
+            exporter.setExporterOutput(new SimpleOutputStreamExporterOutput("C:/Users/Usuario/Desktop/Reportes/ReporteVentas.xlsx"));
 
             // Configuración para Excel "limpio"
             SimpleXlsxReportConfiguration configuration = new SimpleXlsxReportConfiguration();
