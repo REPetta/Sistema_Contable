@@ -27,6 +27,7 @@ import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -121,7 +122,9 @@ public final void setClientesBox() {
             // Llenar el modelo con los nombres de las cuentas
             model.addElement("");
             for (Customer cliente : clientes) {
-                model.addElement(cliente.getClientName()+"-"+cliente.getDni()); // Agregar el nombre de la cuenta
+                if(cliente.getEstado().equalsIgnoreCase("alta")){
+                    model.addElement(cliente.getClientName()+" - DNI: "+cliente.getDni()); // Agregar el nombre de la cuenta
+                }
             }
 
             // Setear el modelo en el JComboBox
@@ -150,7 +153,9 @@ public final void setClientesBox() {
             // Llenar el modelo con los nombres de las cuentas
             model.addElement("");
             for (Item item : items) {
-                model.addElement(item.getItemName()+"-"+item.getItemCode()); // Agregar el nombre de la cuenta
+                if(item.getEstado().equalsIgnoreCase("alta")){
+                     model.addElement(item.getItemName()+" - Codigo: "+item.getItemCode()); // Agregar el nombre de la cuenta
+                }
             }
 
             // Setear el modelo en el JComboBox
@@ -184,7 +189,7 @@ public final void setMethodBox() {
             // Llenar el modelo con los nombres de las cuentas
             model.addElement("");
             for (SaleType method : metodos) {
-                model.addElement(method.getSaleDescription()+"-"+method.getCode()); // Agregar el nombre de la cuenta
+                model.addElement(method.getSaleDescription()+" - Codigo: "+method.getCode()); // Agregar el nombre de la cuenta
             }
 
             // Setear el modelo en el JComboBox
@@ -199,7 +204,7 @@ public int getCodeSelected(){
     String selectedItem = (String) view.jMethodBox.getSelectedItem();
     int methodCode=0;
 if (selectedItem != null && !selectedItem.isEmpty()) {
-    String[] parts = selectedItem.split("-");
+    String[] parts = selectedItem.split("\\s*-\\s*Codigo:\\s*");
 
     if (parts.length == 2) { // Nos aseguramos de que el formato es correcto
         String code = parts[1].trim();  // Obtener el DNI
@@ -215,8 +220,7 @@ public int getItemCodeSelected(){
     String selectedItem = (String) view.jItemBox.getSelectedItem();
     int itemCode=0;
 if (selectedItem != null && !selectedItem.isEmpty()) {
-    String[] parts = selectedItem.split("-");
-    
+    String[] parts = selectedItem.split("\\s*-\\s*Codigo:\\s*");
     if (parts.length == 2) { // Nos aseguramos de que el formato es correcto
         String dni = parts[1].trim();  // Obtener el DNI
         itemCode = Integer.parseInt(dni);
@@ -349,7 +353,7 @@ public int getDniCustomerSelected(){
     String selectedItem = (String) view.jCustomerBox.getSelectedItem();
     int dniCliente=0;
 if (selectedItem != null && !selectedItem.isEmpty()) {
-    String[] parts = selectedItem.split("-");
+    String[] parts = selectedItem.split("\\s*-\\s*DNI:\\s*");
     
     if (parts.length == 2) { // Nos aseguramos de que el formato es correcto
         String dni = parts[1].trim();  // Obtener el DNI

@@ -72,7 +72,7 @@ public class ManagementStock implements ActionListener {
             // Llenar el modelo con los nombres de las cuentas
             model.addElement("");
             for (Item item : items) {
-                model.addElement(item.getItemName()+"-"+item.getItemCode()); // Agregar el nombre de la cuenta
+                model.addElement(item.getItemName()+"-"+"Codigo: "+item.getItemCode()+"-"+"Estado: "+item.getEstado()); // Agregar el nombre de la cuenta
             }
 
             // Setear el modelo en el JComboBox
@@ -101,6 +101,26 @@ public class ManagementStock implements ActionListener {
                                 JOptionPane.showMessageDialog(
                                 null,
                                 "El Articulo no ha podido ser dado de baja exitosamente \n",
+                                 "Error",
+                                 JOptionPane.ERROR_MESSAGE
+                                );
+                  setCombosBox();
+          }
+    }
+    //Metodo para los mensajes del dar de baja cliente//
+    public void actSuccessful(boolean successful){
+        if(successful){
+              JOptionPane.showMessageDialog(
+                                null,
+                                "El Articulo ha sido dado de alta exitosamente  \n",
+                                 "Confirmacion",
+                                 JOptionPane.INFORMATION_MESSAGE
+                                );
+              setCombosBox();
+                            }else{
+                                JOptionPane.showMessageDialog(
+                                null,
+                                "El Articulo no ha podido ser dado de alta exitosamente \n",
                                  "Error",
                                  JOptionPane.ERROR_MESSAGE
                                 );
@@ -152,11 +172,12 @@ public int getItemCodeSelected(){
     String selectedItem = (String) view.jComboItems.getSelectedItem();
     int itemCode=0;
 if (selectedItem != null && !selectedItem.isEmpty()) {
-    String[] parts = selectedItem.split("-");
+    String[] parts = selectedItem.split("-Codigo:");
     
     if (parts.length == 2) { // Nos aseguramos de que el formato es correcto
-        String dni = parts[1].trim();  // Obtener el DNI
-        itemCode = Integer.parseInt(dni);
+        String[] subParts = parts[1].split("-"); // separa por "-", obtenés [" 1", "Estado: alta"]
+         String code = subParts[0].trim();        // "1"
+         itemCode = Integer.parseInt(code);
         
     } else {
         JOptionPane.showMessageDialog(null, "Formato inválido en la selección del cliente.", "Error", JOptionPane.ERROR_MESSAGE);
@@ -247,7 +268,23 @@ public int newNumberStockMin(){
                 setCombosBox();
                 return;
             }
-           int confirm = JOptionPane.showConfirmDialog(
+            if(view.jComboItems.getSelectedItem().toString().contains("baja")){
+                int confirm = JOptionPane.showConfirmDialog(
+                        null,
+                        "¿Estás seguro de que deseas dar de alta a este Articulo?",
+                        "Confirmación",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+            );
+                  if(confirm == JOptionPane.YES_OPTION) { // Si el usuario confirma, intenta agregarlo//
+                        itemsCon =new ItemConnection();
+                        boolean update=itemsCon.activateItem(itemCode);
+                        actSuccessful(update);
+                    }
+            
+            
+            }else{
+                 int confirm = JOptionPane.showConfirmDialog(
                         null,
                         "¿Estás seguro de que deseas dar de baja a este Articulo?",
                         "Confirmación",
@@ -259,6 +296,8 @@ public int newNumberStockMin(){
                         boolean update=itemsCon.desactivateItem(itemCode);
                         delSuccessful(update);
                     }
+            }
+          
         }
     }
     //Metodo para aumentas el Stock//

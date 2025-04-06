@@ -155,9 +155,9 @@ public class SalesSystemView extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jTableSales);
 
         getContentPane().add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 280, 790, 210));
-        getContentPane().add(jCustomerBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 240, 150, 30));
+        getContentPane().add(jCustomerBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 240, 180, 30));
         getContentPane().add(jMethodBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 240, 160, 30));
-        getContentPane().add(jItemBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 240, 170, 30));
+        getContentPane().add(jItemBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 240, 200, 30));
         getContentPane().add(jDateChooser, new org.netbeans.lib.awtextra.AbsoluteConstraints(935, 240, 90, 30));
 
         jLabel2.setText("Articulo");
@@ -165,7 +165,7 @@ public class SalesSystemView extends javax.swing.JFrame {
 
         jLabel3.setText("Cantidad");
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 220, -1, -1));
-        getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 230, 10, 30));
+        getContentPane().add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(530, 240, 10, 30));
 
         jLabel4.setText("Fecha");
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(940, 220, 50, -1));
@@ -174,7 +174,7 @@ public class SalesSystemView extends javax.swing.JFrame {
         getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(750, 220, -1, -1));
 
         jLabel6.setText("Cliente");
-        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(580, 220, 90, -1));
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(550, 220, 90, -1));
 
         btnSave.setText("Guardar Venta");
         getContentPane().add(btnSave, new org.netbeans.lib.awtextra.AbsoluteConstraints(1040, 430, 150, 50));

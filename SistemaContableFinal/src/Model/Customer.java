@@ -15,7 +15,8 @@ public class Customer {
     private String ivaCondition;
     private String clientType;
     private String email;
-
+    private String estado;
+    
     public Customer() {
     }
 
@@ -38,6 +39,14 @@ public class Customer {
         this.ivaCondition = ivaCondition;
         this.clientType = clientType;
         this.email = email;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
     
 

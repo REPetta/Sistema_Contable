@@ -60,7 +60,7 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Component id="btnDel" pref="147" max="32767" attributes="0"/>
+                      <Component id="btnDel" max="32767" attributes="0"/>
                       <Component id="btnAddStock" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace max="32767" attributes="0"/>
@@ -139,8 +139,11 @@
         </Component>
         <Component class="javax.swing.JButton" name="btnDel">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Dar de Baja Articulo"/>
+            <Property name="text" type="java.lang.String" value="Dar de Baja/Alta Articulo"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDelActionPerformed"/>
+          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="1"/>
           </AuxValues>

@@ -14,7 +14,8 @@ public class Item {
     private int stock;
     private int itemCode;
     private int stockMin;
-
+    private String estado;
+    
     public Item() {
     }
 
@@ -36,6 +37,14 @@ public class Item {
         this.stockMin=stockMin;
     }
 
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+    
     public int getStockMin() {
         return stockMin;
     }

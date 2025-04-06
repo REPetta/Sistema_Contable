@@ -51,6 +51,7 @@ public class ItemConnection {
                         item.setStock(rs.getInt("stock"));
                         item.setStockMin(rs.getInt("stockMinimo"));
                         item.setItemCode(itemCode);
+                        item.setEstado(rs.getString("estado"));
                                 }
             }catch(SQLException e){
                     System.err.println("Error al cargar el usuario: " + e.getMessage());
@@ -78,7 +79,7 @@ public class ItemConnection {
     }
     //Metodo para obtener una lista de items//
     public List<Item> getItems() throws SQLException{
-        String sql= "SELECT * FROM Articulo WHERE estado='alta';";
+        String sql= "SELECT * FROM Articulo ;";
         Item item;
         List<Item> items=new ArrayList<>();
         Connections con= new Connections();
@@ -93,6 +94,7 @@ public class ItemConnection {
                          item.setStock(rs.getInt("stock"));
                          item.setItemCode(rs.getInt("codigoArticulo"));
                          items.add(item);
+                         item.setEstado(rs.getString("estado"));
                      }
                  }catch(SQLException e){
                     System.err.println("Error al cargar el usuario: " + e.getMessage());
@@ -108,6 +110,23 @@ public boolean desactivateItem(int itemCode) throws SQLException {
 
     try (PreparedStatement ps = con.connect().prepareStatement(sql)) {
         ps.setString(1, "baja"); // Solo actualiza el estado a "baja"
+        ps.setInt(2, itemCode); // Filtra por el DNI del cliente
+
+        int rowsAffected = ps.executeUpdate();
+        return rowsAffected > 0;
+
+    } catch (SQLException e) {
+        System.err.println("Error al dar de baja al cliente: " + e.getMessage());
+        throw e; 
+    }
+}
+// Método para dar de baja a un cliente (cambiar estado a "baja")
+public boolean activateItem(int itemCode) throws SQLException {
+    String sql = "UPDATE Articulo SET estado=? WHERE codigoArticulo=?;";
+    Connections con = new Connections();
+
+    try (PreparedStatement ps = con.connect().prepareStatement(sql)) {
+        ps.setString(1, "alta"); // Solo actualiza el estado a "baja"
         ps.setInt(2, itemCode); // Filtra por el DNI del cliente
 
         int rowsAffected = ps.executeUpdate();

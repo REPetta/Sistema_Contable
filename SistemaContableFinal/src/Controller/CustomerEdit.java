@@ -34,6 +34,7 @@ public class CustomerEdit implements ActionListener{
         setCondicionIVA();
         setTipoCliente();
         initializeListeners();
+        setEstado();
         loadClient(dni);
     }
     //Metodo para cargar los datos del cliente a editar//
@@ -44,7 +45,8 @@ public class CustomerEdit implements ActionListener{
         this.view.txtEmail.setText(customer.getEmail());
         this.view.jComboRS.setSelectedItem(customer.getSocialReason());
         this.view.jComboIVA.setSelectedItem(customer.getIvaCondition());
-        this.view.jComboState.setSelectedItem(customer.getClientType());
+        this.view.jComboTCustomer1.setSelectedItem(customer.getClientType());
+        this.view.jComboState.setSelectedItem(customer.getEstado());
     }
     //Metodo  para inicializar los listener con los botones//
     public final void initializeListeners(){
@@ -139,7 +141,7 @@ public boolean validateFields(Object[] fields, String[] fieldNames) {
      //Metodo para setear la condicion de IVA//
      public final void setEstado() {
         
-            List<String> condiciones = new ArrayList<>(Arrays.asList("","Responsable Inscripto", "Monotributista","Excento de IVA ", "Consumidor Final","No Responsable de IVA","Sujeto No Categorizado"));
+            List<String> condiciones = new ArrayList<>(Arrays.asList("alta","baja"));
             
             // Crear un modelo para el JComboBox
             DefaultComboBoxModel<String> model = 
@@ -151,7 +153,7 @@ public boolean validateFields(Object[] fields, String[] fieldNames) {
             }
 
             // Setear el modelo en el JComboBox
-            view.jComboIVA.setModel(model); 
+            view.jComboState.setModel(model); 
     // Asegúrate de que addSeatView tenga cbbCuentas
 
     }
@@ -170,7 +172,7 @@ public boolean validateFields(Object[] fields, String[] fieldNames) {
             }
 
             // Setear el modelo en el JComboBox
-            view.jComboState.setModel(model); 
+            view.jComboTCustomer1.setModel(model); 
     // Asegúrate de que addSeatView tenga cbbCuentas
 
     }
@@ -183,6 +185,7 @@ public boolean validateFields(Object[] fields, String[] fieldNames) {
             view.txtEmail,
             view.jComboRS,
             view.jComboIVA,
+            view.jComboTCustomer1,
             view.jComboState
         };
         String[] fieldNames = {
@@ -191,7 +194,8 @@ public boolean validateFields(Object[] fields, String[] fieldNames) {
             "Email",
             "Razon Social",
             "Condicion IVA",
-            "Tipo de Cliente"
+            "Tipo de Cliente",
+            "Estado"
         };
           // Validar los campos
         if (validateFields(fields, fieldNames)) {
@@ -212,6 +216,7 @@ public boolean validateFields(Object[] fields, String[] fieldNames) {
                     String razonSocial  = ((JComboBox<?>) fields[3]).getSelectedItem().toString().trim();
                     String  ivaCondition = ((JComboBox<?>) fields[4]).getSelectedItem().toString().trim();
                     String clientType=((JComboBox<?>) fields[5]).getSelectedItem().toString().trim();
+                    String state= ((JComboBox<?>) fields[6]).getSelectedItem().toString().trim();
                     
                     customer.setClientName(name);
                     customer.setClientSurname(surName);
@@ -220,6 +225,7 @@ public boolean validateFields(Object[] fields, String[] fieldNames) {
                     customer.setSocialReason(razonSocial);
                     customer.setIvaCondition(ivaCondition);
                     customer.setClientType(clientType);
+                    customer.setEstado(state);
                     
                    
                         boolean load=con.updateCustomer(customer);

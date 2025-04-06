@@ -49,7 +49,7 @@ public boolean updateCustomer(Customer customer) throws SQLException {
         ps.setString(4, customer.getIvaCondition());
         ps.setString(5, customer.getClientType());
         ps.setString(6, customer.getEmail());
-        ps.setString(7, "alta");  // Puedes cambiarlo si el estado es dinámico
+        ps.setString(7, customer.getEstado());  // Puedes cambiarlo si el estado es dinámico
         ps.setInt(8, customer.getDni()); // Se usa el DNI como identificador para la actualización
 
         int rowsAffected = ps.executeUpdate();
@@ -79,7 +79,7 @@ public boolean desactivateCustomer(int dni) throws SQLException {
 }
     //Metodo para obtener una lista de clientes//
     public List<Customer> getCustomers() throws SQLException{
-        String sql= "SELECT * FROM Cliente WHERE estado='alta';";
+        String sql= "SELECT * FROM Cliente ;";
         Customer customer;
         List<Customer> customers=new ArrayList<>();
         Connections con= new Connections();
@@ -95,6 +95,7 @@ public boolean desactivateCustomer(int dni) throws SQLException {
                          customer.setIvaCondition(rs.getString("condicionIva"));
                          customer.setClientType(rs.getString("tipoCliente"));
                          customer.setEmail(rs.getString("email"));
+                         customer.setEstado(rs.getString("estado"));
                          customers.add(customer);
                      }
                  }catch(SQLException e){
@@ -106,7 +107,7 @@ public boolean desactivateCustomer(int dni) throws SQLException {
     }
     //Metodo para obtener una un usuario//
     public Customer getCustomer(int dni) throws SQLException{
-        String sql= "SELECT * FROM Cliente AS c WHERE c.estado='alta' AND c.dni=?;";
+        String sql= "SELECT * FROM Cliente AS c WHERE  c.dni=?;";
         Customer customer=new Customer();
         Connections con= new Connections();
             try(PreparedStatement ps= con.connect().prepareStatement(sql) ){
@@ -121,6 +122,7 @@ public boolean desactivateCustomer(int dni) throws SQLException {
                          customer.setIvaCondition(rs.getString("condicionIva"));
                          customer.setClientType(rs.getString("tipoCliente"));
                          customer.setEmail(rs.getString("email"));
+                         customer.setEstado(rs.getString("estado"));
                      }
                  }catch(SQLException e){
                     System.err.println("Error al cargar el usuario: " + e.getMessage());
