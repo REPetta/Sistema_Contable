@@ -480,7 +480,8 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
                     if( validFields() ){
                         item=itemsCon.getItem(getItemCodeSelected());
                         int cantidad=(int) view.jCantidad.getValue();
-                        subTotal=subTotal+(cantidad*item.getUnitPrice());
+                        double precioPostDescuento=(cantidad*item.getUnitPrice())*(1-saleNode.getSaleType().getDiscount());
+                        subTotal=subTotal+precioPostDescuento;
                         subTotal = formatDouble(subTotal);
                        
                         
@@ -494,7 +495,7 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
                                     }
                                     if(!validBalanceVenta(subTotal)){
                                         limpiarVistaParcial();
-                                        subTotal=subTotal-(cantidad*item.getUnitPrice());
+                                        subTotal=subTotal-precioPostDescuento;
                                         return;
                                     }
                              SaleDetails saleDetail=new SaleDetails();
@@ -502,11 +503,11 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
        
                              saleDetail.setQuantity(cantidad);
                              saleDetail.setSalePrice(item.getUnitPrice());
-                             saleDetail.setSubTotal(item.getUnitPrice()*cantidad);
+                             saleDetail.setSubTotal(precioPostDescuento);
                              
                             saleNode.addSalesDetails(saleDetail);
                             
-                            double subT= item.getUnitPrice()*cantidad;
+                            double subT= precioPostDescuento;
                             cargarTabla(saleNode, item, subTotal, cantidad,subT);
                             item.setStock(item.getStock()-cantidad);
                             listaArticulos.add(item);
@@ -534,7 +535,8 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
                     
                     item=itemsCon.getItem(getItemCodeSelected());
                     int cantidad=(int) view.jCantidad.getValue();
-                    subTotal=subTotal+(cantidad*item.getUnitPrice());
+                    double precioPostDescuento=(cantidad*item.getUnitPrice())*(1-saleNode.getSaleType().getDiscount());
+                    subTotal=subTotal+precioPostDescuento;
                     subTotal = formatDouble(subTotal);
                     //En caso de que ya se halla agregado a la venta el articulo anteriormente//
                     for (Item articulo : listaArticulos){
@@ -550,7 +552,7 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
                                     }
                                     if(!validBalanceVenta(subTotal)){
                                         limpiarVistaParcial();
-                                        subTotal=subTotal-(cantidad*item.getUnitPrice());
+                                        subTotal=subTotal-precioPostDescuento;
                                         return;
                                     }
                                         SaleDetails saleDetail=new SaleDetails();
@@ -559,12 +561,12 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
                                      
                                         saleDetail.setQuantity(cantidad);
                                         saleDetail.setSalePrice(item.getUnitPrice());
-                                        saleDetail.setSubTotal(item.getUnitPrice()*cantidad);
+                                        saleDetail.setSubTotal(precioPostDescuento);
                              
                                         saleNode.addSalesDetails(saleDetail);
                                     
                                         articulo.setStock(articulo.getStock()-cantidad);
-                                        double subT= item.getUnitPrice()*cantidad;
+                                        double subT= precioPostDescuento;
                                          cargarTabla(saleNode, item, subTotal, cantidad,subT);
                                         limpiarVistaParcial();
                                         return;
@@ -584,7 +586,7 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
                              
                              if(!validBalanceVenta(subTotal)){
                                         limpiarVistaParcial();
-                                        subTotal=subTotal-(cantidad*item.getUnitPrice());
+                                        subTotal=subTotal-precioPostDescuento;
                                         return;
                              }
                              
@@ -594,11 +596,11 @@ if (selectedItem != null && !selectedItem.isEmpty()) {
                           
                            saleDetail.setQuantity(cantidad);
                            saleDetail.setSalePrice(item.getUnitPrice());
-                           saleDetail.setSubTotal(item.getUnitPrice()*cantidad);
+                           saleDetail.setSubTotal(precioPostDescuento);
                              
                            saleNode.addSalesDetails(saleDetail);
                                         
-                            double subT= item.getUnitPrice()*cantidad;
+                            double subT= precioPostDescuento;
                             cargarTabla(saleNode, item, subTotal, cantidad,subT);
                             limpiarVistaParcial();
                             item.setStock(item.getStock()-cantidad);

@@ -437,7 +437,8 @@ public class Reports {
             JasperViewer reporteMaster = new JasperViewer(jasperPrint,false);
             reporteMaster.setTitle(" JMR - Informe Contador ");
             reporteMaster.setVisible(true);
-
+            
+            
         } catch (JRException ex) {
             JOptionPane.showMessageDialog(null, "Error al generar el reporte: " + ex.getMessage());
         }
